@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: MIDDLE DOT:/md
+# key: /md
+# --
+`(ucs-insert (cdr (assoc-string "MIDDLE DOT" (ucs-names) t)))`

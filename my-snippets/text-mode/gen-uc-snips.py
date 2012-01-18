@@ -38,6 +38,8 @@ d = [
     ("/eq3"       , "QUESTIONED EQUAL TO"        ), # ≟
     ("/eq?"       , "QUESTIONED EQUAL TO"        ), # ≟
     ("/neq"       , "NOT EQUAL TO"               ), # ≠
+    ("/md"        , "MIDDLE DOT"                 ), # ·
+    ("/dot"       , "MIDDLE DOT"                 ), # ·
     ]
 
 
