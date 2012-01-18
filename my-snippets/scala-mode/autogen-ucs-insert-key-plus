@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: HERMITIAN CONJUGATE MATRIX:/plus
+# key: /plus
+# --
+`(ucs-insert (cdr (assoc-string "HERMITIAN CONJUGATE MATRIX" (ucs-names) t)))`

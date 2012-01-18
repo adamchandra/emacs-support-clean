@@ -1,0 +1,15 @@
+;; Object emacs/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "emacs/"
+  :tables (list 
+   (semanticdb-table "kbd-macros.el"
+    :major-mode 'emacs-lisp-mode
+    :tags 'nil
+    :file "kbd-macros.el"
+    :unmatched-syntax 'nil
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

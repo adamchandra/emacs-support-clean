@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: BULLET OPERATOR:/xmap
+# key: /xmap
+# --
+`(ucs-insert (cdr (assoc-string "BULLET OPERATOR" (ucs-names) t)))`

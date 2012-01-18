@@ -1,0 +1,6 @@
+# Author: acs
+# name: tmpdir
+# key: tmpdir
+# --
+import tempfile
+tempfile.mkdtemp(suffix='', prefix='tmp', dir=None)

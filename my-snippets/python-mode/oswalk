@@ -1,0 +1,12 @@
+# Author: acs
+# name: oswalk
+# key: oswalk
+# --
+import os
+from os.path import join
+walker = os.walk(top, topdown=True, onerror=None, followlinks=False)
+for cur, subs, fs in walker:
+    subpaths = [join(cur, sd) for sd in subs]
+    print "cur dir", cur
+    print "sub dirs", subs
+    print "files", fs

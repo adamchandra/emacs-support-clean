@@ -1,0 +1,13 @@
+# Author: acs
+# name: process-example
+# key: process-example
+# --
+import xsbt.Process._
+// "find project -name *.jar" ! 
+// a #&& b
+// a #|| b 
+// a #| b 
+// a #< url or url #> a Use url as the input to a. a may be a File or a command.
+// a #< file or file #> a Use file as the input to a. a may be a File or a command.
+// a #> file or file #< a Write the output of a to file. a may be a File, URL, or a command.
+// a #>> file or file #<< a Append the output of a to file. a may be a File, URL, or a command. 

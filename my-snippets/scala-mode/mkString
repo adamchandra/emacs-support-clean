@@ -1,0 +1,5 @@
+# Author: acs
+# name: [,]
+# key: mkstring
+# --
+mkString("[", ", ", "]")

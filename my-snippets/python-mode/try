@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# name: try
+# key: try
+# --
+try:
+    pass
+exceptcomma
+excepttuple
+exceptany
+exceptioerror
+exceptas
+else:
+    pass
+finally:
+    pass

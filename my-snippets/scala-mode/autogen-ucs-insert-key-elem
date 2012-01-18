@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: ELEMENT OF:/elem
+# key: /elem
+# --
+`(ucs-insert (cdr (assoc-string "ELEMENT OF" (ucs-names) t)))`

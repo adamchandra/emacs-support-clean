@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# -*- coding: utf-8 -*-
+# key: mstr
+# contributor: Translated from TextMate Snippet
+# name: textblock
+# --
+val str = """
+|
+|
+""".stripMargin

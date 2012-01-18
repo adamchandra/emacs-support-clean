@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: LEFTWARDS DOUBLE ARROW:/lda
+# key: /lda
+# --
+`(ucs-insert (cdr (assoc-string "LEFTWARDS DOUBLE ARROW" (ucs-names) t)))`

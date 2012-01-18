@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: CONTAINS AS MEMBER:/contains
+# key: /contains
+# --
+`(ucs-insert (cdr (assoc-string "CONTAINS AS MEMBER" (ucs-names) t)))`

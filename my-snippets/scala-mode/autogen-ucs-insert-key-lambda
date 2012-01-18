@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: GREEK SMALL LETTER LAMDA:/lambda
+# key: /lambda
+# --
+`(ucs-insert (cdr (assoc-string "GREEK SMALL LETTER LAMDA" (ucs-names) t)))`

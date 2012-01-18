@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+# name: exceptas
+# key: exceptas
+# --
+except Exception as inst: # raised Exception('spam', 'eggs')
+   print type(inst)     # the exception instance
+   print inst.args      # ('spam', 'eggs')
+   print inst           # "('spam', 'eggs')"
+   spam, eggs = inst    # unpack

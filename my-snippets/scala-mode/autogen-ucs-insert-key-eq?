@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: QUESTIONED EQUAL TO:/eq?
+# key: /eq?
+# --
+`(ucs-insert (cdr (assoc-string "QUESTIONED EQUAL TO" (ucs-names) t)))`

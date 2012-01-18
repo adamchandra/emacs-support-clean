@@ -1,0 +1,8 @@
+# Author: acs
+# name: exec
+# key: exec
+# --
+import sys
+# l/v = fixed/var args, p/* = use path/don't, e/* = env/no env
+os.execlp("cmd", "cmdname", "arg1")
+os.execvp("cmd", ["cmdname", "arg1"])

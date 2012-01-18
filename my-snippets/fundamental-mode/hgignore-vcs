@@ -1,0 +1,8 @@
+# Author: acs
+# name: hgignore-vcs
+# key: hgignore-vcs
+# --
+
+## hgignore-vcs
+CVS
+.cvsignore

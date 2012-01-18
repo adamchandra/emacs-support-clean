@@ -1,0 +1,14 @@
+# Author: acs
+# name: hgignore-sbt
+# key: hgignore-sbt
+# --
+
+## hgignore-sbt
+lib_managed/
+src_managed/
+target/
+project/boot/
+project/build/target/
+project/plugins/target/
+project/plugins/lib_managed/
+project/plugins/src_managed/

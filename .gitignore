@@ -1,0 +1,5 @@
+# choose syntax
+syntax: glob
+#  syntax: regexp
+
+

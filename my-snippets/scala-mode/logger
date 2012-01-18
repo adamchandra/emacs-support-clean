@@ -1,0 +1,6 @@
+# Author: acs
+# name: logger
+# key: logger
+# --
+val log = Logger.getLogger(classOf[$1].getName)
+$0

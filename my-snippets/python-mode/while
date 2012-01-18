@@ -1,0 +1,6 @@
+# -*- coding: utf-8 -*-
+# name: while
+# key: while
+# --
+while ${condition}:
+    $0

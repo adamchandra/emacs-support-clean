@@ -1,0 +1,9 @@
+# Author: acs
+# name: hgignore-python
+# key: hgignore-python
+# --
+
+## hgignore-python
+src/python/build
+src/python/dist
+src/python/*egg*

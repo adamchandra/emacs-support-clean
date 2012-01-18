@@ -1,0 +1,6 @@
+# -*- coding: utf-8 -*-
+# name: except_ioerror
+# key: except_ioerror
+# --
+except IOError as (errno, strerror):
+    print "I/O error({0}): {1}".format(errno, strerror)

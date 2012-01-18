@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: THERE EXISTS:/exists
+# key: /exists
+# --
+`(ucs-insert (cdr (assoc-string "THERE EXISTS" (ucs-names) t)))`

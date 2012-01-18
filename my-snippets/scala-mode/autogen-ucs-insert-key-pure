@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: GREEK SMALL LETTER ETA:/pure
+# key: /pure
+# --
+`(ucs-insert (cdr (assoc-string "GREEK SMALL LETTER ETA" (ucs-names) t)))`

@@ -1,0 +1,79 @@
+;; Object lisp/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "lisp/"
+  :tables (list 
+   (semanticdb-table "skeleton_defs.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("java-itit" function nil nil [1 240]) ("expand-skeleton" function nil nil [242 487]) ("perl-n" function nil nil [688 820]) ("ruby-n" function nil nil [822 954]))
+    :file "skeleton_defs.el"
+    :pointmax 959
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "my-python-config.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("add-hook" code nil nil [1 106]) ("py-python-command" variable (:user-visible-flag t :default-value "python") nil [109 233]) ("python-documentation" function (:user-visible-flag t :arguments ("w")) nil [235 782]) ("my-python-hook" function nil nil [821 1934]) ("add-hook" code nil nil [1936 1980]) ("when" code nil nil [1983 2429]) ("pyp" function (:user-visible-flag t :arguments ("expr")) nil [2538 3166]) ("ppy" function (:user-visible-flag t :arguments ("variable")) nil [3422 4029]) ("ppyi" function (:user-visible-flag t) nil [4250 4548]))
+    :file "my-python-config.el"
+    :pointmax 5164
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "my-emisc.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("rubify" function nil nil [2 47]) ("escape-squote" function (:arguments ("str")) nil [886 971]) ("describe-face-at-point" function (:user-visible-flag t) nil [974 1089]) ("customize-face-at" function (:user-visible-flag t) nil [1091 1203]) ("get-face-at-point" function nil nil [1205 1832]) ("kill-whitespace-in-region" function nil nil [1835 2179]) ("kill-Ms" function nil nil [2184 2326]) ("make-one-liner" function nil nil [2329 2609]) ("kill-superfluous-buffers" function nil nil [2611 2955]) ("kill-current-buffer" function nil nil [2960 3039]) ("kill-current-buffer-and-window" function nil nil [3041 3149]) ("insert-date" function nil nil [3422 3507]) ("insert-time" function nil nil [3509 3589]) ("insert-datestamp" function nil nil [3591 3673]) ("journal-section-header" function nil nil [3939 4056]) ("journal-subsection-header" function nil nil [4058 4178]) ("bracket-text" function (:arguments ("left" "right")) nil [4183 4812]))
+    :file "my-emisc.el"
+    :pointmax 8481
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "ecb-python.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("ecb-util" include nil nil [239 258]) ("ecb-layout" include nil nil [259 280]) ("ecb-common-browser" include nil nil [281 310]) ("cl" include nil nil [363 376]) ("setq" code nil nil [421 450]) ("switch-to-left-analyse" function nil nil [452 537]) ("switch-to-python-layout1" function nil nil [539 628]) ("switch-to-layout" function (:arguments ("l")) nil [630 724]) ("ecb-sample-keymap-setup" function nil nil [726 1327]) ("ecb-pre-python-layout" variable nil nil [1391 1425]) ("ecb-pre-python-windows-height" variable nil nil [1426 1468]) ("ecb-pre-python-compile-window-height" variable nil nil [1469 1518]) ("ecb-python-save-restore-layout" function (:arguments ("action")) nil [1520 1975]) ("ecb-python-unittest-buffer-name" variable (:constant-flag t :default-value "*Unit Tests*") nil [2020 2077]) ("defecb-window-dedicator" code nil nil [2079 2306]) ("ecb-python-unittest-sync" function (:user-visible-flag t) nil [2309 3095]) ("ecb-print-unittest-results" function (:arguments ("buffer" "filename")) nil [3221 3431]) ("ecb-python-stdout-buffer-name" variable (:constant-flag t :default-value "*Python Stdout*") nil [3524 3582]) ("defecb-window-dedicator" code nil nil [3584 3805]) ("ecb-python-stdout-sync" function (:user-visible-flag t) nil [3808 4588]) ("ecb-print-stdout-results" function (:arguments ("buffer" "filename")) nil [4714 4959]) ("ecb-python-sync" function nil nil [5034 5131]) ("*layout-name*" variable (:constant-flag t :default-value "python-layout1") nil [5333 5374]) ("ecb-layout-define" code nil nil [5376 5732]) ("ecb-python1-activate" function (:user-visible-flag t) nil [5755 6689]) ("ecb-python1-deactivate" function (:user-visible-flag t) nil [6710 7306]))
+    :file "ecb-python.el"
+    :pointmax 7307
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "ecb-scala.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("ecb-util" include nil nil [239 258]) ("ecb-layout" include nil nil [259 280]) ("ecb-common-browser" include nil nil [281 310]) ("cl" include nil nil [363 376]) ("setq" code nil nil [379 408]) ("switch-to-left-analyse" function nil nil [410 495]) ("switch-to-scala-layout1" function nil nil [497 584]) ("switch-to-layout" function (:arguments ("l")) nil [586 680]) ("ecb-sample-keymap-setup" function nil nil [682 1279]) ("ecb-pre-scala-layout" variable nil nil [1343 1376]) ("ecb-pre-scala-windows-height" variable nil nil [1377 1418]) ("ecb-pre-scala-compile-window-height" variable nil nil [1419 1467]) ("ecb-scala-save-restore-layout" function (:arguments ("action")) nil [1469 1917]) ("ecb-scala-unittest-buffer-name" variable (:constant-flag t :default-value "*Unit Tests*") nil [1962 2018]) ("defecb-window-dedicator" code nil nil [2020 2244]) ("ecb-scala-unittest-sync" function (:user-visible-flag t) nil [2247 3031]) ("ecb-print-unittest-results" function (:arguments ("buffer" "filename")) nil [3157 3370]) ("ecb-scala-stdout-buffer-name" variable (:constant-flag t :default-value "*Scala Stdout*") nil [3463 3519]) ("defecb-window-dedicator" code nil nil [3521 3739]) ("ecb-scala-stdout-sync" function (:user-visible-flag t) nil [3742 4520]) ("ecb-print-stdout-results" function (:arguments ("buffer" "filename")) nil [4646 4891]) ("ecb-scala-sync" function nil nil [4966 5060]) ("*layout-name*" variable (:constant-flag t :default-value "scala-layout1") nil [5262 5302]) ("ecb-layout-define" code nil nil [5304 5657]) ("ecb-scala1-activate" function (:user-visible-flag t) nil [5680 6609]) ("ecb-scala1-deactivate" function (:user-visible-flag t) nil [6630 7222]))
+    :file "ecb-scala.el"
+    :pointmax 7223
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "my-java-config.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("jde" include nil nil [1 15]) ("jde-eclipse-compiler-server" include nil nil [16 54]) ("jde-mode" function (:prototype-flag t :user-visible-flag t) nil [55 95]) ("setq" code nil nil [96 190]) ("my-jde-mode-hook" function nil nil [263 9771]) ("add-hook" code nil nil [9774 9817]) ("setup-java-flymake" function nil nil [9819 12453]))
+    :file "my-java-config.el"
+    :pointmax 15162
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "my-color-theme.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("color-theme" include nil nil [22 44]) ("color-theme-adam-chandra" function (:user-visible-flag t) nil [47 8627]))
+    :file "my-color-theme.el"
+    :pointmax 8628
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "filesets-defs.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("cl" include nil (dependency-file "/usr/local/share/emacs/23.0.93/lisp/emacs-lisp/cl.el") [23 36]) ("filesets" include nil (dependency-file "/usr/local/share/emacs/23.0.93/lisp/filesets.el") [39 58]) ("filesets" function (:arguments ("&rest" "sets")) nil [60 278]) ("under" function (:arguments ("root" "&rest" "paths")) nil [280 460]) ("files" function (:arguments ("paths")) nil [462 574]) ("*emacs-config*" variable (:constant-flag t :default-value (expand-file-name "~/adams-worldview/managed-repos/emacs-support/")) nil [577 670]) ("*filesets-config*" variable (:constant-flag t :default-value (concat *emacs-config* "lisp/")) nil [671 731]) ("*ipython-config*" variable (:constant-flag t :default-value (expand-file-name "~/adams-worldview/managed-repos/x-platform-share/etc/.ipython/")) nil [732 843]) ("*eclipse-ws*" variable (:constant-flag t :default-value (expand-file-name "~/fs/eclipse-workspace/")) nil [844 912]) ("*rexo*" variable (:constant-flag t :default-value (concat *eclipse-ws* "rexo/")) nil [913 960]) ("*rexa-common*" variable (:constant-flag t :default-value (concat *eclipse-ws* "rexa-common-trunk/")) nil [961 1028]) ("*rexa-front*" variable (:constant-flag t :default-value (concat *eclipse-ws* "rexa-front-trunk/")) nil [1029 1094]) ("*rexa-front-java*" variable (:constant-flag t :default-value (concat *rexa-front* "src/java/")) nil [1095 1157]) ("*rexa-front-war*" variable (:constant-flag t :default-value (concat *rexa-front* "src/war/")) nil [1158 1218]) ("*rexa-front-gwt-src*" variable (:constant-flag t :default-value (concat *rexa-front* "src/java/org/rexa/gwt/")) nil [1219 1297]) ("filesets" code nil nil [1299 4807]) ("setq" code nil nil [4809 5651]) ("filesets-defs" package nil nil [5653 5677]))
+    :file "filesets-defs.el"
+    :pointmax 5681
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "snippets.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("default-snippet-directory" variable (:default-value "~/emacs/lisp/snippets/") nil [5 64]) ("snippet-create-snippet-from-region" function (:arguments ("snippet-name")) nil [67 644]) ("snippet-insert-snippet" function nil nil [649 993]) ("default-script-directory" variable (:default-value "~/emacs/lisp/snippets/") nil [999 1057]) ("snippet-create-script-from-region" function (:arguments ("snippet-name")) nil [1060 1130]) ("snippet-edit-snippet" function nil nil [1133 1433]) ("snippet-run-perl-script" function nil nil [1437 2316]) ("perldb-eval-expr-in-region" function nil nil [2321 2598]) ("perldb-eval-expr-at-point" function nil nil [2600 2656]))
+    :file "snippets.el"
+    :pointmax 2658
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "my-yas.el"
+    :major-mode 'emacs-lisp-mode
+    :tags '(("*yas/snippet-dir*" variable (:constant-flag t :default-value (concat *emacs-root* "my-snippets")) nil [1 65]) ("yasnippet-setup" function nil nil [67 518]) ("directory-excursion" function (:arguments ("dir" "&rest" "body")) nil [521 707]) ("yas/snippet-mode-dir" function nil nil [710 799]) ("yas/dired-snippet-mode-dir" function nil nil [801 947]) ("yas/write-header" function (:arguments ("snippet-dir" "snippet-name")) nil [949 1526]) ("yas/write-snippet-body" function (:arguments ("snippet-dir" "snippet-name" "content")) nil [1570 2061]) ("yas/new" function (:arguments ("snippet-name")) nil [2086 2665]) ("yas/visit" function (:arguments ("snippet-name")) nil [2667 3131]) ("yasnippet-setup" code nil nil [3133 3150]))
+    :file "my-yas.el"
+    :pointmax 3151
+    :unmatched-syntax 'nil
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

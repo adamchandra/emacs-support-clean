@@ -1,0 +1,8 @@
+# Author: acs
+# name: asdf
+# key: asdf
+# --
+    template
+    [ -d ]
+    cd $WORKON_HOME
+}

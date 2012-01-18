@@ -1,0 +1,6 @@
+# Author: acs
+# name: make-lens
+# key: /lens
+# val wLen: Lens[Word, Int] = Lens(_.wLen, (obj, v) => obj copy (wLen = v))
+# --
+val ${1:getField}: Lens[${2:CaseClass}, ${3:FieldType}] = Lens(_.$1, (obj, v) => obj copy ($1 = v))

@@ -1,0 +1,28 @@
+# Author: acs
+# name: process
+# key: process
+# --
+import scala.sys.process._
+
+// Process(command: Seq[String], cwd: File, extraEnv: (String, String)*): ProcessBuilder
+// Process(command: Seq[String], cwd: Option[File], extraEnv: (String, String)*): ProcessBuilder
+val proc1: ProcessBuilder = 
+  Process(command=Seq("cmd", "arg1"), // or: "cmdname"
+          cwd=new java.io.File("."),  // or: cwd=Some(new java.io.File(".")), 
+          extraEnv=("env1", "val1"))
+
+// Process(Seq("sha1sum", "-")) #< file("f") ! ProcessLogger(
+//   out => println("o: " + out), 
+//   err => println("e: " + err))
+// Process(value: Boolean): ProcessBuilder
+// Process(builder: JProcessBuilder): ProcessBuilder
+// Process(command: Elem): ProcessBuilder
+// Process(command: String, arguments: Seq[String]): ProcessBuilder
+// Process(command: Seq[String]): ProcessBuilder
+// Process(command: String): ProcessBuilder
+// Process(url: URL): URLBuilder
+// Process(file: File): FileBuilder
+
+// def applySeq [T] (builders: Seq[T])(implicit convert: (T) ⇒ Source): Seq[Source]
+// def cat (files: Seq[Source]): ProcessBuilder
+// def cat (file: Source, files: Source*): ProcessBuilder 

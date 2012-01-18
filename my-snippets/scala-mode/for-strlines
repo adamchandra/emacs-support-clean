@@ -1,0 +1,8 @@
+# Author: acs
+# name: for-strlines
+# key: for-strlines
+# --
+for {
+  line <- """|99 
+             |98""".stripMargin.lines
+}{}

@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: NOT EQUAL TO:/neq
+# key: /neq
+# --
+`(ucs-insert (cdr (assoc-string "NOT EQUAL TO" (ucs-names) t)))`

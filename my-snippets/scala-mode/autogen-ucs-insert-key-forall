@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: FOR ALL:/forall
+# key: /forall
+# --
+`(ucs-insert (cdr (assoc-string "FOR ALL" (ucs-names) t)))`

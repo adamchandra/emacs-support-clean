@@ -1,0 +1,16 @@
+# Author: acs
+# name: hgignore-template
+# key: hgignore-template
+# --
+
+## hgignore-common
+## hgignore-vcs
+## hgignore-python
+## hgignore-latex
+
+## hgignore-IDEs
+
+
+
+
+

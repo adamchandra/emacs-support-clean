@@ -1,0 +1,7 @@
+# Author: acs
+# name: Func#NodeSeq##>NodeSeq
+# key: ns>ns
+# --
+NodeSeq => NodeSeq = 
+    ns => {
+    }

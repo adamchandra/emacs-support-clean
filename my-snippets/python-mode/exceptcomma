@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+# name: exceptcomma
+# key: exceptcomma
+# --
+except Exception, err:

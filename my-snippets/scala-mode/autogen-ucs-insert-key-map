@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: RING OPERATOR:/map
+# key: /map
+# --
+`(ucs-insert (cdr (assoc-string "RING OPERATOR" (ucs-names) t)))`

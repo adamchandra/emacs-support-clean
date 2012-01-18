@@ -1,0 +1,11 @@
+# Author: acs
+# name: hgignore-latex
+# key: hgignore-latex
+# --
+
+# hgignore-latex
+somedir/*.aux
+somedir/*.log
+somedir/*.out
+somedir/*.pdf
+somedir/*.toc

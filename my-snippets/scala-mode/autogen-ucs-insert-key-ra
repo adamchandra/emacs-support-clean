@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: RIGHTWARDS ARROW:/ra
+# key: /ra
+# --
+`(ucs-insert (cdr (assoc-string "RIGHTWARDS ARROW" (ucs-names) t)))`

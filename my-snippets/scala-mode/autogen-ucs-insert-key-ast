@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: ASTERISK OPERATOR:/ast
+# key: /ast
+# --
+`(ucs-insert (cdr (assoc-string "ASTERISK OPERATOR" (ucs-names) t)))`

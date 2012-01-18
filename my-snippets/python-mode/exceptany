@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# name: exceptany
+# key: exceptany
+# --
+except: # wildcard except:
+    print "Unexpected error:", sys.exc_info()[0]
+    raise

@@ -1,0 +1,17 @@
+# Author: acs
+# name: regex
+# key: regex
+# --
+import re
+p = re.compile('ab*')
+m.match("str")
+# groups, spans: 
+g = m.group()
+start, end = m.span()
+# list of all matches: 
+m.findall("some string")
+p = re.compile( '(blue|white|red)')
+p.sub( 'colour', 'blue socks and red shoes')
+# 'colour socks and colour shoes'
+p.sub( 'colour', 'blue socks and red shoes', count=1)
+# 'colour socks and red shoes'

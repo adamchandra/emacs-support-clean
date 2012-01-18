@@ -1,0 +1,5 @@
+# Author: acs
+# name: print
+# key: print
+# --
+print("$0")

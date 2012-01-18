@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: RIGHTWARDS ARROW FROM BAR:/traverse
+# key: /traverse
+# --
+`(ucs-insert (cdr (assoc-string "RIGHTWARDS ARROW FROM BAR" (ucs-names) t)))`

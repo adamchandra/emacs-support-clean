@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+# name: exceptions
+# key: exceptions
+# --
+ArithmeticError        MemoryError             GeneratorExit          StopIteration         UnicodeEncodeError
+AssertionError         NameError               IOError                SyntaxError           UnicodeError
+AttributeError         NotImplementedError     ImportError            SystemError           UnicodeTranslateError
+BufferError            OSError                 IndentationError       SystemExit            ValueError
+EOFError               OverflowError           IndexError             TabError              ZeroDivisionError
+EnvironmentError       ReferenceError          KeyError               TypeError
+Exception              RuntimeError            KeyboardInterrupt      UnboundLocalError
+FloatingPointError     StandardError           LookupError            UnicodeDecodeError
+
+Warning                        UserWarning
+DeprecationWarning             FutureWarning
+PendingDeprecationWarning      ImportWarning
+RuntimeWarning                 UnicodeWarning
+SyntaxWarning                  BytesWarning

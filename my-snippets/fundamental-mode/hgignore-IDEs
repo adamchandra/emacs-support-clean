@@ -1,0 +1,23 @@
+# Author: acs
+# name: hgignore-IDEs
+# key: hgignore-IDEs
+# --
+
+## ignore eclipse/idea/ensime
+.project
+.classpath
+.settings
+.distfiles
+.idea
+.ensime
+
+## ignore sbt
+lib_managed/
+src_managed/
+target/
+project/boot/
+project/build/target/
+project/plugins/target/
+project/plugins/lib_managed/
+project/plugins/src_managed/
+
