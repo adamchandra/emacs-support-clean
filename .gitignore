@@ -1,8 +1,5 @@
 # choose syntax
 syntax: glob
-
 *.elc
 
 #  syntax: regexp
-
-
