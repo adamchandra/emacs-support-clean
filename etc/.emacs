@@ -392,6 +392,7 @@
 			(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)))
    (t nil))
   (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
+  (add-to-list 'auto-mode-alist '("\\.sbt$" . scala-mode))
   (add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
   (add-to-list 'auto-mode-alist '("\\.gp$" . gnuplot-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode))
