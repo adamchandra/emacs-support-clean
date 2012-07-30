@@ -9,14 +9,14 @@ d = [
     ("/x"         , "ASTERISK OPERATOR"          ), # ∗
     ("/ast"       , "ASTERISK OPERATOR"          ), # ∗
     ("/xo"        , "CIRCLED ASTERISK OPERATOR"  ), # ⊛
-    ("/apply"     , "CIRCLED ASTERISK OPERATOR"  ), # ⊛
-    ("/applic"    , "CIRCLED ASTERISK OPERATOR"  ), # ⊛
+    ("/app"       , "CIRCLED ASTERISK OPERATOR"  ), # ⊛
     ("/exists"    , "THERE EXISTS"               ), # ∃
     ("/forall"    , "FOR ALL"                    ), # ∀
     ("/elem"      , "ELEMENT OF"                 ), # ∈
     ("/contains"  , "CONTAINS AS MEMBER"         ), # ∋
     ("/bullet"    , "BULLET OPERATOR"            ), # ∙
     ("/contramap" , "BULLET OPERATOR"            ), # ∙
+    ("/of"        , "BULLET OPERATOR"            ), # ∙
     ("/xmap"      , "BULLET OPERATOR"            ), # ∙
     ("/ga"        , "GREEK SMALL LETTER ALPHA"   ), # α
     ("/gb"        , "GREEK SMALL LETTER BETA"    ), # β
@@ -40,6 +40,9 @@ d = [
     ("/neq"       , "NOT EQUAL TO"               ), # ≠
     ("/md"        , "MIDDLE DOT"                 ), # ·
     ("/dot"       , "MIDDLE DOT"                 ), # ·
+    ("/empty"     , "EMPTY SET"                  ), # ∅
+    ("/zip"       , "LATIN SMALL LETTER Z WITH RETROFLEX HOOK"), # ʐ
+
     ]
 
 

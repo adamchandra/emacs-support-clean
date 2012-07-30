@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: CIRCLED ASTERISK OPERATOR:/app
+# key: /app
+# --
+`(ucs-insert (cdr (assoc-string "CIRCLED ASTERISK OPERATOR" (ucs-names) t)))`

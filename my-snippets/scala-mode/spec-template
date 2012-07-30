@@ -1,0 +1,30 @@
+# Author: acs
+# name: spec-template
+# key: /spec
+# --
+package edu.umass.cs.iesl.commons.rdf
+
+import org.specs2.mutable
+import org.specs2.mutable._
+
+import scalaz._
+import scalaz.{Scalaz => Z}
+import Z.{node => _, _}
+
+// import cc.acs.commons.util.StringOps._
+// import cc.acs.commons.util.FileOps._
+// import cc.acs.commons.util.scalaz._
+// import cc.acs.commons.util.scalaz.TreeDrawing._
+// import cc.acs.commons.util.scalaz.TreeLocDrawing._
+// import cc.acs.commons.util.scalaz.TreeLocUtils._
+// import acs.boxes.Boxes._
+// import scala.collection.{mutable => m}
+
+object RDFScratchSpec extends mutable.Specification {
+
+  "sample code" should {
+    "load and query an rdf doc" in {
+      todo
+    }
+  }
+}

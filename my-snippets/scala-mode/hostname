@@ -1,0 +1,15 @@
+# Author: acs
+# name: hostname
+# key: /hostname
+# --
+  def serverHostname(): String = { 
+    import java.net.{InetAddress, UnknownHostException}
+    try {
+      val inetAddress = InetAddress.getLocalHost();
+      val ipAddr = inetAddress.getAddress();
+      val hostname = inetAddress.getCanonicalHostName();
+      hostname
+    } catch {
+      case e:UnknownHostException => "localhost"
+    }
+  }

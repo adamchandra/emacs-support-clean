@@ -1,0 +1,6 @@
+# Author: acs
+# name: uuid
+# key: /uuid
+# --
+import java.util.UUID
+val uuid = UUID.randomUUID

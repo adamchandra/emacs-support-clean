@@ -1,0 +1,15 @@
+# Author: acs
+# name: imp-lift
+# key: /imp.lift
+# --
+// lift basics
+import net.liftweb._, common._, http._
+// lift js/jq/json
+import http.js, js._, js.jquery._, JqJsCmds._, JsCmds._, json._
+// lift REST
+import rest._, actor._
+// lift pages
+import util._, Helpers._
+// lift boot
+import sitemap._, http.LiftRules, mapper._, Loc._
+

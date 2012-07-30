@@ -1,0 +1,5 @@
+# Author: acs
+# name: javaconverters
+# key: /imp.javaconverters
+# --
+import scala.collection.JavaConverters._

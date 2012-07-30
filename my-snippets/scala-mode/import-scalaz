@@ -1,0 +1,5 @@
+# Author: acs
+# name: import-scalaz
+# key: /imp.scalaz
+# --
+import scalaz._, scalaz.{Scalaz => Z}, Z.{node => _, _}

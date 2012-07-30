@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: BULLET OPERATOR:/of
+# key: /of
+# --
+`(ucs-insert (cdr (assoc-string "BULLET OPERATOR" (ucs-names) t)))`

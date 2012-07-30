@@ -1,0 +1,8 @@
+# Author: acs
+# name: java-date-time
+# key: /jdate
+# --
+import java.util.Date
+import java.text.DateFormat
+val date = new Date()
+val thedate = DateFormat.getDateInstance().format(date)

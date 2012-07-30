@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: LATIN SMALL LETTER Z WITH RETROFLEX HOOK:/zip
+# key: /zip
+# --
+`(ucs-insert (cdr (assoc-string "LATIN SMALL LETTER Z WITH RETROFLEX HOOK" (ucs-names) t)))`

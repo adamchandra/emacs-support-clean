@@ -1,0 +1,134 @@
+# Author: acs
+# name: dispatch-verbs
+# key: dispatch-verbs
+# --
+Split into two request handlers, return results of each in tuple.
+  >+ [A, B] (block: (Request) ⇒ (Handler[A], Handler[B])): Handler[(A, B)]
+Chain two request handlers.
+  >+> [T] (block: (Request) ⇒ Handler[Handler[T]]): Handler[T]
+Combination header and request chaining verb.
+  >:+ [T] (block: (Map[String, Seq[String]], Request) ⇒ Handler[T]): Handler[T]
+
+
+
+Handle some non-huge response body as a String, in a block.
+                                   as XML document in block
+                     header as Map in block.
+  >- [T] (block: (String) ⇒ T): Handler[T]
+  <> [T] (block: (Elem) ⇒ T): Handler[T]
+  >:> [T] (block: (Map[String, Set[String]]) ⇒ T): Handler[T]
+
+Handle InputStream in block, handle gzip if so encoded.
+  >> [T] (block: (InputStream) ⇒ T): Handler[T]
+  >> [T] (block: (InputStream, String) ⇒ T): Handler[T]
+
+Handle response as java.
+                   scala.
+  >>~ [T] (block: (InputStreamReader) ⇒ T): Handler[T]
+  >~ [T] (block: (Source) ⇒ T): Handler[T]
+
+Write to the given OutputStream.
+  >>> [OS <: OutputStream] (out: OS): Handler[OS]
+Ignore response body.
+  >| : Handler[Unit]
+
+
+Return response as a scala.
+  as_source : Handler[Source]
+Return some non-huge response as a String.
+  as_str : Handler[String]
+Process headers as a Map of strings to sequences of *lowercase* strings, to facilitate case-insensetive header lookup.
+  headers_> [T] (block: (Map[String, Seq[String]]) ⇒ T): Handler[T]
+Process response as XHTML document in block, more lenient than <> but still not great.
+  </> [T] (block: (NodeSeq) ⇒ T): Handler[T]
+
+
+Append an element to this request's path, joins with '/'.
+  / (path: String): Request
+
+Combine this request with another.
+  <& (req: Request): Request
+
+Combine this request with another handler.
+  >& [T] (other: Handler[T]): Handler[T]
+
+Add headers to this request.
+Add query parameters.
+  <:< (values: Map[String, String]): Request
+  <<? (values: Traversable[(String, String)]): Request
+
+Set the default character set to be used when processing the request in <<, <<<, Handler#>> and derived operations >~, as_str, etc
+  >\ (charset: String): Request
+
+Post the given byte array.
+               string value.
+               string value, with text/plain content-type.
+               key value sequence.
+  << (contents: Array[Byte]): Request
+  << (stringbody: String, contenttype: String): Request
+  << (stringbody: String): Request
+  << (values: Traversable[(String, String)]): Request
+
+
+PUT the given values as a urlencoded form
+        file.
+        string.
+        string, with text/plain content-type.
+  <<< (values: Traversable[(String, String)]): Request
+  <<< (file: File, content_type: String): Request
+  <<< (stringbody: String, contenttype: String): Request
+  <<< (stringbody: String): Request
+
+
+HTTP delete/head/etc
+  DELETE : Request
+  HEAD : Request
+  POST : Request
+  PUT : Request
+
+Set credentials that may be used for basic or digest auth; requires a host value :/(.
+Add basic auth header unconditionally to this request.
+Convert this to a secure (scheme https) request if not already
+  as (name: String, pass: String): Request
+  as_! (name: String, pass: String): Request
+  secure : Request
+
+
+gzip : Request
+to_uri : URI
+
+OAuth-related:
+sign a request with a callback, e.g. a request-token request 
+sign a request with a consumer, token, and verifier, e.g. access-token request 
+sign a request with a consumer and a token, e.g. an OAuth-signed API request 
+    <@ (consumer: Consumer, callback: String): Request = sign(consumer, None, None, Some(callback))
+    <@ (consumer: Consumer, token: Token, verifier: String): Request = sign(consumer, Some(token), Some(verifier), None)
+    <@ (consumer: Consumer, token: Token): Request = sign(consumer, Some(token), None, None)
+
+add token value as a query string parameter, for user authorization redirects 
+     with_token (token: Token) =  r <<? (("oauth_token" -> token.value) :: Nil)
+
+     >% [T] (block: IMap[String, String] => T) = r >- ( split_decode andThen block )
+     as_token = r >% { Token(_).getOrElse { error("Token parameters not found in given map") } }
+
+
+import org.apache.http.{HttpEntity, HttpResponse}
+
+// Example form post w/ httpresponse handler
+val form = Map("user[password]" -> user1, 
+               "user[full_name]" -> "Koko Laufer")          
+
+val status = try {
+  http { (host / "users" / user1 <<< form as_str) { 
+    case (code:Int, response:HttpResponse, entity:Option[HttpEntity], fn:(()=>String)) => {
+      code
+    } 
+  }} 
+} catch { 
+  case StatusCode(code:Int, _:String) => {
+    code
+  }
+}
+
+
+

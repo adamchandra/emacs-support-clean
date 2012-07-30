@@ -22,6 +22,7 @@
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-buffers-ido-like-flag t)
  '(icicle-download-dir "~/emacs/site-lisp/icicles")
+ '(icicle-saved-completion-sets (quote (("pstotext-multiview" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/pstotext-multiview.icy") ("monitor-proj" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor-proj.icy") ("monitor" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor.icy"))))
  '(icomplete-mode nil nil (icomplete))
  '(ido-case-fold t)
  '(indent-tabs-mode t)
@@ -48,12 +49,16 @@
  '(sgml-basic-offset 4)
  '(show-paren-mode t nil (paren))
  '(show-paren-style (quote expression))
+ '(sr-speedbar-right-side nil)
+ '(sr-speedbar-width-console 48)
+ '(sr-speedbar-width-x 48)
  '(tab-width 2)
  '(tool-bar-mode nil nil (tool-bar))
  '(transient-mark-mode t)
  '(truncate-lines t)
- '(yas/prompt-functions (quote (yas/ido-prompt yas/dropdown-prompt)))
- '(yas/trigger-key ""))
+ '(undo-limit 800000)
+ '(undo-strong-limit 2000000)
+ '(yas/prompt-functions (quote (yas/ido-prompt yas/dropdown-prompt))))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -150,6 +155,7 @@
   (interactive)
   (require 'tramp)
   (setq tramp-default-method "scp")
+  ;; (setq tramp-default-method "mosh")
 
   ;; 23.2 specific customizations:
   (setq font-use-system-font t)
@@ -158,7 +164,7 @@
   ;; end 23.2 specific customizations:
 
   (setq semantic-load-turn-useful-things-on t)
-  (partial-completion-mode)
+  ;; (partial-completion-mode)
   (setq-default indent-tabs-mode nil)
   (setq dired-use-ls-dired nil)
   (setq c-basic-offset 2)
@@ -203,6 +209,7 @@
   (setq remember-annotation-functions '(org-remember-annotation))
   (setq remember-handler-functions '(org-remember-handler))
   (add-hook 'remember-mode-hook 'org-remember-apply-template)
+  (icomplete-mode 1)
   )
 
 (defun sudo-edit (&optional arg)
@@ -266,6 +273,9 @@
           ([(control ?4)              ] ediff-buffers)
           ([(control ?7)              ] ido-switch-buffer)
           ([(control ?8)              ] ibuffer)
+
+          ([(control ?*)              ] icicle-buffer)
+
           ([(control ?9)              ] bs-cycle-previous)
           ([(control ?0)              ] bs-cycle-next)
           ([(control ?\))             ] (lambda() (interactive) (other-window 1)))
@@ -286,19 +296,18 @@
           ([(meta f6)                 ] filesets-close)
           ([(control XF86Forward)     ] find-grep-dired)
           ([f12                       ] revert-buffer-and-refind-position)
+          ([(control tab)             ] sr-speedbar-toggle)
           ))
   )
 
-;; I either want to load up a heavyweight emacs if I am on my local machine
-;;   and my slag heap o' elisp is available, or, if I am launching from 
-;;   a remote machine via terminal, I just want a useful subset
-(defconst *sendak-emacs-support* (expand-file-name "/usr/sen/tmp1/saunders/adams-worldview/managed-repos/emacs-supports/current/"))
+
 (defconst *home-emacs-support* (expand-file-name "~/emacs/"))
 (defconst *emacs-root*
       (cond
-       ((file-directory-p *sendak-emacs-support*) *sendak-emacs-support*)
 			 ((file-directory-p *home-emacs-support*) *home-emacs-support*)
 			 (t nil)))
+
+(defconst *site-lisp* (expand-file-name (concat *emacs-root* "site-lisp/")))
 
 (defconst *full-elisp-available* (not (null *emacs-root*)))
 
@@ -317,6 +326,7 @@
       (add-path "auto-install-lisp")  
 
       (add-path "site-lisp/cc-mode") 
+      (add-path "site-lisp/cedet") 
       (add-path "site-lisp/coffee-mode")  
       (add-path "site-lisp/color-theme")
       (add-path "site-lisp/ecb")  
@@ -332,12 +342,18 @@
       (add-path "site-lisp/python-mode")  
       (add-path "site-lisp/remember")  
       (add-path "site-lisp/scala-mode")  
+      (add-path "site-lisp/jade-mode")  
+      (add-path "site-lisp/less-css-mode")  
       (add-path "site-lisp/slime")  
       (add-path "site-lisp/yasnippet")  
       ))
    (t nil)))
 
 (setup-paths)
+
+
+;; (set-scroll-bar-mode 'left)
+
 
 (defun common-setup()
   (interactive)
@@ -359,12 +375,14 @@
 			(require 'ido)
 			(require 'pabbrev)
 			(require 'picture)
-			(require 'smooth-scrolling)
 			(require 'yaml-mode)
       (require 'icicles)
       (require 'bookmark+)
       (require 'htmlize)
       (require 'coffee-mode)
+      (require 'sws-mode)
+      (require 'less-css-mode)
+      (require 'jade-mode)    
       (require 'js2-mode)
       (require 'auto-install)
       (require 'undo-tree)
@@ -381,7 +399,6 @@
 			;; (ido-mode nil)
 			(icy-mode nil)
 			(filesets-setup)
-
 			(scala-mode-setup)
 			(haskell-setup)
 			;; (load-file "my-lisp-config")
@@ -391,16 +408,24 @@
 			(load-library "my-python-config")
 			(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)))
    (t nil))
-  (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-  (add-to-list 'auto-mode-alist '("\\.sbt$" . scala-mode))
-  (add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
-  (add-to-list 'auto-mode-alist '("\\.gp$" . gnuplot-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode))
-  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+  (add-to-list 'auto-mode-alist '("\\.scala$"  . scala-mode))
+  (add-to-list 'auto-mode-alist '("\\.sbt$"    . scala-mode))
+  (add-to-list 'auto-mode-alist '("\\.hs$"     . haskell-mode))
+  (add-to-list 'auto-mode-alist '("\\.[hg]s$"  . haskell-mode))
+  (add-to-list 'auto-mode-alist '("\\.hi$"     . haskell-mode))
+  (add-to-list 'auto-mode-alist '("\\.l[hg]s$" . literate-haskell-mode))
+  (add-to-list 'auto-mode-alist '("\\.gp$"     . gnuplot-mode))
+  (add-to-list 'auto-mode-alist '("\\.ya?ml$"  . yaml-mode))
   (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
-  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
-  (add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("Cakefile"   . coffee-mode))
+  (add-to-list 'auto-mode-alist '("\\.styl$"   . sws-mode))
+  (add-to-list 'auto-mode-alist '("\\.less$"   . less-css-mode))
+  (add-to-list 'auto-mode-alist '("\\.jade$"   . jade-mode))
+  (add-to-list 'auto-mode-alist '("\\.scaml$"  . jade-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.js$"     . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.js$"     . javascript-mode))
+  (add-to-list 'auto-mode-alist '("\\.md"      . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode))
 
   (cond ((eq window-system nil) 
 				 ;; Running in a terminal =============
@@ -422,6 +447,8 @@
   (load-library "filesets-defs")
   )
 
+
+
 ;; MINI HOWTO: open .scala file. Ensure bin/server.sh is executable. M-x ensime
 
 (defun scala-mode-setup()
@@ -441,10 +468,11 @@
 (defun haskell-setup()
   (interactive)
   (load "haskell-site-file")
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-ghci)
-  ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+  ;; obsolete: (add-hook 'haskell-mode-hook 'turn-on-haskell-ghci)
+  ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
   )
 
 (defun gnuplot-mode-setup()
@@ -509,372 +537,6 @@
   (require 'color-theme))
 (require 'color-theme)
 
-;; (defun color-theme-printable-bw ()
-;;   (interactive)
-;;   (color-theme-install
-;;    '(color-theme-inkpot
-;;      ((foreground-color . "#000000")
-;;       (background-color . "#FFFFFF")
-;;       (border-color . "#3e3e5e")
-;;       (cursor-color . "#404040")
-;;       (background-mode . dark))
-;;      (font-lock-builtin-face ((t (:foreground "#000000"))))
-;;      (font-lock-comment-face ((t (:stipple t :italic t :foreground "#000000")))) 
-;;      (font-lock-delimiter-face ((t (:italic t :foreground "#000000")))) 
-;;      (font-lock-constant-face ((t (:foreground "#000000"))))
-;;      (font-lock-doc-face ((t (:italic t :foreground "#000000"))))
-;;      (font-lock-function-name-face ((t (:bold t :foreground "#000000"))))
-;;      (font-lock-keyword-face ((t (:bold t :foreground "#000000"))))
-;;      (font-lock-preprocessor-face ((t (:foreground "#000000"))))
-;;      (font-lock-reference-face ((t (:bold t :foreground "#000000"))))
-;;      (font-lock-string-face ((t (:foreground "#000000"))))
-;;      (font-lock-type-face ((t (:roman t :foreground "#000000"))))
-;;      (font-lock-variable-name-face ((t (:foreground "#000000"))))
-;;      (font-lock-warning-face ((t (:foreground "#000000")))))))
-;; 
-;; 
-;; 
-;; (defun color-theme-adam-chandra ()
-;;   "Color theme by Adam Saunders, originally ripped off from somebody named Arneson"
-;;   (interactive)
-;;   (color-theme-install
-;;    '(color-theme-adam-chandra
-;;      ((background-color . "black")
-;;       (background-mode . light)
-;;       (background-toolbar-color . "#cf3ccf3ccf3c")
-;;       (border-color . "#000000000000")
-;;       (bottom-toolbar-shadow-color . "#79e77df779e7")
-;;       (cursor-color . "Red")
-;;       (foreground-color . "Beige")
-;;       (top-toolbar-shadow-color . "#fffffbeeffff"))
-;;      ((buffers-tab-face . buffers-tab)
-;;       (cperl-here-face . font-lock-string-face)
-;;       (cperl-invalid-face quote default)
-;;       (cperl-pod-face . font-lock-comment-face)
-;;       (cperl-pod-head-face . font-lock-variable-name-face)
-;;       (ispell-highlight-face . highlight)
-;;       (vc-mode-face . highlight)
-;;       (vm-highlight-url-face . bold-italic)
-;;       (vm-highlighted-header-face . bold)
-;;       (vm-mime-button-face . gui-button-face)
-;;       (vm-summary-highlight-face . bold))
-;;      (default ((t (nil))))
-;;      (bbdb-company ((t (nil))))
-;;      (bbdb-field-name ((t (:bold t))))
-;;      (bbdb-field-value ((t (nil))))
-;;      (bbdb-name ((t (:underline t))))
-;;      (blue ((t (:foreground "SteelBlue1"))))
-;;      (bold ((t (:bold t))))
-;;      (bold-italic ((t (:bold t :foreground "yellow"))))
-;;      (border-glyph ((t (nil))))
-;;      (buffers-tab ((t (:background "black" :foreground "LightSkyBlue"))))
-;;      (cperl-array-face ((t (:bold t :foreground "SkyBlue2"))))
-;;      (cperl-hash-face ((t (:foreground "LightBlue2"))))
-;;      (cperl-invalid-face ((t (:foreground "white"))))
-;;      (cperl-nonoverridable-face ((t (:foreground "chartreuse3"))))
-;;      (custom-button-face ((t (:bold t))))
-;;      (custom-changed-face ((t (:background "SteelBlue1" :foreground "white"))))
-;;      (custom-comment-face ((t (:foreground "white"))))
-;;      (custom-comment-tag-face ((t (:foreground "white"))))
-;;      (custom-documentation-face ((t (nil))))
-;;      (custom-face-tag-face ((t (:underline t))))
-;;      (custom-group-tag-face ((t (:underline t :foreground "SteelBlue1"))))
-;;      (custom-group-tag-face-1 ((t (:underline t :foreground "red"))))
-;;      (custom-invalid-face ((t (:background "red" :foreground "yellow"))))
-;;      (custom-modified-face ((t (:background "SteelBlue1" :foreground "white"))))
-;;      (custom-rogue-face ((t (:background "black" :foreground "pink"))))
-;;      (custom-saved-face ((t (:underline t))))
-;;      (custom-set-face ((t (:background "white" :foreground "SteelBlue1"))))
-;;      (custom-state-face ((t (:foreground "white"))))
-;;      (custom-variable-button-face ((t (:underline t :bold t))))
-;;      (custom-variable-tag-face ((t (:underline t :foreground "SteelBlue1"))))
-;;      (cvs-filename-face ((t (:foreground "white"))))
-;;      (cvs-handled-face ((t (:foreground "pink"))))
-;;      (cvs-header-face ((t (:foreground "green"))))
-;;      (cvs-marked-face ((t (:bold t :foreground "green3"))))
-;;      (cvs-msg-face ((t (:foreground "red"))))
-;;      (cvs-need-action-face ((t (:foreground "yellow"))))
-;;      (cvs-unknown-face ((t (:foreground "grey"))))
-;;      (diff-added-face ((t (nil))))
-;;      (diff-changed-face ((t (nil))))
-;;      (diff-file-header-face ((t (:bold t :background "grey70"))))
-;;      (diff-hunk-header-face ((t (:background "grey85"))))
-;;      (diff-index-face ((t (:bold t :background "grey70"))))
-;;      (diff-removed-face ((t (nil))))
-;;      (dired-face-boring ((t (:foreground "Gray65"))))
-;;      (dired-face-directory ((t (:bold t :foreground "SkyBlue2"))))
-;;      (dired-face-executable ((t (:foreground "Green"))))
-;;      (dired-face-flagged ((t (:background "LightSlateGray"))))
-;;      (dired-face-header ((t (:background "grey75" :foreground "black"))))
-;;      (dired-face-marked ((t (:background "PaleVioletRed"))))
-;;      (dired-face-permissions ((t (:background "grey75" :foreground "black"))))
-;;      (dired-face-setuid ((t (:foreground "Red"))))
-;;      (dired-face-socket ((t (:foreground "magenta"))))
-;;      (dired-face-symlink ((t (:foreground "cyan"))))
-;;      (excerpt ((t (nil))))
-;;      (fixed ((t (:bold t))))
-;;      (font-lock-builtin-face ((t (:foreground "red3"))))
-;;      (font-lock-comment-face ((t (:foreground "LightGray"))))
-;;      (font-lock-constant-face ((t (nil))))
-;;      (font-lock-doc-string-face ((t (:foreground "turquoise"))))
-;;      (font-lock-function-name-face ((t (:foreground "white"))))
-;;      (font-lock-keyword-face ((t (:foreground "green"))))
-;;      (font-lock-preprocessor-face ((t (:foreground "green3"))))
-;;      (font-lock-reference-face ((t (:foreground "red3"))))
-;;      (font-lock-string-face ((t (:foreground "turquoise"))))
-;;      (font-lock-type-face ((t (:foreground "steelblue"))))
-;;      (font-lock-variable-name-face ((t (:foreground "magenta2"))))
-;;      (font-lock-warning-face ((t (:bold t :foreground "Red"))))
-;;      (green ((t (:foreground "green"))))
-;;      (gui-button-face ((t (:background "grey75" :foreground "black"))))
-;;      (gui-element ((t (nil))))
-;;      (highlight ((t (:background "darkseagreen2" :foreground "SteelBlue1"))))
-;;      (html-helper-bold-face ((t (:bold t))))
-;;      (html-helper-italic-face ((t (:bold t :foreground "yellow"))))
-;;      (html-helper-underline-face ((t (:underline t))))
-;;      (hyper-apropos-documentation ((t (:foreground "white"))))
-;;      (hyper-apropos-heading ((t (:bold t))))
-;;      (hyper-apropos-hyperlink ((t (:foreground "sky blue"))))
-;;      (hyper-apropos-major-heading ((t (:bold t))))
-;;      (hyper-apropos-section-heading ((t (:bold t))))
-;;      (hyper-apropos-warning ((t (:bold t :foreground "red"))))
-;;      (info-node ((t (:bold t :foreground "yellow"))))
-;;      (info-xref ((t (:bold t))))
-;;      (isearch ((t (:background "paleturquoise" :foreground "dark red"))))
-;;      (isearch-secondary ((t (:foreground "red3"))))
-;;      (italic ((t (:bold t :foreground "yellow"))))
-;;      (left-margin ((t (nil))))
-;;      (list-mode-item-selected ((t (:background "gray68" :foreground "dark green"))))
-;;      (man-bold ((t (:bold t))))
-;;      (man-heading ((t (:bold t))))
-;;      (man-italic ((t (:foreground "yellow"))))
-;;      (man-xref ((t (:underline t))))
-;;      (message-cited-text ((t (:foreground "orange"))))
-;;      (message-header-contents ((t (:foreground "white"))))
-;;      (message-headers ((t (:bold t :foreground "orange"))))
-;;      (message-highlighted-header-contents ((t (:bold t))))
-;;      (message-url ((t (:bold t :foreground "pink"))))
-;;      (mmm-face ((t (:background "black" :foreground "green"))))
-;;      ; (modeline ((t (:background "LightYellow" :foreground "DarkBlue" :bold t))))
-;;      ; (modeline-buffer-id ((t (:background "Gray80" :foreground "SteelBlue4"))))
-;;      ; (modeline-mousable ((t (:background "Gray80" :foreground "firebrick"))))
-;;      ; (modeline-mousable-minor-mode ((t (:background "Gray80" :foreground "green4"))))
-;;      (paren-blink-off ((t (:foreground "gray80"))))
-;;      (paren-match ((t (:background "dark blue"))))
-;;      (paren-mismatch ((t (:background "DeepPink" :foreground "LightSkyBlue"))))
-;;      (pointer ((t (nil))))
-;;      (primary-selection ((t (:background "gray65" :foreground "DarkBlue"))))
-;;      (red ((t (:foreground "red"))))
-;;      (region ((t (:background "gray65" :foreground "DarkBlue"))))
-;;      (right-margin ((t (nil))))
-;;      (secondary-selection ((t (:background "paleturquoise" :foreground "black"))))
-;;      (shell-option-face ((t (:foreground "SteelBlue4"))))
-;;      (shell-output-2-face ((t (:foreground "green4"))))
-;;      (shell-output-3-face ((t (:foreground "green4"))))
-;;      (shell-output-face ((t (:bold t))))
-;;      (shell-prompt-face ((t (:foreground "red4"))))
-;;      (text-cursor ((t (:background "Red3" :foreground "black"))))
-;;      (toolbar ((t (:background "Gray80" :foreground "black"))))
-;;      (underline ((t (:underline t))))
-;;      (vertical-divider ((t (nil))))
-;;      (vm-xface ((t (:background "white" :foreground "black"))))
-;;      (vmpc-pre-sig-face ((t (:foreground "forestgreen"))))
-;;      (vmpc-sig-face ((t (:foreground "steelblue"))))
-;;      (widget ((t (nil))))
-;;      (widget-button-face ((t (:bold t))))
-;;      (widget-button-pressed-face ((t (:foreground "red"))))
-;;      (widget-documentation-face ((t (:foreground "dark green"))))
-;;      (widget-field-face ((t (:background "gray85" :foreground "black"))))
-;;      (widget-inactive-face ((t (:foreground "dim gray"))))
-;;      (x-face ((t (:background "white" :foreground "black"))))
-;;      (xrdb-option-name-face ((t (:foreground "red"))))
-;;      (yellow ((t (:foreground "yellow"))))
-;;      (nxml-name-face ((t (:foreground "LightBlue"))))
-;;      (nxml-text-face ((t (:foreground "Heather"))))
-;;        (nxml-comment-content-face ((t (:foreground "Gray80"))))
-;;      (nxml-delimited-data-face ((t (:foreground "Heather"))))
-;;      (zmacs-region ((t (:background "gray65")))))))
-;; 
-;; (defun color-theme-printable-bw ()
-;;   (interactive)
-;; 
-;;   (color-theme-install
-;;    '(color-theme-adam-chandra
-;;      ((background-color . "white")
-;;       (background-mode . light)
-;;       (background-toolbar-color . "#cf3ccf3ccf3c")
-;;       (border-color . "#000000000000")
-;;       (bottom-toolbar-shadow-color . "#79e77df779e7")
-;;       (cursor-color . "Red")
-;;       (foreground-color . "Black")
-;;       (top-toolbar-shadow-color . "#fffffbeeffff"))
-;;      ((buffers-tab-face . buffers-tab)
-;;       (cperl-here-face . font-lock-string-face)
-;;       (cperl-invalid-face quote default)
-;;       (cperl-pod-face . font-lock-comment-face)
-;;       (cperl-pod-head-face . font-lock-variable-name-face)
-;;       (ispell-highlight-face . highlight)
-;;       (vc-mode-face . highlight)
-;;       (vm-highlight-url-face . bold-italic)
-;;       (vm-highlighted-header-face . bold)
-;;       (vm-mime-button-face . gui-button-face)
-;;       (vm-summary-highlight-face . bold))
-;; 
-;;      (default ((t (:stipple nil 
-;;                             :background "White" 
-;;                             :foreground "Black" 
-;;                             :inverse-video nil 
-;;                             :box nil 
-;;                             :strike-through nil 
-;;                             :overline nil 
-;;                             :underline nil 
-;;                             :slant normal 
-;;                             :weight normal 
-;;                             :height 90
-;;                             :width normal 
-;;                             :foundry "unknown" 
-;;                             ;; :family "DejaVu Sans Mono"
-;;                   ))))
-;;      (bbdb-company ((t (nil))))
-;;      (bbdb-field-name ((t (:bold t))))
-;;      (bbdb-field-value ((t (nil))))
-;;      (bbdb-name ((t (:underline t))))
-;;      (blue ((t (:foreground "SteelBlue1"))))
-;;      (bold ((t (:bold t))))
-;;      (bold-italic ((t (:bold t :foreground "yellow"))))
-;;      (border-glyph ((t (nil))))
-;;      (buffers-tab ((t (:background "black" :foreground "LightSkyBlue"))))
-;;      (cperl-array-face ((t (:bold t :foreground "SkyBlue2"))))
-;;      (cperl-hash-face ((t (:foreground "LightBlue2"))))
-;;      (cperl-invalid-face ((t (:foreground "white"))))
-;;      (cperl-nonoverridable-face ((t (:foreground "chartreuse3"))))
-;;      (custom-button-face ((t (:bold t))))
-;;      (custom-changed-face ((t (:background "SteelBlue1" :foreground "white"))))
-;;      (custom-comment-face ((t (:foreground "white"))))
-;;      (custom-comment-tag-face ((t (:foreground "white"))))
-;;      (custom-documentation-face ((t (nil))))
-;;      (custom-face-tag-face ((t (:underline t))))
-;;      (custom-group-tag-face ((t (:underline t :foreground "SteelBlue1"))))
-;;      (custom-group-tag-face-1 ((t (:underline t :foreground "red"))))
-;;      (custom-invalid-face ((t (:background "red" :foreground "yellow"))))
-;;      (custom-modified-face ((t (:background "SteelBlue1" :foreground "white"))))
-;;      (custom-rogue-face ((t (:background "black" :foreground "pink"))))
-;;      (custom-saved-face ((t (:underline t))))
-;;      (custom-set-face ((t (:background "white" :foreground "SteelBlue1"))))
-;;      (custom-state-face ((t (:foreground "white"))))
-;;      (custom-variable-button-face ((t (:underline t :bold t))))
-;;      (custom-variable-tag-face ((t (:underline t :foreground "SteelBlue1"))))
-;;      (cvs-filename-face ((t (:foreground "white"))))
-;;      (cvs-handled-face ((t (:foreground "pink"))))
-;;      (cvs-header-face ((t (:foreground "green"))))
-;;      (cvs-marked-face ((t (:bold t :foreground "green3"))))
-;;      (cvs-msg-face ((t (:foreground "red"))))
-;;      (cvs-need-action-face ((t (:foreground "yellow"))))
-;;      (cvs-unknown-face ((t (:foreground "grey"))))
-;;      (diff-added-face ((t (nil))))
-;;      (diff-changed-face ((t (nil))))
-;;      (diff-file-header-face ((t (:bold t :background "grey70"))))
-;;      (diff-hunk-header-face ((t (:background "grey85"))))
-;;      (diff-index-face ((t (:bold t :background "grey70"))))
-;;      (diff-removed-face ((t (nil))))
-;;      (dired-face-boring ((t (:foreground "Gray65"))))
-;;      (dired-face-directory ((t (:bold t :foreground "SkyBlue2"))))
-;;      (dired-face-executable ((t (:foreground "Green"))))
-;;      (dired-face-flagged ((t (:background "LightSlateGray"))))
-;;      (dired-face-header ((t (:background "grey75" :foreground "black"))))
-;;      (dired-face-marked ((t (:background "PaleVioletRed"))))
-;;      (dired-face-permissions ((t (:background "grey75" :foreground "black"))))
-;;      (dired-face-setuid ((t (:foreground "Red"))))
-;;      (dired-face-socket ((t (:foreground "magenta"))))
-;;      (dired-face-symlink ((t (:foreground "cyan"))))
-;;      (excerpt ((t (nil))))
-;;      (fixed ((t (:bold t))))
-;; 
-;;      (font-lock-constant-face						((t (:foreground "black" :bold t  	              ))))
-;;      (font-lock-warning-face						((t (:foreground "black"                          ))))
-;;      (font-lock-builtin-face						((t (:foreground "black" :bold t		              ))))
-;;      (font-lock-comment-face						((t (:foreground "black"            :italic t  		))))
-;;      (font-lock-comment-delimiter-face  ((t (:foreground "black"            :italic t  		))))
-;;      (font-lock-doc-string-face					((t (:foreground "black"            :italic t 		))))
-;;      (font-lock-doc-face		      			((t (:foreground "black"           	:italic t 		))))
-;;      (font-lock-delimiter-face          ((t (:foreground "black"            :italic t 		))))
-;;      (font-lock-function-name-face			((t (:foreground "black" :bold t  	              ))))
-;;      (font-lock-keyword-face						((t (:foreground "black" :bold t  	              ))))
-;;      (font-lock-preprocessor-face				((t (:foreground "black"                          ))))
-;;      (font-lock-reference-face					((t (:foreground "black"                          ))))
-;;      (font-lock-string-face							((t (:foreground "black"                          ))))
-;;      (font-lock-type-face								((t (:foreground "black" :bold t  	              ))))
-;;      (font-lock-variable-name-face			((t (:foreground "black" :bold t  	              ))))
-;; 
-;;      (green ((t (:foreground "green"))))
-;;      (gui-button-face ((t (:background "grey75" :foreground "black"))))
-;;      (gui-element ((t (nil))))
-;;      (highlight ((t (:background "darkseagreen2" :foreground "SteelBlue1"))))
-;;      (html-helper-bold-face ((t (:bold t))))
-;;      (html-helper-italic-face ((t (:bold t :foreground "yellow"))))
-;;      (html-helper-underline-face ((t (:underline t))))
-;;      (hyper-apropos-documentation ((t (:foreground "white"))))
-;;      (hyper-apropos-heading ((t (:bold t))))
-;;      (hyper-apropos-hyperlink ((t (:foreground "sky blue"))))
-;;      (hyper-apropos-major-heading ((t (:bold t))))
-;;      (hyper-apropos-section-heading ((t (:bold t))))
-;;      (hyper-apropos-warning ((t (:bold t :foreground "red"))))
-;;      (info-node ((t (:bold t :foreground "yellow"))))
-;;      (info-xref ((t (:bold t))))
-;;      (isearch ((t (:background "paleturquoise" :foreground "dark red"))))
-;;      (isearch-secondary ((t (:foreground "red3"))))
-;;      (italic ((t (:bold t :foreground "yellow"))))
-;;      (left-margin ((t (nil))))
-;;      (list-mode-item-selected ((t (:background "gray68" :foreground "dark green"))))
-;;      (man-bold ((t (:bold t))))
-;;      (man-heading ((t (:bold t))))
-;;      (man-italic ((t (:foreground "yellow"))))
-;;      (man-xref ((t (:underline t))))
-;;      (message-cited-text ((t (:foreground "orange"))))
-;;      (message-header-contents ((t (:foreground "white"))))
-;;      (message-headers ((t (:bold t :foreground "orange"))))
-;;      (message-highlighted-header-contents ((t (:bold t))))
-;;      (message-url ((t (:bold t :foreground "pink"))))
-;;      (mmm-face ((t (:background "black" :foreground "green"))))
-;;      ; (modeline ((t (:background "LightYellow" :foreground "DarkBlue" :bold t))))
-;;      ; (modeline-buffer-id ((t (:background "Gray80" :foreground "SteelBlue4"))))
-;;      ; (modeline-mousable ((t (:background "Gray80" :foreground "firebrick"))))
-;;      ; (modeline-mousable-minor-mode ((t (:background "Gray80" :foreground "green4"))))
-;;      (paren-blink-off ((t (:foreground "gray80"))))
-;;      (paren-match ((t (:background "dark blue"))))
-;;      (paren-mismatch ((t (:background "DeepPink" :foreground "LightSkyBlue"))))
-;;      (pointer ((t (nil))))
-;;      (primary-selection ((t (:background "gray65" :foreground "DarkBlue"))))
-;;      (red ((t (:foreground "red"))))
-;;      (region ((t (:background "gray65" :foreground "DarkBlue"))))
-;;      (right-margin ((t (nil))))
-;;      (secondary-selection ((t (:background "paleturquoise" :foreground "black"))))
-;;      (shell-option-face ((t (:foreground "SteelBlue4"))))
-;;      (shell-output-2-face ((t (:foreground "green4"))))
-;;      (shell-output-3-face ((t (:foreground "green4"))))
-;;      (shell-output-face ((t (:bold t))))
-;;      (shell-prompt-face ((t (:foreground "red4"))))
-;;      (text-cursor ((t (:background "Red3" :foreground "black"))))
-;;      (toolbar ((t (:background "Gray80" :foreground "black"))))
-;;      (underline ((t (:underline t))))
-;;      (vertical-divider ((t (nil))))
-;;      (vm-xface ((t (:background "white" :foreground "black"))))
-;;      (vmpc-pre-sig-face ((t (:foreground "forestgreen"))))
-;;      (vmpc-sig-face ((t (:foreground "steelblue"))))
-;;      (widget ((t (nil))))
-;;      (widget-button-face ((t (:bold t))))
-;;      (widget-button-pressed-face ((t (:foreground "red"))))
-;;      (widget-documentation-face ((t (:foreground "dark green"))))
-;;      (widget-field-face ((t (:background "gray85" :foreground "black"))))
-;;      (widget-inactive-face ((t (:foreground "dim gray"))))
-;;      (x-face ((t (:background "white" :foreground "black"))))
-;;      (xrdb-option-name-face ((t (:foreground "red"))))
-;;      (yellow ((t (:foreground "yellow"))))
-;;      (nxml-name-face ((t (:foreground "LightBlue"))))
-;;      (nxml-text-face ((t (:foreground "Heather"))))
-;;        (nxml-comment-content-face ((t (:foreground "Gray80"))))
-;;      (nxml-delimited-data-face ((t (:foreground "Heather"))))
-;;      (zmacs-region ((t (:background "gray65")))))))
 
 (defun dired-expand-all-subdirs ()
   (interactive)
@@ -897,6 +559,199 @@
       ((fn (apply-partially 'ask-before-kill-buffer (current-buffer))))
     (add-to-list 'kill-buffer-query-functions fn)))
 
-;; (add-to-list 'kill-buffer-hook 'ask-before-kill-buffer)
-;; (set 'kill-buffer-query-functions '(server-kill-buffer-query-function process-kill-buffer-query-function))
+
+(setq *all-groups*
+      '(("default"
+         ("scala" (mode . scala-mode))
+         ("java"  (mode . java-mode))
+         ("dired" (mode . dired-mode))
+         ("hs" (mode . haskell-mode))
+         ("inf-*" (or
+                  (mode . inf-haskell-mode)
+                  (name . "^\\*ansi-term\\*$")
+                  (name . "^\\*haskell\\*$")
+                  ))
+         ("markup" (or 
+                  (mode . nxml-mode)
+                  (mode . org-mode)
+                  (mode . markdown-mode)))
+         ("js" (or 
+                  (mode . coffee-mode)
+                  (mode . javascript-mode)
+                  (mode . javascript-ide-mode)))
+         ("emacs" (mode . emacs-lisp-mode))
+         ("*..*" (name . "^\\*.*\\*$"))
+         )))
+
+(setq *scala-groups*
+      '(("default"
+         ("scala" (mode . scala-mode))
+         ("journal" (filename . "/project-planning/org-files/"))
+         ("emacs" (mode . emacs-lisp-mode))
+         ("dired" (mode . dired-mode))
+         ("*..*" (name . "^\\*.*\\*$"))
+         )))
+
+(setq *haskell-groups*
+      '(("default"
+         ("hs" (mode . haskell-mode))
+         ("ghc*" (or
+                  (mode . inf-haskell-mode)
+                  (name . "^\\*ansi-term\\*$")
+                  (name . "^\\*haskell\\*$")
+                  ))
+         ("dired" (mode . dired-mode))
+         ("*..*" (name . "^\\*.*\\*$"))
+         )))
+
+(setq ibuffer-saved-filter-groups *all-groups*)
+
+(add-hook 'ibuffer-mode-hook
+          (lambda ()
+            ;; Use human readable Size column instead of original one
+            (define-ibuffer-column size-h
+              (:name "Size" :inline t)
+              (cond
+               ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
+               ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
+               (t (format "%8d" (buffer-size)))))
+
+            ;; Modify the default ibuffer-formats
+            (setq ibuffer-formats
+                  '((mark modified read-only " "
+                          (name 35 35 :right :elide)
+                          " "
+                          (size-h 9 -1 :right)
+                          " "
+                          (mode 16 16 :left :elide)
+                          " "
+                          filename-and-process)))
+
+            (ibuffer-switch-to-saved-filter-groups "default")
+
+            ))
+
+
+
+
+(defun table-align-imports ()
+  (interactive)
+  (table-capture (point) (mark) ;; (table-capture BEG END 
+                 "[[:space:]]"  ;;  &optional COL-DELIM-REGEXP 
+                 "\n"           ;;  ROW-DELIM-REGEXP 
+                 "left"         ;;  JUSTIFY 
+                 1              ;;  MIN-CELL-WIDTH 
+                 )              ;;  COLUMNS)
+  ;;(replace-regexp REGEXP TO-STRING &optional DELIMITED START END)
+  ;; (table-release)
+)
+
+
+;; Todo: look into eev mode
+(defun cs (pathre codere)
+  (interactive "sPath RE: \nMCode RE: ")
+  (compilation-start 
+   (concat "csearch -n -f '" pathre "$' '" codere "'")
+   'grep-mode
+   )
+  )
+
+(defun cs/class (codere)
+  (interactive "MCode RE: ")
+  (compilation-start 
+   (concat "csearch -n -f '.*\.scala$' '(class|trait|object)\\s+" codere "'")
+   'grep-mode
+   )
+  )
+
+(defun cs/def (codere)
+  (interactive "MCode RE: ")
+  (compilation-start 
+   (concat "csearch -n -f '.*\.scala$' 'def\\s+" codere "[\\s(:[]'")
+   'grep-mode
+   )
+  )
+
+
+;; (defun code-search (command-args)
+;;   (interactive
+;;    (progn
+;;      (let ((default "csearch"))
+;;        (list (read-shell-command "Run code-search (like this): "
+;;                                  (if current-prefix-arg default "csearch")
+;;                                  'grep-history
+;;                                  (if current-prefix-arg nil default))))))
+;; 
+;;   ;; Setting process-setup-function makes exit-message-function work
+;;   ;; even when async processes aren't supported.
+;;   (compilation-start (if (and grep-use-null-device null-device)
+;;                          (concat command-args " " null-device)
+;;                        command-args)
+;;                      'grep-mode))
+;; 
+;; (defun compilation-start (command &optional mode name-function highlight-regexp)
+;;   "Run compilation command COMMAND (low level interface).
+;; If COMMAND starts with a cd command, that becomes the `default-directory'.
+;; The rest of the arguments are optional; for them, nil means use the default.
+;; 
+;; MODE is the major mode to set in the compilation buffer.  Mode
+;; may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'.
+;; 
+;; If NAME-FUNCTION is non-nil, call it with one argument (the mode name)
+;; to determine the buffer name.  Otherwise, the default is to
+;; reuses the current buffer if it has the proper major mode,
+;; else use or create a buffer with name based on the major mode.
+;; 
+;; If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight
+;; the matching section of the visited source line; the default is to use the
+;; global value of `compilation-highlight-regexp'.
+
+
+
+(defun load-cedet () 
+  (interactive)
+  ;; Load CEDET.
+  ;; See cedet/common/cedet.info for configuration details.
+  ;; IMPORTANT: For Emacs >= 23.2, you must place this *before* any
+  ;; CEDET component (including EIEIO) gets activated by another 
+  ;; package (Gnus, auth-source, ...).
+  (load-file (concat *site-lisp* "cedet/common/cedet.el"))
+
+  ;; Enable EDE (Project Management) features
+  (global-ede-mode 1)
+
+  ;; Enable EDE for a pre-existing C++ project
+  ;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
+
+
+  ;; Enabling Semantic (code-parsing, smart completion) features
+  ;; Select one of the following:
+
+  ;; * This enables the database and idle reparse engines
+  (semantic-load-enable-minimum-features)
+
+  ;; * This enables some tools useful for coding, such as summary mode,
+  ;;   imenu support, and the semantic navigator
+  (semantic-load-enable-code-helpers)
+
+  ;; * This enables even more coding tools such as intellisense mode,
+  ;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+  ;; (semantic-load-enable-gaudy-code-helpers)
+
+  ;; * This enables the use of Exuberant ctags if you have it installed.
+  ;;   If you use C++ templates or boost, you should NOT enable it.
+  ;; (semantic-load-enable-all-exuberent-ctags-support)
+  ;;   Or, use one of these two types of support.
+  ;;   Add support for new languages only via ctags.
+  ;; (semantic-load-enable-primary-exuberent-ctags-support)
+  ;;   Add support for using ctags as a backup parser.
+  ;; (semantic-load-enable-secondary-exuberent-ctags-support)
+
+  ;; Enable SRecode (Template management) minor-mode.
+  ;; (global-srecode-minor-mode 1)
+
+  ;; cedet extensions
+  (require 'sr-speedbar)
+  ;; (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
+)
 

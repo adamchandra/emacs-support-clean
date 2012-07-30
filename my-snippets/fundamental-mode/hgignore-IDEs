@@ -12,6 +12,7 @@
 .ensime
 
 ## ignore sbt
+.lib
 lib_managed/
 src_managed/
 target/

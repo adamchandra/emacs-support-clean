@@ -1,0 +1,5 @@
+# Author: acs
+# name: import-java_io_File
+# key: import-java_io_File
+# --
+import java.io.{File => JFile}

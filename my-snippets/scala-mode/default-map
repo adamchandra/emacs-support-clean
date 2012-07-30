@@ -1,0 +1,5 @@
+# Author: acs
+# name: default-map
+# key: default-map
+# --
+val defaultMap = m.Map[Int, List[Int]]().withDefaultValue(List())

@@ -1,0 +1,6 @@
+
+# author: adamchandra, using gen-ucs-snips.py
+# name: EMPTY SET:/empty
+# key: /empty
+# --
+`(ucs-insert (cdr (assoc-string "EMPTY SET" (ucs-names) t)))`

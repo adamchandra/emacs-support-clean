@@ -2,5 +2,6 @@
 # name: logger
 # key: logger
 # --
-val log = Logger.getLogger(classOf[$1].getName)
-$0
+// configure with: /main/resources/logback.xml and/or /test/resources/logback-test.xml 
+import com.weiglewilczek.slf4s.Logger
+object MyClazz extends App with Logger {}

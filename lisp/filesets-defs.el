@@ -28,15 +28,20 @@
 
 (defconst *home-dir* (expand-file-name "~/"))
 (defconst *projects* (expand-file-name "~/projects/"))
-(defconst *emacs-support* (concat *projects* "emacs-support/"))
-(defconst *personal-stuff* (concat *projects* "personal-stuff/"))
-(defconst *project-planning* (concat *projects* "project-planning/"))
-(defconst *external-projects* (concat *projects* "external-projects/"))
+(defconst *the-outhouse* (concat *projects* "the-outhouse/"))
+(defconst *external-projects* *the-outhouse*)
+(defconst *the-toolshed* (concat *projects* "the-toolshed/"))
+(defconst *the-library* (concat *projects* "the-library/"))
+(defconst *the-kitchen* (concat *projects* "the-kitchen/"))
 
-(defconst *rexa2-dev* (concat *projects* "rexa2s/rexa2-dev/"))
+(defconst *project-planning* (concat *the-library* "project-planning/"))
+(defconst *emacs-support* (concat *the-toolshed* "emacsen/emacs-support/"))
 (defconst *scala-sources* (concat *external-projects* "scala/scala/src/"))
-(defconst *scalaz-root* (concat *external-projects* "scala/scalazeds/scalaz-github-incoming/"))
-(defconst *scala-meta-project* (concat *projects* "scala-meta-project/"))
+(defconst *scalaz-root* (concat *external-projects* "scala/scalazeds/"))
+(defconst *scalaz-six-src*   (concat *external-projects* "scala/scalazeds/combined-scalaz-six-src"))
+(defconst *scalaz-seven-src* (concat *external-projects* "scala/scalazeds/combined-scalaz-seven-src"))
+(defconst *lift-src* (concat *external-projects* "scala/lifts/combined-liftweb-src/"))
+
 
 (filesets
  '("emacs/dotemacs"
@@ -54,22 +59,25 @@
     (under *scala-sources*
            "scala")))
 
- '("rexa2/src"
+ '("scala/gists"
    (files
-    (under *rexa2-dev*
-           "src"
-           "front/src")))
-
- '("scala/genesis/bucket"
-   (files
-    (under *scala-meta-project*
+    (under *the-kitchen*
            "scala-genesis/src/main/scala/cc/acs/BitBucket.scala")))
 
- '("scala/scalaz"
+ '("scalaz/6"
    (files
     (under *scalaz-root*
-           "example/src/main/scala/scalaz/example"
-           "core/src/main/scala/scalaz")))
+           "combined-scalaz-six-src")))
+
+ '("scalaz/7"
+   (files
+    (under *scalaz-root*
+           "combined-scalaz-seven-src")))
+
+ '("lift/src"
+   (files
+    (under *lift-src*
+           "src")))
 
  '("lift/css"
    (files
@@ -81,11 +89,6 @@
     (under *emacs-root*
            "lisp/filesets-defs.el")))
 
-
- '("emacs/filesets"
-   (files
-    (under *emacs-support*
-           "lisp/filesets-defs.el")))
  '("rc"
    (files
     (under "~/"
