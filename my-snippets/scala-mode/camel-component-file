@@ -1,0 +1,22 @@
+# Author: acs
+# name: camel-component-file
+# key: camel-component-file
+# --
+
+def formatComponent(component:String, args:String):String = {
+  val lines = args.trim.stripMargin.split("\n").toList.map(_.trim)
+  component.trim + "?" + lines.mkString("&")
+}
+
+
+// producer options
+to(formatComponent(
+  "file:/tmp/pstotext.sh",
+  """
+  |  fileExist=Override|Append|Fail|Ignore
+  |  tempPrefix=.tmpfile-
+  |  tempFileName=.tmpfilename	
+  |  keepLastModified=false	
+  |  eagerDeleteTargetFile=true	
+  |  doneFileName=${filename}.done
+  """))

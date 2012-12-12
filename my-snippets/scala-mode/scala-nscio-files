@@ -1,0 +1,12 @@
+# Author: acs
+# name: scala-nscio-files
+# key: scala/nscio/files
+# --
+import java.io.{File => JFile}
+import scala.tools.nsc.io.{File => SFile}
+import scala.tools.nsc.io.{Path => SPath}
+import scala.tools.nsc.io.{Directory => SDir}
+
+val res = getClass.getResource("/my-resource").toURI()
+val f1 = SFile(SPath(".") / "d1")
+val f2 = SFile("a/b/c")

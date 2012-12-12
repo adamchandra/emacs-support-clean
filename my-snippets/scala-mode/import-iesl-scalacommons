@@ -1,0 +1,6 @@
+# Author: acs
+# name: import-iesl-scalacommons
+# key: import-iesl-scalacommons
+# --
+import edu.umass.cs.iesl.scalacommons.util.StringOps._
+import edu.umass.cs.iesl.scalacommons.util.FileOps._

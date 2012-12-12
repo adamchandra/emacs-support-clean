@@ -1,5 +1,5 @@
 (require 'python)
-(require 'ipython)
+;; (require 'ipython)
 
 ; (add-hook 'python-mode-hook
 ; 	  (lambda ()

@@ -1,0 +1,9 @@
+# Author: acs
+# name: camel-message-handler
+# key: camel-message-handler
+# --
+(((m:Message) => {
+    val res = m.bodyAs[String]
+    m
+  })
+)

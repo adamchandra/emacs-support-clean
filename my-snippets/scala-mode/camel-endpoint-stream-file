@@ -1,0 +1,21 @@
+# Author: acs
+# name: camel-endpoint-stream-file
+# key: camel-endpoint-stream-file
+# --
+  // pipe out output to file 
+  val pstotextStreamInputs = new RouteBuilder {
+    // |  fileName={{var.path}}/run/pstotext-queue-grouped-1.in
+    // |  scanStream=true
+    // |  scanStreamDelay=1000
+    // |  retry=true
+    from(
+      fmtcomp("stream:file", """
+              |  fileName=pstotext-queue-grouped-1.in
+              |  scanStream=true
+              |  groupLines=1
+              """)) ==> {
+        transform(_.in[java.util.ArrayList[String]].asScala.toSeq)
+        to("log:info")
+        to("direct:create.script.pstotext")
+      }
+  }

@@ -1,0 +1,5 @@
+# Author: acs
+# name: scalaz-iterate
+# key: scalaz/iterate
+# --
+val str = (0.iterate[Stream](_+1).takeWhile(_<10)

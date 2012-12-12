@@ -1,0 +1,6 @@
+# Author: acs
+# name: scalaz-sequence-validation
+# key: scalaz-sequence-validation
+# --
+val ll: List[ValidationNEL[String, Int]]= List(1.success.liftFailNel, 2.success.liftFailNel)
+val ls = ll.sequence[({type λ[α]=ValidationNEL[String, α]})#λ, Int]

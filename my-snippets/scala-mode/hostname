@@ -2,14 +2,6 @@
 # name: hostname
 # key: /hostname
 # --
-  def serverHostname(): String = { 
-    import java.net.{InetAddress, UnknownHostException}
-    try {
-      val inetAddress = InetAddress.getLocalHost();
-      val ipAddr = inetAddress.getAddress();
-      val hostname = inetAddress.getCanonicalHostName();
-      hostname
-    } catch {
-      case e:UnknownHostException => "localhost"
-    }
-  }
+
+import java.net.InetAddress
+val hostname = java.net.InetAddress.getLocalHost.getCanonicalHostName

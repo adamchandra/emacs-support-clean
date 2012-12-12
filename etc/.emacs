@@ -6,6 +6,8 @@
  '(auto-install-directory "~/emacs/auto-install-lisp")
  '(auto-install-install-confirm t)
  '(auto-install-replace-confirm t)
+ '(bookmark-default-file "~/emacs/bookmarks/index.bmk")
+ '(bookmark-version-control (quote nospecial))
  '(case-fold-search t)
  '(current-language-environment "Latin-1")
  '(default-input-method "latin-1-prefix")
@@ -151,6 +153,20 @@
   (require 'cl))
 ;; (require 'cl)
 
+
+(defconst *home-emacs-support* (expand-file-name "~/emacs/"))
+(defconst *emacs-root*
+      (cond
+			 ((file-directory-p *home-emacs-support*) *home-emacs-support*)
+			 (t nil)))
+
+(defconst *site-lisp* (expand-file-name (concat *emacs-root* "site-lisp/")))
+(defconst *bookmark-dir* (expand-file-name (concat *emacs-root* "bookmarks/")))
+(defconst *orgfile-dir* (expand-file-name "~/projects/the-library/project-planning/org-files/"))
+
+
+(defconst *full-elisp-available* (not (null *emacs-root*)))
+
 (defun assorted-customizations()
   (interactive)
   (require 'tramp)
@@ -255,14 +271,36 @@
     (global-set-key 
      (car key-fn) 
      (cadr key-fn)))
+
+
+  (defun set-key-local (keydef) 
+    (let ((key-binding (car keydef))
+          (fun (cadr keydef))
+          (mode-hook (caddr keydef)))
+      (add-hook mode-hook
+                '(lambda ()
+                   (local-set-key key-binding fun)))))
+
+
   (mapc 'setkey
         '(
           ([(control ?c) (control ?m) ] execute-extended-command)
           ([(control ?c) (?m)         ] execute-extended-command)
           ([(control ?x) (control ?m) ] execute-extended-command)
           ([(control ?x) (m)          ] execute-extended-command)
+          ([(meta ?\ )                ] execute-extended-command)
           ([(control ?c) (control ?k) ] kill-region)
           ([(meta ?w)                 ] kill-ring-save)
+
+          ;; change font size, interactively
+          ([(control ?=)              ] zoom-in)
+          ([(control ?-)              ] zoom-out)
+
+          ;; 
+          ([(meta ?a)                 ] backward-char)
+          ;; ([(meta ?s)                 ] kill-ring-save)
+          ([(meta ?d)                 ] forward-char)
+
           ([(control ?y)              ] yank)
           ([(control ?w)              ] backward-kill-word)
           ([(control ?x) (control ?k) ] kill-region)
@@ -282,34 +320,38 @@
           ([(control ?\()             ] (lambda() (interactive) (other-window -1)))
           ([(control meta ?0)         ] winner-redo)
           ([(control meta ?9)         ] winner-undo)
-          ;; ([(tab)                     ] my-indent-function)
-          ;; ([(control ?i)              ] my-indent-function)
           ([(control kp-subtract)     ] delete-window)
           ([(meta ?\\)                ] kill-current-buffer)
           ([(meta ?/)                 ] hippie-expand)
           ([(shift kp-subtract)       ] kill-current-buffer-and-window)
           ([(shift right)             ] picture-forward-column)
           ([(shift ?\ )               ] just-one-space)
-          ([(meta ?\ )                ] yas/expand)
-          ([f5                        ] mode-compile)   	  
+          ([(meta ?>)                 ] (lambda() (interactive) (find-file-existing (concat *orgfile-dir* "bookmark-index.org"))))
           ([f6                        ] filesets-open)
           ([(meta f6)                 ] filesets-close)
           ([(control XF86Forward)     ] find-grep-dired)
           ([f12                       ] revert-buffer-and-refind-position)
           ([(control tab)             ] sr-speedbar-toggle)
+          ([(control ?J)              ] ace-jump-mode)
+          ([(control ?H)              ] ace-jump-mode-pop-mark)
+
+          ([(control ?>) (?s) (?o)    ] csearch-occur)
+          ([(control ?>) (?s) (?c)    ] csearch-class)
+          ([(control ?>) (?s) (?d)    ] csearch-def)
+
+
           ))
+
+  ;; mode-specific hooks
+	(add-hook 'org-mode-hook
+						'(lambda ()
+							 (local-set-key [(meta ?.)] 'org-open-at-point)
+							 (local-set-key [(meta ?,)] 'org-mark-ring-goto)
+							 ))
+
+
   )
 
-
-(defconst *home-emacs-support* (expand-file-name "~/emacs/"))
-(defconst *emacs-root*
-      (cond
-			 ((file-directory-p *home-emacs-support*) *home-emacs-support*)
-			 (t nil)))
-
-(defconst *site-lisp* (expand-file-name (concat *emacs-root* "site-lisp/")))
-
-(defconst *full-elisp-available* (not (null *emacs-root*)))
 
 (defun setup-paths () 
   (interactive)
@@ -364,6 +406,10 @@
   (cond
    (*full-elisp-available*
 		(progn
+      (require 'grep+)
+      (require 'compile-)
+      (require 'compile)
+      (require 'compile+)
 			(require 'smooth-scrolling)
 			(require 'parenface)
 			(require 'dired-aux)
@@ -418,7 +464,11 @@
   (add-to-list 'auto-mode-alist '("\\.ya?ml$"  . yaml-mode))
   (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
   (add-to-list 'auto-mode-alist '("Cakefile"   . coffee-mode))
-  (add-to-list 'auto-mode-alist '("\\.styl$"   . sws-mode))
+  ;; significant whitespace mode
+  (add-to-list 'auto-mode-alist '("\\.styl$"   . sws-mode)) 
+  ;; sws for yaml-like property files
+  (add-to-list 'auto-mode-alist '("\\.(props?|properties)$"   . sws-mode))
+
   (add-to-list 'auto-mode-alist '("\\.less$"   . less-css-mode))
   (add-to-list 'auto-mode-alist '("\\.jade$"   . jade-mode))
   (add-to-list 'auto-mode-alist '("\\.scaml$"  . jade-mode))
@@ -426,6 +476,8 @@
   (add-to-list 'auto-mode-alist '("\\.js$"     . javascript-mode))
   (add-to-list 'auto-mode-alist '("\\.md"      . markdown-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode))
+  (add-to-list 'auto-mode-alist '("[^/]\\.dired$" . dired-virtual-mode))
+
 
   (cond ((eq window-system nil) 
 				 ;; Running in a terminal =============
@@ -449,12 +501,13 @@
 
 
 
+
 ;; MINI HOWTO: open .scala file. Ensure bin/server.sh is executable. M-x ensime
 
 (defun scala-mode-setup()
   (interactive)
   (require 'ensime)
-  (require 'scala-mode-auto)
+  ;; (require 'scala-mode-auto)
   (require 'scala-mode)
   (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
   (defvar ensime-scaladoc-stdlib-url-base "http://www.scala-lang.org/api/current")
@@ -647,64 +700,6 @@
 )
 
 
-;; Todo: look into eev mode
-(defun cs (pathre codere)
-  (interactive "sPath RE: \nMCode RE: ")
-  (compilation-start 
-   (concat "csearch -n -f '" pathre "$' '" codere "'")
-   'grep-mode
-   )
-  )
-
-(defun cs/class (codere)
-  (interactive "MCode RE: ")
-  (compilation-start 
-   (concat "csearch -n -f '.*\.scala$' '(class|trait|object)\\s+" codere "'")
-   'grep-mode
-   )
-  )
-
-(defun cs/def (codere)
-  (interactive "MCode RE: ")
-  (compilation-start 
-   (concat "csearch -n -f '.*\.scala$' 'def\\s+" codere "[\\s(:[]'")
-   'grep-mode
-   )
-  )
-
-
-;; (defun code-search (command-args)
-;;   (interactive
-;;    (progn
-;;      (let ((default "csearch"))
-;;        (list (read-shell-command "Run code-search (like this): "
-;;                                  (if current-prefix-arg default "csearch")
-;;                                  'grep-history
-;;                                  (if current-prefix-arg nil default))))))
-;; 
-;;   ;; Setting process-setup-function makes exit-message-function work
-;;   ;; even when async processes aren't supported.
-;;   (compilation-start (if (and grep-use-null-device null-device)
-;;                          (concat command-args " " null-device)
-;;                        command-args)
-;;                      'grep-mode))
-;; 
-;; (defun compilation-start (command &optional mode name-function highlight-regexp)
-;;   "Run compilation command COMMAND (low level interface).
-;; If COMMAND starts with a cd command, that becomes the `default-directory'.
-;; The rest of the arguments are optional; for them, nil means use the default.
-;; 
-;; MODE is the major mode to set in the compilation buffer.  Mode
-;; may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'.
-;; 
-;; If NAME-FUNCTION is non-nil, call it with one argument (the mode name)
-;; to determine the buffer name.  Otherwise, the default is to
-;; reuses the current buffer if it has the proper major mode,
-;; else use or create a buffer with name based on the major mode.
-;; 
-;; If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight
-;; the matching section of the visited source line; the default is to use the
-;; global value of `compilation-highlight-regexp'.
 
 
 
@@ -755,3 +750,245 @@
   ;; (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 )
 
+
+
+(defun zoom-in ()
+  "Increase font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+      		      :height
+		      (+ (face-attribute 'default :height)
+		         10)))
+
+(defun zoom-out ()
+  "Decrease font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+      		      :height
+		      (- (face-attribute 'default :height)
+		         10)))
+
+
+
+(defun config-ace-jump-mode ()
+  ;;
+  ;; ace jump mode major function
+  ;; 
+  ;; (add-to-list 'load-path "/full/path/where/ace-jump-mode.el/in/")
+  (require 'ace-jump-mode)
+  (autoload
+    'ace-jump-mode
+    "ace-jump-mode"
+    "Emacs quick move minor mode"
+    t)
+
+
+
+  ;; 
+  ;; enable a more powerful jump back function from ace jump mode
+  ;;
+  (autoload
+    'ace-jump-mode-pop-mark
+    "ace-jump-mode"
+    "Ace jump back:-)"
+    t)
+
+  (eval-after-load "ace-jump-mode"
+    '(ace-jump-mode-enable-mark-sync))
+
+  )
+
+(config-ace-jump-mode)
+
+
+
+;; Code Search functions
+
+
+(setq *csearch-index-dir* "/home/saunders/projects/the-kitchen/var/run/cindex/")
+(setq *csearch-index* "/home/saunders/projects/the-kitchen/var/run/cindex/.cindex-data")
+
+;; Todo: look into eev mode
+(defun cs/path (pathre codere)
+  (interactive "sPath RE: \nMCode RE: ")
+  (compilation-start 
+   (concat "csearch -n -f '" pathre "' '" codere "'")
+   'grep-mode
+   )
+  )
+
+(defun cs/ext (pathre codere)
+  (interactive "sPath RE: \nMCode RE: ")
+  (compilation-start 
+   (concat "csearch -n -f '\." pathre "$' '" codere "'")
+   'grep-mode
+   )
+  )
+
+
+
+;; (defun symbol-string-at-point ()
+;;   (interactive)
+;;   (let* ((bounds (bounds-of-thing-at-point 'symbol))
+;; 
+;;          (thing-string (buffer-substring (car bounds) (cdr bounds))))
+;;     (message thing-string)
+;;     thing-string)
+;;   )
+
+(defun symbol-string-at-point ()
+  (interactive)
+  (let* ((bounds (bounds-of-thing-at-point 'symbol)))
+    (if bounds
+        (let ((thing-string (buffer-substring (car bounds) (cdr bounds))))
+          (message thing-string)
+          thing-string))))
+
+
+
+(defun csearch-def (codere)
+  (interactive
+   (let ((default-sym (symbol-string-at-point)))
+     (list 
+      (read-string "def> " default-sym))))
+
+  (let ((compilation-environment (list 
+                                  (concat "CSEARCHINDEX=" *csearch-index*))))
+    (compilation-start 
+     (concat "csearch -n -f '.*\.scala$' 'def\\s+" codere "[\\s(:[]'")
+     'grep-mode
+     )))
+
+
+(defun csearch-occur (codere)
+  (interactive
+   (let ((default-sym (symbol-string-at-point)))
+     (list 
+      (read-string "occurs> " default-sym))))
+
+  (let ((compilation-environment (list 
+                                  (concat "CSEARCHINDEX=" *csearch-index*))))
+    (compilation-start 
+     (concat "csearch -n -f '.*\.scala$' '\\W" codere "\\W'")
+     'grep-mode
+     )))
+
+
+(defun csearch-class (codere)
+  (interactive
+   (let ((default-sym (symbol-string-at-point)))
+     (list 
+      (read-string "class> " default-sym))))
+
+  (let ((compilation-environment (list 
+                                  (concat "CSEARCHINDEX=" *csearch-index*))))
+    (compilation-start 
+     (concat "csearch -n -f '.*\.scala$' '(class|trait|object)\\s+" codere "[\\s([]'")
+     'grep-mode
+     )))
+
+
+
+;; (defun code-search (command-args)
+;;   (interactive
+;;    (progn
+;;      (let ((default "csearch"))
+;;        (list (read-shell-command "Run code-search (like this): "
+;;                                  (if current-prefix-arg default "csearch")
+;;                                  'grep-history
+;;                                  (if current-prefix-arg nil default))))))
+;; 
+;;   ;; Setting process-setup-function makes exit-message-function work
+;;   ;; even when async processes aren't supported.
+;;   (compilation-start (if (and grep-use-null-device null-device)
+;;                          (concat command-args " " null-device)
+;;                        command-args)
+;;                      'grep-mode))
+;; 
+;; (defun compilation-start (command &optional mode name-function highlight-regexp)
+;;   "Run compilation command COMMAND (low level interface).
+;; If COMMAND starts with a cd command, that becomes the `default-directory'.
+;; The rest of the arguments are optional; for them, nil means use the default.
+;; 
+;; MODE is the major mode to set in the compilation buffer.  Mode
+;; may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'.
+;; 
+;; If NAME-FUNCTION is non-nil, call it with one argument (the mode name)
+;; to determine the buffer name.  Otherwise, the default is to
+;; reuses the current buffer if it has the proper major mode,
+;; else use or create a buffer with name based on the major mode.
+;; 
+;; If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight
+;; the matching section of the visited source line; the default is to use the
+;; global value of `compilation-highlight-regexp'.
+
+
+
+;; grep buffer behavior
+(add-to-list 'same-window-buffer-names "*grep*")
+
+(defun kill-grep-window ()
+  (destructuring-bind (window major-mode)
+      (with-selected-window (next-window (selected-window))
+        (list (selected-window) major-mode))
+    (when (eq major-mode 'grep-mode)
+      (delete-window window))))
+
+(add-hook 'next-error-hook 'kill-grep-window)
+
+
+
+
+(defvar find-file-root-prefix (if (featurep 'xemacs) "/[sudo/root@localhost]" "/sudo:root@localhost:" )
+  "*The filename prefix used to open a file with `find-file-root'.")
+
+(defvar find-file-root-history nil
+  "History list for files found using `find-file-root'.")
+
+(defvar find-file-root-hook nil
+  "Normal hook for functions to run after finding a \"root\" file.")
+
+(defun find-file-root ()
+  "*Open a file as the root user.
+   Prepends `find-file-root-prefix' to the selected file name so that it
+   maybe accessed via the corresponding tramp method."
+
+  (interactive)
+  (require 'tramp)
+  (let* ( ;; We bind the variable `file-name-history' locally so we can
+	 ;; use a separate history list for "root" files.
+	 (file-name-history find-file-root-history)
+	 (name (or buffer-file-name default-directory))
+	 (tramp (and (tramp-tramp-file-p name)
+		     (tramp-dissect-file-name name)))
+	 path dir file)
+
+    ;; If called from a "root" file, we need to fix up the path.
+    (when tramp
+      (setq path (tramp-file-name-localname tramp)
+	    dir (file-name-directory path)))
+
+    (when (setq file (read-file-name "Find file (UID = 0): " dir path))
+      (find-file (concat find-file-root-prefix file))
+      ;; If this all succeeded save our new history list.
+      (setq find-file-root-history file-name-history)
+      ;; allow some user customization
+      (run-hooks 'find-file-root-hook))))
+
+(global-set-key [(control x) (control r)] 'find-file-root)
+
+(defface find-file-root-header-face
+  '((t (:foreground "white" :background "red3")))
+  "*Face use to display header-lines for files opened as root.")
+
+(defun find-file-root-header-warning ()
+  "*Display a warning in header line of the current buffer.
+   This function is suitable to add to `find-file-root-hook'."
+  (let* ((warning "WARNING: EDITING FILE AS ROOT!")
+	 (space (+ 6 (- (window-width) (length warning))))
+	 (bracket (make-string (/ space 2) ?-))
+	 (warning (concat bracket warning bracket)))
+    (setq header-line-format
+	  (propertize  warning 'face 'find-file-root-header-face))))
+
+(add-hook 'find-file-root-hook 'find-file-root-header-warning)

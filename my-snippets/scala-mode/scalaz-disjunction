@@ -1,0 +1,5 @@
+# Author: acs
+# name: scalaz-disjunction
+# key: /dis
+# --
+${1:leftV} \/ ${2:rightV}$0

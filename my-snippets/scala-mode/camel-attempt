@@ -1,0 +1,14 @@
+# Author: acs
+# name: camel-attempt
+# key: camel-attempt
+# --
+attempt {
+  (((m:Message) => {
+    val result = m.bodyAs[C]
+    m
+  })
+   >=> to("direct:z")
+ )
+} fallback {
+  case e:Throwable => log("ERROR: " + e)
+}

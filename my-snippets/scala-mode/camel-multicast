@@ -1,0 +1,8 @@
+# Author: acs
+# name: camel-multicast
+# key: camel-multicast
+# --
+multicast(
+  to("direct:a"),
+  to("direct:b")
+)

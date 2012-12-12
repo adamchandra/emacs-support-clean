@@ -1,0 +1,8 @@
+# Author: acs
+# name: scala-io-imports
+# key: scala-io-imports
+# --
+import scalax.file.Path
+import Path._
+import scalax.file.PathSet
+import scalax.file.PathMatcher._
