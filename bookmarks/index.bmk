@@ -2,24 +2,38 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(#1=(#("val" 0 3
+(#1=(#("nav" 0 3
 			(bmkp-full-record #1#))
-		(tags "tags" "some")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala")
 		(buffer-name . "nav.scala")
-		(front-context-string . "  val login = GE")
-		(rear-context-string . "th Controller {\n")
+		(front-context-string . "package nav\n\nimp")
+		(rear-context-string)
 		(front-context-region-string)
 		(rear-context-region-string)
 		(visits . 0)
-		(time . #2=(20692 45252 629682))
+		(time . #2=(20692 46888 387376))
 		(created . #2#)
-		(position . 1307)
-		(end-position . 1307))
-#1=(#("Auth.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala', position 1" help-echo #2#)
-			1 10
+		(position . 1)
+		(end-position . 1))
+#1=(#("nav" 0 1
+			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala', position 4659" help-echo #2#)
+			1 3
 			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala")
+		(buffer-name . "nav.scala")
+		(front-context-string . "  GET on \"token\"")
+		(rear-context-string . "resetPassword _\n")
+		(front-context-region-string)
+		(rear-context-region-string)
+		(visits . 1)
+		(time 20692 46882 276334)
+		(created 20692 46876 623124)
+		(position . 4659)
+		(end-position . 4659))
+#1=(#("Auth.scala" 0 1
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala', position 1" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
+			1 10
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala")
 		(buffer-name . "Auth.scala")
 		(front-context-string . "package controll")
@@ -32,9 +46,9 @@
 		(position . 1)
 		(end-position . 1))
 #1=(#("Auth.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala', position 3586" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala', position 3586" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 10
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/controllers/Auth.scala")
 		(buffer-name . "Auth.scala")
 		(front-context-string . "\n  }}\n\n\n  // def")
@@ -47,9 +61,9 @@
 		(position . 3586)
 		(end-position . 3586))
 #1=(#("profile.jade" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/profile.jade', position 1" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/profile.jade', position 1" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 12
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(tags "profile")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/profile.jade")
 		(buffer-name . "profile.jade")
@@ -63,9 +77,9 @@
 		(position . 1)
 		(end-position . 1))
 #1=(#("nav.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala', position 1" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala', position 1" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 9
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(tags "profile" "nav")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/nav/nav.scala")
 		(buffer-name . "nav.scala")
@@ -73,15 +87,15 @@
 		(rear-context-string)
 		(front-context-region-string)
 		(rear-context-region-string)
-		(visits . 1)
-		(time 20692 45246 478372)
+		(visits . 2)
+		(time 20692 46819 335352)
 		(created 20691 21801 864342)
 		(position . 1)
 		(end-position . 1))
 #1=(#("UserProfileComponent.email.jade" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.email.jade', position 1084" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.email.jade', position 1084" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 31
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(tags "profile")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.email.jade")
 		(buffer-name . "UserProfileComponent.email.jade")
@@ -95,9 +109,9 @@
 		(position . 1084)
 		(end-position . 1084))
 #1=(#("UserProfileComponent.index.jade" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.index.jade', position 1202, " help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.index.jade', position 1202, " icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 31
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(annotation . "")
 		(tags "profile")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views/model/user/UserProfileComponent.index.jade")
@@ -112,9 +126,9 @@
 		(position . 1202)
 		(end-position . 1202))
 #1=(#("UserProfileComponent.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/model/user/UserProfileComponent.scala', position 369" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/model/user/UserProfileComponent.scala', position 369" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 26
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(tags "profile")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/model/user/UserProfileComponent.scala")
 		(buffer-name . "UserProfileComponent.scala")
@@ -128,9 +142,9 @@
 		(position . 369)
 		(end-position . 369))
 #1=(#("jaliss/securesocial" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jaliss@github.com/securesocial/, position 4483" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jaliss@github.com/securesocial/, position 4483" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 19
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "securesocial")
 		(front-context-string . "  -rw-rw-r-- 1 s")
 		(rear-context-string . "1Provider.scala\n")
@@ -225,9 +239,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("nginx" 0 1
-			(bmkp-full-record #1# face bmkp-remote-file icicle-mode-line-help #2="Dired /scp:vinci8:/etc/nginx/, position 883" help-echo #2#)
+			(help-echo #2="Dired /scp:vinci8:/etc/nginx/, position 883" icicle-mode-line-help #2# face bmkp-remote-file bmkp-full-record #1#)
 			1 5
-			(bmkp-full-record #1# face bmkp-remote-file help-echo #2#))
+			(help-echo #2# face bmkp-remote-file bmkp-full-record #1#))
 		(buffer-name . "nginx")
 		(front-context-string . "uwsgi_params\n  -")
 		(rear-context-string . "70 Mar 17  2012 ")
@@ -247,9 +261,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("vinci9-openreview-root" 0 1
-			(bmkp-full-record #1# face bmkp-remote-file icicle-mode-line-help #2="Dired /scp:vinci9:/m/vinci9/data1/saunders/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/, position 1809" help-echo #2#)
+			(help-echo #2="Dired /scp:vinci9:/m/vinci9/data1/saunders/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/, position 1809" icicle-mode-line-help #2# face bmkp-remote-file bmkp-full-record #1#)
 			1 22
-			(bmkp-full-record #1# face bmkp-remote-file help-echo #2#))
+			(help-echo #2# face bmkp-remote-file bmkp-full-record #1#))
 		(buffer-name . "openreview<2>")
 		(front-context-string . "src\n  drwxrwxr-x")
 		(rear-context-string . "96 Dec  3 12:20 ")
@@ -270,9 +284,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("github-pages" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/adamchandra@github.com/adamchandra.github.com/, position 3300" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/adamchandra@github.com/adamchandra.github.com/, position 3300" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 12
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "adamchandra.github.com")
 		(front-context-string . "canvas_rotated_t")
 		(rear-context-string . "40 Nov 28 12:52 ")
@@ -296,9 +310,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("openreview/front" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/, position 17117" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/, position 17117" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 16
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(tags "dir" "openreview")
 		(buffer-name . "prj-openreview-front")
 		(front-context-string)
@@ -355,9 +369,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("sys/process" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/sys/process/ProcessBuilderImpl.scala', position 3213" help-echo #2#)
+			(help-echo #2="File `~/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/sys/process/ProcessBuilderImpl.scala', position 3213" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 11
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/sys/process/ProcessBuilderImpl.scala")
 		(buffer-name . "ProcessBuilderImpl.scala")
 		(front-context-string . "  private[scala]")
@@ -370,9 +384,9 @@
 		(position . 3213)
 		(end-position . 3213))
 #1=(#("iesl/scalacommons" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/iesl-scalacommons/, position 7136" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/iesl-scalacommons/, position 7136" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 17
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "iesl-scalacommons<2>")
 		(front-context-string . "ConfigUtilsSpec.")
 		(rear-context-string . "24 Oct 10 18:26 ")
@@ -412,9 +426,9 @@
 		(dired-hidden-dirs #17# #16# #15# #14# #13# #12# #11# #10# #9# #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("openreview/root" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/, position 1045" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/, position 1045" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 15
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(tags "dir" "openreview")
 		(buffer-name . "openreview")
 		(front-context-string . "prj-openreview-f")
@@ -435,9 +449,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("openreview/core" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-core/, position 1" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-core/, position 1" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 15
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(tags "dir" "openreview")
 		(buffer-name . "prj-openreview-core")
 		(front-context-string . "  /home/saunders")
@@ -475,9 +489,9 @@
 		(dired-hidden-dirs #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("play/scalaz" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/playframework-libs/play-scalaz/, position 1597" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/playframework-libs/play-scalaz/, position 1597" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 11
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(buffer-name . "play-scalaz")
 		(front-context-string . "json.scala\n  -rw")
 		(rear-context-string . "15 Oct  9 15:48 ")
@@ -501,9 +515,9 @@
 		(dired-hidden-dirs #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("play/navigator" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/playframework-libs/play-navigator/, position 1744" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/playframework-libs/play-navigator/, position 1744" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 14
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(buffer-name . "play-navigator")
 		(front-context-string . "PlayNavigator.sc")
 		(rear-context-string . "49 Oct  9 15:48 ")
@@ -532,9 +546,9 @@
 		(dired-hidden-dirs #9# #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("cindexing" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-plumbing/home-directory-resources/cindexing/, position 174" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-plumbing/home-directory-resources/cindexing/, position 174" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 9
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "cindexing")
 		(front-context-string . ".cindex-roots\n  ")
 		(rear-context-string . "43 Sep 27 15:40 ")
@@ -553,9 +567,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("home/rcs" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-plumbing/home-directory-resources/, position 5310" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-plumbing/home-directory-resources/, position 5310" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 8
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "home-directory-resources")
 		(front-context-string . "3den.zsh-theme\n ")
 		(rear-context-string . "30 Dec  4 15:06 ")
@@ -579,9 +593,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("playframework/scala-src" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/playframework@github.com/Play20/framework/src/play/src/main/scala/, position 1" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/playframework@github.com/Play20/framework/src/play/src/main/scala/, position 1" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 23
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scala")
 		(front-context-string . "  /home/saunders")
 		(rear-context-string)
@@ -645,9 +659,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("scalate/uri-helpers" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/scalate@github.com/scalate/scalate-util/src/main/scala/org/fusesource/scalate/util/URIs.scala', position 1" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/scalate@github.com/scalate/scalate-util/src/main/scala/org/fusesource/scalate/util/URIs.scala', position 1" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 19
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/github.com/scalate@github.com/scalate/scalate-util/src/main/scala/org/fusesource/scalate/util/URIs.scala")
 		(buffer-name . "URIs.scala")
 		(front-context-string . "/**\n * Copyright")
@@ -660,9 +674,9 @@
 		(position . 1)
 		(end-position . 1))
 #1=(#("scalate/src" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/scalate@github.com/scalate/, position 202" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/scalate@github.com/scalate/, position 202" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 11
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scalate")
 		(front-context-string . "archetypes\n  -rw")
 		(rear-context-string . "012-09-14 19:45 ")
@@ -681,9 +695,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("play/framework" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/playframework@github.com/Play20/, position 2651" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/playframework@github.com/Play20/, position 2651" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 14
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "Play20")
 		(front-context-string . "  total used in ")
 		(rear-context-string . "k/src/play/src:\n")
@@ -706,9 +720,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("typesafe/config" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/typesafehub@github.com/config/, position 17951" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/typesafehub@github.com/config/, position 17951" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 15
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "config")
 		(front-context-string . "  -rw-rw-r-- 1 s")
 		(rear-context-string . "ilable 64625480\n")
@@ -768,9 +782,9 @@
 		(dired-hidden-dirs #35# #34# #33# #32# #31# #30# #29# #28# #27# #26# #25# #24# #23# #22# #21# #20# #19# #18# #17# #16# #15# #14# #13# #12# #11# #10# #9# #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("typesafe/config/Build.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/typesafehub@github.com/config/project/Build.scala', position 70" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/typesafehub@github.com/config/project/Build.scala', position 70" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 27
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/github.com/typesafehub@github.com/config/project/Build.scala")
 		(buffer-name . "Build.scala")
 		(front-context-string . "object ConfigBui")
@@ -783,9 +797,9 @@
 		(position . 70)
 		(end-position . 70))
 #1=(#("scala/io/samples" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/file/src/samples/scala/, position 816" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/file/src/samples/scala/, position 816" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 16
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scala")
 		(front-context-string . "path-matching.sc")
 		(rear-context-string . "012-08-20 10:35 ")
@@ -804,9 +818,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("AssertionSugar.scala" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/core/src/test/scala/scalax/test/sugar/AssertionSugar.scala', position 931" help-echo #2#)
+			(help-echo #2="File `~/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/core/src/test/scala/scalax/test/sugar/AssertionSugar.scala', position 931" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 20
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(tags "exceptions" "code")
 		(filename . "~/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/core/src/test/scala/scalax/test/sugar/AssertionSugar.scala")
 		(buffer-name . "AssertionSugar.scala")
@@ -820,9 +834,9 @@
 		(position . 931)
 		(end-position . 931))
 #1=(#("scala/io" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/, position 671" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/jesseeichar@github.com/scala-io/, position 671" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 8
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scala-io")
 		(front-context-string . "\n  -rw-rw-r-- 1 ")
 		(rear-context-string . "20 10:35 project")
@@ -892,9 +906,9 @@
 		(dired-hidden-dirs #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("scala/library/src" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/, position 1" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/, position 1" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 17
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scala<2>")
 		(front-context-string . "  /home/saunders")
 		(rear-context-string)
@@ -971,9 +985,9 @@
 		(dired-hidden-dirs)
 		(handler . bmkp-jump-dired))
 #1=(#("scala/compiler/src" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-compiler-src.jar.d/scala/, position 1" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-compiler-src.jar.d/scala/, position 1" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 18
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scala")
 		(front-context-string . "  /home/saunders")
 		(rear-context-string)
@@ -1035,9 +1049,9 @@
 		(dired-hidden-dirs "/home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-compiler-src.jar.d/scala/" #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("bash/template" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-plumbing/home-directory-resources/acs-bin/bash-script-template.sh', position 1183" help-echo #2#)
+			(help-echo #2="File `~/projects/the-plumbing/home-directory-resources/acs-bin/bash-script-template.sh', position 1183" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 13
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-plumbing/home-directory-resources/acs-bin/bash-script-template.sh")
 		(buffer-name . "bash-script-template.sh")
 		(front-context-string . "\n\nusage () {\n  c")
@@ -1050,9 +1064,9 @@
 		(position . 1183)
 		(end-position . 1183))
 #1=(#("journal/index" 0 1
-			(bmkp-full-record #1# face bmkp-local-file-without-region icicle-mode-line-help #2="File `~/projects/the-library/project-planning/org-files/index.org', position 1" help-echo #2#)
+			(help-echo #2="File `~/projects/the-library/project-planning/org-files/index.org', position 1" icicle-mode-line-help #2# face bmkp-local-file-without-region bmkp-full-record #1#)
 			1 13
-			(bmkp-full-record #1# face bmkp-local-file-without-region help-echo #2#))
+			(help-echo #2# face bmkp-local-file-without-region bmkp-full-record #1#))
 		(filename . "~/projects/the-library/project-planning/org-files/index.org")
 		(buffer-name . "index.org")
 		(front-context-string . "* [[file:./daily")
@@ -1065,9 +1079,9 @@
 		(position . 1)
 		(end-position . 1))
 #1=(#("studies/euler" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-study/auto-didactic-crap/, position 166" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-study/auto-didactic-crap/, position 166" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 13
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "auto-didactic-crap")
 		(front-context-string . "  -rw-rw-r-- 1 s")
 		(rear-context-string . "7-26 11:25 .git\n")
@@ -1096,9 +1110,9 @@
 		(dired-hidden-dirs #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("sbt/iesl-base" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/iesl-sbt-base/, position 1" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/iesl-sbt-base/, position 1" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 13
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "iesl-sbt-base")
 		(front-context-string . "  /home/saunders")
 		(rear-context-string)
@@ -1131,9 +1145,9 @@
 		(dired-hidden-dirs #9# #8# #7# #6# #5# #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("scalaz/seven" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-seven-src/src/, position 3578" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-seven-src/src/, position 3578" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 12
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "scalaz-7")
 		(front-context-string . "  drwxrwxr-x 2 s")
 		(rear-context-string . "2:52 Each.scala\n")
@@ -1201,9 +1215,9 @@
 		(dired-hidden-dirs "/home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-seven-src/src/" #4# #3#)
 		(handler . bmkp-jump-dired))
 #1=(#("scalaz/six" 0 1
-			(bmkp-full-record #1# face bmkp-local-directory icicle-mode-line-help #2="Dired /home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-six-src/, position 1136" help-echo #2#)
+			(help-echo #2="Dired /home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-six-src/, position 1136" icicle-mode-line-help #2# face bmkp-local-directory bmkp-full-record #1#)
 			1 10
-			(bmkp-full-record #1# face bmkp-local-directory help-echo #2#))
+			(help-echo #2# face bmkp-local-directory bmkp-full-record #1#))
 		(buffer-name . "combined-scalaz-six-src")
 		(front-context-string . "\n  /home/saunder")
 		(rear-context-string . "itraryGeo.scala\n")
