@@ -6,8 +6,10 @@
  '(auto-install-directory "~/emacs/auto-install-lisp")
  '(auto-install-install-confirm t)
  '(auto-install-replace-confirm t)
+ '(bmkp-last-as-first-bookmark-file "~/emacs/bookmarks/index.bmk")
  '(bookmark-default-file "~/emacs/bookmarks/index.bmk")
- '(bookmark-version-control (quote nospecial))
+ '(bookmark-save-flag 1)
+ '(bookmark-version-control t)
  '(case-fold-search t)
  '(current-language-environment "Latin-1")
  '(default-input-method "latin-1-prefix")
@@ -24,7 +26,7 @@
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-buffers-ido-like-flag t)
  '(icicle-download-dir "~/emacs/site-lisp/icicles")
- '(icicle-saved-completion-sets (quote (("pstotext-multiview" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/pstotext-multiview.icy") ("monitor-proj" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor-proj.icy") ("monitor" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor.icy"))))
+ '(icicle-saved-completion-sets (quote (("myproj" . "/home/saunders/projects/the-toolshed/emacsen/emacs-support-clean/etc/myproj.icy") ("pstotext-multiview" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/pstotext-multiview.icy") ("monitor-proj" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor-proj.icy") ("monitor" . "/home/saunders/projects/the-livingroom/rexa2s/rexa2-front-play/app/monitor.icy"))))
  '(icomplete-mode nil nil (icomplete))
  '(ido-case-fold t)
  '(indent-tabs-mode t)
@@ -330,7 +332,7 @@
           ([f6                        ] filesets-open)
           ([(meta f6)                 ] filesets-close)
           ([(control XF86Forward)     ] find-grep-dired)
-          ([f12                       ] revert-buffer-and-refind-position)
+          ;; ([f12                       ] revert-buffer-and-refind-position)
           ([(control tab)             ] sr-speedbar-toggle)
           ([(control ?J)              ] ace-jump-mode)
           ([(control ?H)              ] ace-jump-mode-pop-mark)
@@ -339,7 +341,8 @@
           ([(control ?>) (?s) (?c)    ] csearch-class)
           ([(control ?>) (?s) (?d)    ] csearch-def)
 
-
+          ([f12                       ] raise-bookmark-buffer)
+          
           ))
 
   ;; mode-specific hooks
@@ -367,6 +370,7 @@
       ;; auto install stuff
       (add-path "auto-install-lisp")  
 
+      (add-path "site-lisp/bookmark+") 
       (add-path "site-lisp/cc-mode") 
       (add-path "site-lisp/cedet") 
       (add-path "site-lisp/coffee-mode")  
@@ -388,8 +392,12 @@
       (add-path "site-lisp/less-css-mode")  
       (add-path "site-lisp/slime")  
       (add-path "site-lisp/yasnippet")  
+      (add-path "site-lisp/color-themes")
       ))
    (t nil)))
+
+
+
 
 (setup-paths)
 
@@ -534,6 +542,11 @@
   (autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
   (global-set-key [(f9)] 'gnuplot-make-buffer)
   )
+
+
+(defun raise-bookmark-buffer()
+  (interactive)
+  (switch-to-buffer "*Bookmark List*"))
        	       	       	       	       	       	    
 (defun flip-to-last-buffer (&optional n)
   (interactive "p")
@@ -585,10 +598,6 @@
 (defun ensime-rpc-symbol-at-point-i ()
   (interactive)
   (ensime-rpc-symbol-at-point))
-
-(eval-when-compile
-  (require 'color-theme))
-(require 'color-theme)
 
 
 (defun dired-expand-all-subdirs ()
