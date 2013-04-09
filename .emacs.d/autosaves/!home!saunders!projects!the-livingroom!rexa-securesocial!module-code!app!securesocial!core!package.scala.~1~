@@ -1,0 +1,10 @@
+package securesocial
+
+
+package object core {
+  import play.api.libs.concurrent.{PlayPromise, PlayRedeemable}
+  implicit def futureToPlayPromise[A](fu: scala.concurrent.Future[A]): PlayPromise[A] = new PlayPromise[A](fu)
+
+  implicit def promiseToRedeemable[A](p: scala.concurrent.Promise[A]): PlayRedeemable[A] = new PlayRedeemable(p)
+
+}

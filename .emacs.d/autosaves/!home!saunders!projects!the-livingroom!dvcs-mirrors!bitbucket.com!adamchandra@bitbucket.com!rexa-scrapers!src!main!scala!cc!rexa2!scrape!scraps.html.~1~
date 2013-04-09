@@ -1,0 +1,95 @@
+<div class="gs_r">
+    <h3 class="gs_rt">
+        <a href="http://repository.upenn.edu/cis_papers/159/" onmousedown="return scife_clk(this.href,'','res','0')">
+            Conditional random fields: Probabilistic models for segmenting and labeling sequence data
+    </a>
+    </h3>
+    <div class="gs_ggs gs_fl">
+        <a href="http://repository.upenn.edu/cgi/viewcontent.cgi?article=1162&amp;context=cis_papers" onmousedown="return scife_clk(this.href,'gga','gga','0')">
+            <span class=gs_ctg2>[PDF]</span> from upenn.edu
+        </a>
+    </div>
+    <div class="gs_a">J <b>Lafferty</b>, 
+        <a href="/citations?hl=en&amp;user=yILa1y0AAAAJ&amp;oi=sra">A McCallum</a>&hellip; - 2001 - repository.upenn.edu
+    </div>
+    <div class="gs_rs"><b>...</b> <b>LAFFERTY</b>@CS.CMU.EDU <b>...</b> 
+        The critical difference between CRFs and MEMMs is that a MEMM<br>
+        uses per-state exponential mod- els for the conditional probabilities of next states given the current<br>
+        state, while a <b>CRF</b> has a single exponential model for the joint probability of the <b>...</b> 
+    </div>
+    <div class="gs_fl">
+        <a href="/scholar?cites=14553887910606988646&amp;as_sdt=40000005&amp;sciodt=1,22&amp;hl=en">Cited by 4639</a> - 
+        <a href="/scholar?q=related:ZuWU5PHL-ckJ:scholar.google.com/&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">Related articles</a> - 
+        <a href="http://direct.bl.uk/research/2A/50/RN100556261.html?source=googlescholar" onmousedown="return scife_clk(this.href,'','docdel','0')">BL Direct</a> - 
+        <a href="/scholar?cluster=14553887910606988646&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">All 127 versions</a>
+    </div>
+</div>    
+<div class="gs_r">
+    <h3 class="gs_rt">
+        <a href="http://dl.acm.org/citation.cfm?id=1015337" onmousedown="return scife_clk(this.href,'','res','1')">
+            Kernel conditional random fields: representation and clique selection
+        </a>
+    </h3>
+    <div class="gs_ggs gs_fl">
+        <a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/user/zhuxj/www/pub/CMU-CS-04-115.pdf" onmousedown="return scife_clk(this.href,'gga','gga','1')">
+            <span class=gs_ctg2>[PDF]</span> from cmu.edu</a></div><div class="gs_a">J <b>Lafferty</b>, 
+        <a href="/citations?hl=en&amp;user=hqTu-QcAAAAJ&amp;oi=sra">X Zhu</a>&hellip; - Proceedings of the twenty-first international  &hellip;, 2004 - dl.acm.org
+    </div>
+    <div class="gs_rs"><b>...</b> Conditional random fields (<b>Lafferty</b> et al., 2001) have been proposed as an approach to modeling<br>
+        the interactions be- tween labels in such problems using the tools of graphical models. A<br>
+        conditional random field (<b>CRF</b>) is a model that assigns a joint probability distribution over <b>...</b> 
+    </div>
+    <div class="gs_fl">
+        <a href="/scholar?cites=6440214895592751967&amp;as_sdt=40000005&amp;sciodt=1,22&amp;hl=en">Cited by 128</a> - 
+        <a href="/scholar?q=related:X0P8aFM9YFkJ:scholar.google.com/&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">Related articles</a>   - 
+        <a href="/scholar?q=info:X0P8aFM9YFkJ:scholar.google.com/&amp;output=instlink&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1&amp;scillfp=16400716546895013632">Other access via UMLinks</a>   - 
+        <a href="/scholar?q=info:X0P8aFM9YFkJ:scholar.google.com/&amp;output=instlink&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1&amp;scillfp=1728424895243318386">Library Search</a> - 
+        <a href="http://direct.bl.uk/research/21/58/RN184046189.html?source=googlescholar" onmousedown="return scife_clk(this.href,'','docdel','1')">BL Direct</a> - 
+        <a href="/scholar?cluster=6440214895592751967&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">All 36 versions</a>
+    </div>
+</div>    
+<div class="gs_r"><h3 class="gs_rt">
+        <a href="http://dl.acm.org/citation.cfm?id=1329409" onmousedown="return scife_clk(this.href,'','res','2')">Conditional random fields for activity recognition</a><
+                                                                                                                                                                              /h3>
+    <div class="gs_ggs gs_fl">
+        <a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/Web/People/dvail2/pubs/vail07conditional.pdf" onmousedown="return scife_clk(this.href,'gga','gga','2')"><span class=gs_ctg2>[PDF]</span> from cmu.edu</a></div><div class="gs_a">&hellip;, <a href="/citations?hl=en&amp;user=2FbkAzYAAAAJ&amp;oi=sra">MM Veloso</a>, JD <b>Lafferty</b> - Proceedings of the 6th international  &hellip;, 2007 - dl.acm.org</div><div class="gs_rs"><b>...</b> Carnegie Mellon University Pittsburgh, Pennsylvania <b>lafferty</b>@cs.cmu.edu <b>...</b> tag domain, chosen<br>
+        because it is multi-agent and produces complex interactions between observations, we explore<br>
+        the differences in performance be- tween the discriminatively trained <b>CRF</b> and the <b>...</b> 
+
+
+<div class="gs_r">
+    <h3 class="gs_rt">
+        <a href="http://link.aps.org/doi/10.1103/PhysRevLett.72.1406" shape="rect">
+            Observation of D^{0}→ K^{+} π^{-}
+        </a>
+    </h3>
+    <div class="gs_ggs gs_fl">  
+        <a href="/scholar?q=info:543TLqeEyFkJ:scholar.google.com/&amp;output=instlink&amp;hl=en&amp;oe=ASCII&amp;as_sdt=1,22&amp;as_vis=1&amp;scillfp=14746603885295401764" shape="rect">
+            Get Full Text via UMLinks
+        </a>
+    </div>
+    <div class="gs_a">
+        …, <b>M </b>Procario, S Yang, <b>R </b>Balest, K Cho, <b>M </b> Daoudi… - Physical review letters, 1994 - APS
+    </div>
+    <div class="gs_rs">
+        <b>...</b> both the kaon and pion candidatesbe inconsistent with an electron and a muon, using the
+        <br clear="none"></br>
+        electromagnetic calorimeterand muon chambers [9]. After applying <b>all</b> the cuts <b>...</b> and different <b>cr</b><br clear="none"></br>
+        on each side of the peak) plus a background function of the form <b>u</b>(AM)s s +b(b <b>M</b>) i s +<b>c</b>(b <b>M</b> <b>...</b> 
+    </div>
+    <div class="gs_fl">
+        <a href="/scholar?cites=6469566718297738727&amp;as_sdt=40000005&amp;sciodt=1,22&amp;hl=en&amp;oe=ASCII" shape="rect">
+            Cited by 102
+        </a> - 
+        <a href="/scholar?q=related:543TLqeEyFkJ:scholar.google.com/&amp;hl=en&amp;oe=ASCII&amp;as_sdt=1,22&amp;as_vis=1" shape="rect">
+            Related articles
+        </a> - 
+        <a href="http://direct.bl.uk/research/45/26/EN014457185.html?source=googlescholar" shape="rect">
+            BL Direct
+        </a> - 
+        <a href="/scholar?cluster=6469566718297738727&amp;hl=en&amp;oe=ASCII&amp;as_sdt=1,22&amp;as_vis=1" shape="rect">
+            All 6 versions 
+        </a>
+    </div>
+</div>
+

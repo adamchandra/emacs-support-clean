@@ -1,0 +1,6 @@
+-@ val message: String
+
+.span6.offset3.center.alert.alert-error
+  = message
+  button.close(type="button" data-dismiss="alert")
+    i.icon-remove

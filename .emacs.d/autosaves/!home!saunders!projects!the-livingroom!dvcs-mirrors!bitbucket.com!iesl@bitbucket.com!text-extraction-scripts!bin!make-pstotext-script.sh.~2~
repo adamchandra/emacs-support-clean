@@ -1,0 +1,83 @@
+#!/bin/bash
+
+BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $BIN/common-defs.sh
+
+declare file="$1"
+
+declare inputPath=$(dirname "$file")
+declare baseName=$(basename "$file")
+
+cd $inputPath
+
+cat <<'EOF' > "sge-$baseName.sh"
+#!/bin/bash
+
+# --- interpreter
+#$ -S /bin/sh
+#
+# --- run from current dir
+#$ -cwd
+#
+# --- job name
+#$ -N rexa.pstotext
+#
+# --- stdio redirection
+# $ -e /dev/null
+# $ -o /dev/null
+#
+# --- merge stdout/stderr?
+#$ -j y
+#
+# --- pass on entire env
+#$ -V
+EOF
+
+cat <<EOF >> "sge-$baseName.sh"
+# need to get the actual location of bin dirs from config file (or rely on convention)
+declare -r totext="$pstotext_bin/totext"
+EOF
+
+cat <<'EOF' >> "sge-$baseName.sh"
+run_pstotext () {
+    local pdfFile="$1"
+    local path=$(dirname "$pdfFile")
+    local filename=$(basename "$pdfFile")
+    local artifactdir="${path}/${filename}.d/pstotext"
+
+    # echo "file                   = $pdfFile"
+    # echo "output dir             = $artifactdir"
+
+    if [ ! -f "$artifactdir/$filename.pstotext.xml" ]; then
+        [[ -d "$artifactdir" ]] || mkdir -p "$artifactdir"
+        $totext -log $pdfFile.pstotext.log -timeout 30 -debug -nogzip -file $pdfFile 
+        mv $pdfFile.pstotext.* "$artifactdir/"
+    else
+        echo "skipping already-processed $pdfFile"
+    fi
+}
+
+
+# kludge: remove any pstotext tmp files that may be left in /tmp,
+find /tmp -maxdepth 1 -type f -name 'ps2*'  -amin +4 -printf "removing temp file %f\n" -exec rm {} ';'
+
+declare -a pdfs=(
+EOF
+
+cat $baseName >> "sge-$baseName.sh"
+
+cat <<'EOF' >> "sge-$baseName.sh"
+)
+
+for pdf in ${pdfs[@]}
+do
+    # echo $pdf
+    run_pstotext ${pdf}
+done
+
+EOF
+
+chmod 755 "sge-$baseName.sh"
+rm $baseName
+

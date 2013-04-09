@@ -1,0 +1,28 @@
+- attributes("layout") = "/layout/layout-splash.jade"
+-import play.api.mvc._
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.Registry
+-import securesocial.core.IdentityProvider
+-import securesocial.core.providers.UsernamePasswordProvider
+-import securesocial.core.AuthenticationMethod._
+
+-@ val request: RequestHeader
+-@ val token: String
+
+- implicit val req = request
+
+.main
+  .span4.well
+    form.form-inline(action={RoutesHelper.handleSignUp(token).absoluteURL(IdentityProvider.sslEnabled)} method="POST")
+      .control-group
+        .controls
+          input(name="firstName" type="text" placeholder="first name")
+          input(name="lastName" type="text" placeholder="last name")
+          input(name="password.password1" type="password" placeholder="password")
+          input(name="password.password2" type="password" placeholder="retype password")
+      .control-group
+        .controls
+          button.btn(type="submit") Create Account

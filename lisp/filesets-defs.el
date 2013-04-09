@@ -42,64 +42,100 @@
 (defconst *scalaz-seven-src* (concat *external-projects* "scala/scalazeds/combined-scalaz-seven-src"))
 (defconst *lift-src* (concat *external-projects* "scala/lifts/combined-liftweb-src/"))
 
+; ~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview
+;; (filesets
+;; (setq filesets-data
+;;       '(
+;;         ("sample" .
+;;          '("jade files"
+;;             (:pattern "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app" "^.+\\.jade$")))
+;; 
+;;         ))
+;; 
+
+;;       '(
+;;         ("sample" .
+;;          '(("jade files"
+;;             (:ingroup "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/target"))
+;;            ("My Homepage"
+;;             (:pattern "~/public_html/" "^.+\\.html$")
+;;             (:open filesets-find-file))
+;;            ("User Configuration"
+;;             (:files "~/.xinitrc"
+;;                     "~/.bashrc"
+;;                     "~/.bash_profile"))
+;;            ("HOME"
+;;             (:tree "~" "^[^.].*[^~]$")
+;;             (:filter-dirs-flag t))))
+;;         )
+;;        )
+;; 
 
 (filesets
- '("emacs/dotemacs"
-   (files
-    (under *home-dir*
-           ".emacs")))
+  '("emacs/dotemacs"
+    (files
+     (under *home-dir*
+            ".emacs")))
 
- '("emacs/yas/snippetdir"
-   (files
-    (under *emacs-root*
-           "my-snippets")))
 
- '("scala/src"
-   (files
-    (under *scala-sources*
-           "scala")))
+  '("sample" 
+    '("jade files"
+      (:pattern "~/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app" "^.+\\.jade$")))
 
- '("scala/gists"
-   (files
-    (under *the-kitchen*
-           "scala-genesis/src/main/scala/cc/acs/BitBucket.scala")))
 
- '("scalaz/6"
-   (files
-    (under *scalaz-root*
-           "combined-scalaz-six-src")))
 
- '("scalaz/7"
-   (files
-    (under *scalaz-root*
-           "combined-scalaz-seven-src")))
+)
+ 
+ ;;  '("emacs/yas/snippetdir"
+ ;;    (files
+ ;;     (under *emacs-root*
+ ;;            "my-snippets")))
+ ;; 
+ ;;  '("scala/src"
+ ;;    (files
+ ;;     (under *scala-sources*
+ ;;            "scala")))
+ ;; 
+ ;;  '("scala/gists"
+ ;;    (files
+ ;;     (under *the-kitchen*
+ ;;            "scala-genesis/src/main/scala/cc/acs/BitBucket.scala")))
+ ;; 
+ ;;  '("scalaz/6"
+ ;;    (files
+ ;;     (under *scalaz-root*
+ ;;            "combined-scalaz-six-src")))
+ ;; 
+ ;;  '("scalaz/7"
+ ;;    (files
+ ;;     (under *scalaz-root*
+ ;;            "combined-scalaz-seven-src")))
+ ;; 
+ ;;  '("lift/src"
+ ;;    (files
+ ;;     (under *lift-src*
+ ;;            "src")))
+ ;; 
+ ;;  '("lift/css"
+ ;;    (files
+ ;;     (under *external-projects*
+ ;;            "scala/lifts/framework/web/webkit/src/main/resources/toserve")))
+ ;;            
+ ;;  '("emacs/filesets"
+ ;;    (files
+ ;;     (under *emacs-root*
+ ;;            "lisp/filesets-defs.el")))
+ ;; 
+ ;;  '("rc"
+ ;;    (files
+ ;;     (under "~/"
+ ;;            ".bashrc")))
+ ;; 
+ ;;  '("journal"
+ ;;    (files
+ ;;     (under *project-planning*
+ ;;            "org-files/index.org")))
 
- '("lift/src"
-   (files
-    (under *lift-src*
-           "src")))
-
- '("lift/css"
-   (files
-    (under *external-projects*
-           "scala/lifts/framework/web/webkit/src/main/resources/toserve")))
-           
- '("emacs/filesets"
-   (files
-    (under *emacs-root*
-           "lisp/filesets-defs.el")))
-
- '("rc"
-   (files
-    (under "~/"
-           ".bashrc")))
-
- '("journal"
-   (files
-    (under *project-planning*
-           "org-files/index.org")))
-
- )
 
 (setq filesets-external-viewers
       '(

@@ -1,0 +1,313 @@
+package net.openreview.model
+package mongodb
+
+import io.Source
+import java.util.{UUID, Date}
+import java.net.URL
+import org.joda.time.DateTime
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+import se.radley.plugin.salat._
+import com.novus.salat.global._
+import edu.umass.cs.iesl.scalacommons.NonemptyString
+import pov._
+
+trait EventDAO extends BaseDAO {
+  val created: DateTime
+  val creator: UUID 
+  val target: UUID
+  val ephemeralText: Option[NonemptyString]
+  val subject: NonemptyString
+
+  def toEvent: Event
+}
+
+object EventDAO {
+  // def getTime = DateTime = dao.created
+
+}
+
+case class PrimaryEventDAO(
+  val inResponseTo: Option[UUID] // Option[PrimaryEvent] = None
+) extends EventDAO {
+
+  override def toEvent = {
+    new PrimaryEvent {
+      val dao = PrimaryEventDAO.this
+
+      val uuid: UUID                        = dao.uuid
+      override val created: DateTime        = dao.created
+      override def creator: EventProcessor  = getEventProcessor(dao.creator)
+      override def target:  EventProcessor  = getEventProcessor(dao.target)
+      override val ephemeralText            = dao.ephemeralText
+      override val subject: NonemptyString  = dao.subject
+      // why is this always in response to primary event type?
+      override def inResponseTo             = getEvent(dao.inResponseTo) map (_.asInstanceOf[PrimaryEvent])
+    }
+  }
+}
+
+
+case class WrappingEventDAO(
+  val wrapped: UUID // Event
+) extends EventDAO {
+
+  override def toEvent = {
+    new WrappingEvent {
+      val dao = WrappingEventDAO.this
+
+      val uuid: UUID                        = dao.uuid
+      override val created: DateTime        = dao.created
+      override def creator: EventProcessor  = getEventProcessor(dao.creator)
+      override def target:  EventProcessor  = getEventProcessor(dao.target)
+      override val ephemeralText            = dao.ephemeralText
+      override val subject: NonemptyString  = dao.subject
+      override def wrapped                  = getEvent(dao.wrapped)
+    }
+  }
+}
+
+case class RequiresResponseEventDAO(
+  val inResponseTo: Option[UUID], // Option[PrimaryEvent] = None
+  val acknowledgeBy: Option[DateTime],
+  val due: Option[DateTime]
+) extends EventDAO {
+
+  override def toEvent = {
+    new RequiresResponseEvent {
+      val dao = RequiresResponseEventDAO.this
+
+      val uuid: UUID                        = dao.uuid
+      override val created: DateTime        = dao.created
+      override def creator: EventProcessor  = getEventProcessor(dao.creator)
+      override def target:  EventProcessor  = getEventProcessor(dao.target)
+      override val ephemeralText            = dao.ephemeralText
+      override val subject: NonemptyString  = dao.subject
+
+      override def inResponseTo             = getEvent(dao.inResponseTo) map (_.asInstanceOf[PrimaryEvent])
+
+      override def acknowledgeBy: Option[DateTime] = dao.acknowledgeBy
+      override def due: Option[DateTime] = dao.due
+    }
+  }
+}
+
+
+// case class ForwardEventDAO(
+//   val wrapped: UUID // Event
+// ) extends EventDAO {
+// 
+//   override def toEvent = {
+//     new ForwardEvent {
+//       val dao = ForwardEventDAO.this
+// 
+//       val uuid: UUID                        = dao.uuid
+//       override val created: DateTime        = dao.created
+//       override def creator: EventProcessor  = getEventProcessor(dao.creator)
+//       override def target:  EventProcessor  = getEventProcessor(dao.target)
+//       override val ephemeralText            = dao.ephemeralText
+//       override val subject: NonemptyString  = dao.subject
+//       override def wrapped                  = getEvent(dao.wrapped)
+//     }
+//   }
+// }
+
+
+// an _incoming_ forward, e.g. a mailing list receives something and forwards it to subscribers
+// the point is that the subscribers are acually targets of the message, as opposed to Cc'd observers
+case class Forward(target: EventProcessor,
+                   creator: EventProcessor,
+                   wrapped: Event,
+                   //ephemeralText: Option[NonemptyString] = None,
+                   uuid: UUID = UUID.randomUUID(),
+                   created: DateTime = DateTime.now) extends WrappingEvent {
+  def subject = wrapped.subject //("Fwd: " + original.subject).n
+    
+  override def reverseEventPath : List[Event] = this :: wrapped.reverseEventPath
+  override def originalEvent = reverseEventPath.last
+  
+  // not allowed to forward something that has already been Cc'd
+  require(reverseEventPath.find(_.isInstanceOf[CarbonCopy]).isEmpty)
+  def ephemeralText = wrapped.ephemeralText
+}
+ 
+// // an _outgoing_ forward, e.g. a "program committee" node sends an outgoing message based on instructions from one
+// // committee member, but also Cc's the others.
+// // ** might want a system whereby the target of a message is actually a "return path" through multiple nodes,
+// // so that the message can be Forwarded to the specific target but Cc'd to the observers
+// case class CarbonCopy(target: EventProcessor,
+//                    creator: EventProcessor,
+//                    wrapped: Event,
+//                    //ephemeralText: Option[NonemptyString] = None,
+//                    uuid: UUID = UUID.randomUUID(),
+//                    created: DateTime = DateTime.now) extends WrappingEvent {
+//   def subject = wrapped.subject //("Cc: " + original.subject).n
+//   override def reverseEventPath : List[Event] = this :: wrapped.reverseEventPath
+//   override def originalEvent = reverseEventPath.last
+//   def ephemeralText = wrapped.ephemeralText
+// }
+// 
+// case class Info(target: EventProcessor,
+//                 creator: EventProcessor,
+//                 subject: NonemptyString,
+//                 ephemeralText: Option[NonemptyString] = None,
+//                 uuid: UUID = UUID.randomUUID(),
+//                 created: DateTime = DateTime.now) extends PrimaryEvent {
+//   //def subject = ephemeralText.map(_.s.limitAtWhitespace(80,"...")).getOrElse("")
+// 
+// //  def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// case class License(target: EventProcessor,
+//                    creator: EventProcessor,
+//                    doc: Document,
+//                    ephemeralText: Option[NonemptyString] = None,
+//                    uuid: UUID = UUID.randomUUID(),
+//                    created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = ("Permission granted: " + doc.title.getOrElse("")).n
+// 
+//   override def isRegardingDoc(docUuid: UUID) = doc.isRegardingDoc(docUuid)
+// 
+// //  def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// case class Request(target: EventProcessor,
+//                    creator: EventProcessor,
+//                    template: EventTemplate,
+//                    acknowledgeBy: Option[DateTime] = None,
+//                    due: Option[DateTime] = None,
+//                    sticky: Boolean = false,
+//                    uuid: UUID = UUID.randomUUID(),
+//                    prerequisiteTo: Option[Request] = None,
+//                    ephemeralText: Option[NonemptyString] = None,
+//                    subjectText: Option[NonemptyString] = None,
+//                    created: DateTime = DateTime.now) extends RequiresResponseEvent {
+//   def subject = subjectText.getOrElse(("Request for " + template.templateType).n)
+//   override def isRegardingDoc(docUuid: UUID) = template match {
+//     case t: LicenseTemplate => t.doc.map(_.uuid == docUuid).getOrElse(false)
+//     case t: NewDocumentLicenseTemplate => false //t.docTemplateOpt.map(_.inResponseTo.map(_.uuid == docUuid).getOrElse(false)).getOrElse(false)
+//     case _ => false
+//   }
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// case class Withdraw(target: EventProcessor,
+//                     creator: EventProcessor,
+//                     override val inResponseTo: Some[Request],
+//                     ephemeralText: Option[NonemptyString] = None,
+//                     uuid: UUID = UUID.randomUUID(),
+//                     created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = ("Request withdrawn: " + inResponseTo.get.subject).n
+// 
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// case class Acknowledge(target: EventProcessor,
+//                        creator: EventProcessor,
+//                        override val inResponseTo: Some[Request],
+//                        ephemeralText: Option[NonemptyString] = None,
+//                        uuid: UUID = UUID.randomUUID(),
+//                        created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = ("Acknowledge: " + inResponseTo.get.subject).n
+// 
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// case class Decline(target: EventProcessor,
+//                    creator: EventProcessor,
+//                    override val inResponseTo: Some[Request],
+//                    ephemeralText: Option[NonemptyString] = None,
+//                    uuid: UUID = UUID.randomUUID(),
+//                    created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = ("Declined: " + inResponseTo.get.subject).n
+// 
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+// 
+// /**
+//  * A notification that a request was fulfilled.  This is distinct from the event that actually fulfills the request (which may have a different target).
+//  * @param uuid
+//  * @param created
+//  * @param creator
+//  * @param target
+//  * @param inResponseTo
+//  * @param filledTemplate
+//  */
+// case class Fulfill(target: EventProcessor,
+//                    creator: EventProcessor,
+//                    override val inResponseTo: Some[Request],
+//                    filledTemplate: Event,
+//                    ephemeralText: Option[NonemptyString] = None,
+//                    uuid: UUID = UUID.randomUUID(),
+//                    created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = ("Fulfilled: " + inResponseTo.get.subject).n
+// 
+//  // def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// 
+//   
+// case class Subscribe(target: EventProcessor,
+//                      creator: EventProcessor,
+//                      ephemeralText: Option[NonemptyString] = None,
+//                      uuid: UUID = UUID.randomUUID(),
+//                      created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = "subscribe".n
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// case class Unsubscribe(target: EventProcessor,
+//                        creator: EventProcessor,
+//                        ephemeralText: Option[NonemptyString] = None,
+//                        uuid: UUID = UUID.randomUUID(),
+//                        created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = "unsubscribe".n
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+// case class ListSubscribers(target: EventProcessor,
+//                            creator: EventProcessor,
+//                            ephemeralText: Option[NonemptyString] = None,
+//                            uuid: UUID = UUID.randomUUID(),
+//                            created: DateTime = DateTime.now) extends PrimaryEvent {
+//   def subject = "listsubscribers".n
+//   //def forwardTo(forwardTarget: EventProcessor, forwardCreator: EventProcessor) { this.copy(target=forwardTarget,creator=forwardCreator,uuid=UUID.randomUUID(),original = Some(this)).send }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+object EventModelStore extends ModelCompanion[EventDAO, UUID] {
+  val collection = MongoConnection()("my_db")("event_coll")
+  val dao = new SalatDAO[EventDAO, UUID](collection = collection) {}
+}
+
+class MongoEventStore extends EventStore {
+
+  def +(m: Event): Unit = {
+  }
+
+  def fromPoV(to: StatefulEventProcessor): EventPoVStore[EventPoV] = {
+    throw new RuntimeException("not implemented")
+  }
+
+  def get(uuid: UUID): Option[Event] = {
+    EventModelStore.findOneById(uuid) map (_.toEvent)
+  }
+}

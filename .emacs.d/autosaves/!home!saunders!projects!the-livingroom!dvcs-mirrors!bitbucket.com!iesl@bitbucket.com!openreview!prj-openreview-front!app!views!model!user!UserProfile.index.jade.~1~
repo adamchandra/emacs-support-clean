@@ -1,0 +1,70 @@
+-import play.api.mvc._
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.Registry
+-import securesocial.core.IdentityProvider
+-import securesocial.core.providers.UsernamePasswordProvider
+-import securesocial.core.AuthenticationMethod._
+-implicit val twitterBootstrapField = new h.FieldConstructor { def apply(elts: h.FieldElements) = views.html.myBootstrapFieldConstructor(elts) }
+
+-import java.io.UnsupportedEncodingException
+-import java.net.URLEncoder
+
+-@ val request: RequestHeader
+- implicit val req = request
+-@ val message: Option[String] = None
+
+-@ val it : model.user.UserProfileComponent
+
+.profile.user-emails(data-refresh-url={"/user/emails"})
+  .row-fluid
+    h4
+      = it.fullname
+      = request.flash.get("error").getOrElse(message.getOrElse(""))
+
+  .row-fluid
+    .emails
+      h5
+        - it.primaryEmail.map(email=>
+          | Contact at: #{email.email}
+        - ).getOrElse(
+          | No verified contact email
+        - )
+  
+      ul.h-indent-ul
+        li 
+          h5 Additional emails
+        - for (email <- it.nonPrimaryEmails; val encEmail = URLEncoder.encode(email.email, "UTF-8"))
+          li
+            ul.inline-ul
+              li
+                = email.email
+  
+                - if (!email.verified)
+                  li
+                    a.ajax(
+                      href={"/user/email/verify/"+encEmail}
+                      data-replace={".user-emails"})
+                      | Verify 
+                  li
+                    a.ajax(
+                      href={"/user/email/remove/"+encEmail}
+                      data-replace={".user-emails"})
+                      | Remove
+                - else
+                  li
+                    a.ajax(
+                      href={"/user/email/setprimary/"+encEmail}
+                      data-replace={".user-emails"})
+                      | Set as primary contact
+                  li
+                    a.ajax(
+                      href={"/user/email/verify/"+encEmail}
+                      data-replace={".user-emails"})
+                      | Reverify 
+  
+        li 
+          form.ajax.form-horizontal(action="/user/email/add" method="POST" data-replace={".user-emails"})
+            input(name="email" type="text" placeholder="Add email")

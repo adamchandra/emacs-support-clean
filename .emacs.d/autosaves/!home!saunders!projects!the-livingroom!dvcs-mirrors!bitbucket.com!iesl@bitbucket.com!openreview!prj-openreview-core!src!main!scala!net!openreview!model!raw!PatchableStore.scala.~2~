@@ -1,0 +1,12 @@
+package net.openreview.model.raw
+
+import java.util.UUID
+import org.joda.time.DateTime
+import scala.collection.JavaConverters._
+import com.weiglewilczek.slf4s.Logging
+
+trait PatchableStore extends Logging {
+  def patchUserIds(from:UUID, to:UUID)  {
+    logger.warn("noop: patchUserIds("+from+", "+to+")")
+  }
+}

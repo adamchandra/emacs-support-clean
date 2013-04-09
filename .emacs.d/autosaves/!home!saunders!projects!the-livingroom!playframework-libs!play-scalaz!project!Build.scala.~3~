@@ -1,0 +1,29 @@
+import sbt._
+import sbt.Keys._
+import edu.umass.cs.iesl.sbtbase.{Dependencies, IeslProject}
+import edu.umass.cs.iesl.sbtbase.IeslProject._
+
+object ScalaCommonsBuild extends Build {
+
+  val vers = "0.1.0-SNAPSHOT" // matches eu.teammon play-scalaz version #
+
+  implicit val allDeps: Dependencies = new Dependencies(); //(CleanLogging.excludeLoggers)  // doesn't work?
+
+  import allDeps._
+
+  val deps = Seq(
+    "play" %% "play" % "2.1-09142012" % "compile",
+    "play" %% "play-test" % "2.1-09142012" % "test",
+    "org.specs2" %% "specs2" % "1.7.1" % "test"
+  )
+
+
+  lazy val scalacommons = (
+    IeslProject("play-scalaz", vers, deps, Public).cleanLogging.standardLogging
+    .settings(
+      resolvers ++= Seq(
+        Resolver.url("Play", url("http://download.playframework.org/ivy-releases/"))(Resolver.ivyStylePatterns),
+        "Typesafe Snapshots Repository" at "http://repo.typesafe.com/typesafe/snapshots/",
+        "Typesafe Releases Repository" at "http://repo.typesafe.com/typesafe/releases/"
+      )))
+}

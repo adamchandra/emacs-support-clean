@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rsync -azv --delete --copy-unsafe-links --relative --filter ': .rsyncd-filters' the-{livingroom,toolshed,plumbing} vinci9.cs.umass.edu:/m/vinci9/data1/saunders/the-world
+

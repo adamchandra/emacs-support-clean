@@ -1,0 +1,57 @@
+* Bookmarks
+
+
+*** RC Files
+    [[/home/saunders/projects/the-toolshed/emacsen/emacs-support-clean/etc/.emacs][.emacs]]     
+      [[elisp:(byte-compile-file "/home/saunders/.emacs")][byte-compile .emacs]]
+
+*** Org files
+    [[file:./interesting-code-snippets.txt][Code Snippets (misc)]]
+    [[file:./code-reviews.org][Software/code reviews]]
+    [[file:./rexa2-iesl-wiki-pages.org][Rexa2 Wiki Pages]]
+    [[file:./index.org][Index]]
+    [[file:./writing.org][Writing]]
+    [[file:./daily-practice.org][Daily Practice]]
+    [[file:./uncategorized-notes.org][Uncategorized Notes]]
+    [[file:./rexa-reboot-project.org][Rexa-reboot-project]]
+    [[file:./project-misc.org][Project Miscellany]]
+    [[file:./rosettacode-links.org][Rosetta Code]]
+    [[file:./functional-programming-progress.org][Functional programming progress]]
+    [[file:./dataset-topology.org][Dataset Topology]]
+    [[file:./visualization-techniques.org][Visualization techniques]]
+    [[file:./annotation-tooling.org][Annotation Tooling]]
+    [[file:./emacs-howtos.org][Emacs How-to]]
+
+
+
+;; Usage:
+;;   - enter a line containing "#+BEGIN_FSTREE: <dir>" into an org buffer, 
+;;     where <dir> is the directory, that is to be inserted.
+;;   - while the cursor is in the line mentioned, press "C-c C-c"
+;;
+;; Options:
+;;   Specify options in the form:
+;;   "#+BEGIN_FSTREE: <dir> :<optionname1> <optionvalue1> :<optionname2> <optionvalue2>  ...
+;;   Options are:
+;;     - :non-recursive t , to suppress recursion into directories
+;;     - :exclude-regexp-name <list of regexp strings> , exclude file/directory names matching either 
+;;                                                  of the given regexp expressions
+;;       Examples: 
+;;         :exclude-regexp-name (".*\\.pdf$" ".*\\.zip$"), excludes files/directories ending with either ".pdf" or ".zip"
+;;         :exclude-regexp-name ("^\\.git$") , excludes files/directories named ".git"
+;;
+;;     - :exclude-regexp-fullpath <list of regexp strings>, same as :exclude-regexp-name but matches absolute path to file/directory
+;;     - :relative-links t , generates relative instead of absolute links
+;;     - :show-only-matches t , only files that are being linked to show up
+;;     - :only-directories t , only directories are listed
+;;     - :only-regular-files t , only regular files are listed
+;;     - :dynamic-update t , [EXPERIMENTAL] dynamically update a subtree on visibility cycling.
+;;     - :links-as-properties t, sets the links as properties Link1, Link2,... for use in column view [Does not work with dynamic-update!]
+;;     - :no-annotations t, suppresses the search and display of file annotations
+
+#+BEGIN_FSTREE: /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-core/src :exclude-regexp-name ("")
+
+
+
+
+#+BEGIN_FSTREE: /home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-core/src

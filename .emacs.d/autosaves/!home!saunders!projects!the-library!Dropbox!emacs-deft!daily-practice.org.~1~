@@ -1,0 +1,77 @@
+* Notes
+
+*** Daily Practice
+    + Lectures
+      + Andrew Ng
+    + Coding
+
+*** Estimate how much time is spent each day on the following: 
+***** doing or making sure things just get done, working through 
+      task lists, setting frameworks, defining what is expected, 
+      managing projects
+***** relating to people, building relationships, listening to 
+      problems, catching up on what others are doing and letting 
+      them know what you are doing
+***** exploring, analyzing, looking at how things work, looking
+      for deeper relationships between systems, looking at who or 
+      what is dependent on your work and who and what your work 
+      is dependent on
+***** leading, creating the conditions for others to be able to
+      work effectively, providing direction, order, and protection, 
+      motivating and inspiring people to negotiate changes in their
+      work.
+
+
+*** A few good quotes
+    The difference between people who exercise initiative and those who don't is literally the
+    difference between night and day. I'm not talking about a 25 to 50 percent difference in
+    effectiveness; I'm talking about a 5000-plus percent difference, particularly if they are smart,
+    aware, and sensitive to others.
+
+
+*** Programming concepts
+    - [ ] http://stackoverflow.com/questions/9128294/scala-trait-and-its-methods-parametrization
+          also, following discussion: http://stackoverflow.com/a/674090/812484
+    - [ ] dynamic programming probs: http://people.csail.mit.edu/bdean/6.046/dp/
+    - [ ] Project Euler
+    - [ ] http://debasishg.blogspot.in/2011/01/iteration-in-scala-effectful-yet.html 
+    - [ ] [[http://www.cs.ox.ac.uk/jeremy.gibbons/publications/iterator.pdf][The Essence of the Iterator Pattern]]
+
+
+
+*** Mastering scalaz
+    - [ ] scalaz classes/idioms:
+      
+
+*** Anatomy of a development environment
+***** Features
+      + Quick access to language/library documentation
+      + ability to quickly evaluate arbitrary expressions (repl)
+        + history, macro/replay of history
+        + init/rc scripts with some convenience defs
+        
+      + doctest like ability to eval code 'in place', ideally inside function scope
+      + filesystem/resource access to parallel directories
+        + e.g., package foo.bar in src/main/foo/bar can easily access
+          directory src/test/foo/bar
+      + code completion and/or hints for class methods, function names, argument lists/types/docs
+      + snippet storage/retrieval, ala yasnippet
+        + completion hints on snippet trigger prefix
+      + incremental background compilation and easy access to errors/warnings
+      + quick feedback loop on coding/results
+        + e.g., graphics/html rendering, unit tests passing
+      + 'virtualenv' like capability (sandboxing libraries in development for system installation)
+      + statistics for current module/function/scope/etc.
+        + class/function/package dependency viewing
+        + afferent/efferent dependencies
+        + test coverage
+        + similarity function (cut/paste detection)
+      + code surfing capabilities
+        + view of inheritence structure and call chains
+          + ability to navigate graph and jump to code
+        + jump to def/declaration
+        + show references/usages/call sites
+
+
+
+

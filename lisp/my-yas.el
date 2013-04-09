@@ -3,10 +3,10 @@
 (defun yasnippet-setup()
   (interactive)
   (require 'yasnippet)
-  (yas/initialize)
-  (yas/minor-mode-on)
+  ;; (yas/initialize)
+  ;; (yas/minor-mode-on)
   (setq yas/root-directory (concat *emacs-root* "my-snippets"))
-  (yas/load-directory  yas/root-directory)
+  (yas-load-directory  yas/root-directory)
   ;; If non-nil, don't derive tab triggers from filenames.
   (setq yas/ignore-filenames-as-triggers t)
   (require 'dropdown-list)
@@ -16,7 +16,7 @@
   ;; (setq yas/prompt-functions '(yas/x-prompt))
   ;; (setq yas/prompt-functions '(yas/dropdown-prompt))
   ;; (setq yas/prompt-functions '(yas/ido-prompt))
-  (setq yas/prompt-functions '(yas/completing-prompt))
+  (setq yas-prompt-functions '(yas/completing-prompt))
   )
 
 ;; (require 'yasnippet-bundle)

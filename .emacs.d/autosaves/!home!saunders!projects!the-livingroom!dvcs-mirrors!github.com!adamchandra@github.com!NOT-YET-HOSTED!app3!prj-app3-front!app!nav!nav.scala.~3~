@@ -1,0 +1,23 @@
+package nav
+
+import controllers._
+import play.navigator._
+import scala.xml._
+import java.util.UUID
+import play.api.Play.current
+import play.api.Play
+import play.api.mvc._
+
+import java.io.UnsupportedEncodingException
+import java.net.{URLEncoder, URLDecoder}
+
+
+object nav extends PlayNavigator {
+
+  GET on "/" to Application.index _
+
+  val assetsVersion = "12"
+  val assets = GET on "assets" / assetsVersion / ** to ((p: String) => controllers.Assets.at(path = "/public", p))
+
+}
+

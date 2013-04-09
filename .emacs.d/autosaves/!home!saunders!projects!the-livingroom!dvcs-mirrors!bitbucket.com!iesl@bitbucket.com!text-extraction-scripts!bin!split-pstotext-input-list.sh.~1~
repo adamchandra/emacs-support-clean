@@ -1,0 +1,16 @@
+#!/bin/bash
+
+BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $BIN/common-defs.sh
+
+declare infile="$1"
+
+cd $workdir
+
+# split -a 5 -d -l "$batchSize" papers-to-process-pstotext.txt run-pstotext.
+# split -a 5 -d -l "$batchSize" $infile --filter run-pstotext.
+
+
+split -a 2 -d -l 2 $infile --filter='cat > $FILE; ../bin/dir-munge.sh $FILE | xargs -i mkdir -p {}; mv $FILE $(../bin/dir-munge.sh $FILE)' 0
+

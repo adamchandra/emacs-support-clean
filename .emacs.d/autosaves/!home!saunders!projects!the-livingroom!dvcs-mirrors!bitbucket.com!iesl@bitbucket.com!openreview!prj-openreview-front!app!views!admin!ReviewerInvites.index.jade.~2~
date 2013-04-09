@@ -1,0 +1,14 @@
+-@ val it : admin.ReviewerInvites
+
+ul
+  - for (inv <- it.invites)
+    li
+      a.ajax(href={"/admin/reviewer/invite/"+inv.user.id}
+             rel="tooltip")
+        | Send invite to #{inv.user.emails.headOption.map(_.email).getOrElse("error: no valid email!!")}
+    li
+      .expand.fadeable.withtooltip(title="Expand email" read-more="Expand email" read-less="Collapse email")
+        .abstractsmall
+          small.abstract = inv.emailBody
+
+

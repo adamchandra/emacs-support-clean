@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# TODO: this should parse the logs for 'is a paper'
+
+BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $BIN/common-defs.sh
+
+declare infile="$1"
+declare outfile="$2"
+
+find $infile -type f -name "*.pstotext.log" -exec grep -q 'is a paper' {} ';' -printf "%p -> %p.meta.xml\n" | perl -pne 's/\.log/.xml/; s/\.log\.meta/.meta/' > $workdir/$outfile
+
+
+
+#!/bin/bash
+# Split pstotext.log(s)
+
+declare pstotextLog="$1"
+
+# pdfs/www.cs.uvm.edu/~eppstein/personal/Gecco06EMT.pdf is a paper Mon Nov 19 21:40:28 2012
+
+grep 'is a paper' $pstotextLog | perl -pne 's|^(.*)\wis a paper|\1.d/pstotext/|'
+split -a 5 -d -l "$batchSize" $infile --filter='cat > $FILE; ../bin/dir-munge.sh $FILE | xargs -i mkdir -p {}; mv $FILE $(../bin/dir-munge.sh $FILE)' 0
+
+
+#!/bin/sh
+exec scala -J-Xmx6G -savecompiled $0 $@
+!#
+
+import scala.io.Source
+
+val dsForwardLinks =
+  Source.stdin.getLines.foldLeft(Map[String, (Double, Set[String])]())({
+    //case ((forward: Map[String, Set[String]], reverse: Map[String, Set[String]]), s: String) => (forward, reverse)
+    case (forward, line) => {
+      count += 1
+      if (count % 10000 == 0) Console.err.println("Read %s ds lines" format (count))
+      val cols = line.split('\t')
+      if (cols.size == 10) {
+        val Array(recordtype, clusternum, seqlength, pcid, strand, bogus1, bogus2, alignment, query, target) = cols
+        //  val Array(query, target) = cols
+
+        val pcidD = pcid.toDouble
+
+        val forwardSoFar = forward.getOrElse(query, (0.,Set[String]()))
+        val updatedForward = pcidD match
+        {
+          case d if d < forwardSoFar._1 => forward // ignore new data
+          case d if d > forwardSoFar._1 => forward + (query->(d, Set(target)))  // ignore old data
+          case d => forward + (query->(d,forwardSoFar._2 + target))
+        }
+        updatedForward
+
+      }
+      else {
+        countSkipped += 1
+        if (countSkipped % 10000 == 0) Console.err.println("Skipped %s lines" format (countSkipped))
+        //println("skipped line: " + line)
+        forward
+      }
+    }
+  })

@@ -1,0 +1,27 @@
+.row-fluid
+  .span2.well
+    ul.nav.h-indent-ul
+      li.header
+        | Groups
+      li
+        a(href="#") Mine (10)
+      li
+        a(href="#") All (123)
+      
+        a(href="#") Subscribed (12)
+      li
+        a(href="#") Create
+
+  .span10
+    table.table.mailish
+      tbody
+        tr
+          td.from
+            i.icon-folder-close
+            b ICLR 2013 Area Chair
+          td
+            span.subject
+              | 
+          td 
+            span.date
+              | Oct 12, 2013

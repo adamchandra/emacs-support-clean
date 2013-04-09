@@ -1,0 +1,463 @@
+* Bookmarks
+
+
+*** RC Files
+    [[/home/saunders/projects/the-toolshed/emacsen/emacs-support-clean/etc/.emacs][.emacs]]     
+      [[elisp:(byte-compile-file "/home/saunders/.emacs")][byte-compile .emacs]]
+
+*** Org files
+    [[file:./interesting-code-snippets.txt][Code Snippets (misc)]]
+    [[file:./code-reviews.org][Software/code reviews]]
+    [[file:./rexa2-iesl-wiki-pages.org][Rexa2 Wiki Pages]]
+    [[file:./index.org][Index]]
+    [[file:./writing.org][Writing]]
+    [[file:./daily-practice.org][Daily Practice]]
+    [[file:./uncategorized-notes.org][Uncategorized Notes]]
+    [[file:./rexa-reboot-project.org][Rexa-reboot-project]]
+    [[file:./project-misc.org][Project Miscellany]]
+    [[file:./rosettacode-links.org][Rosetta Code]]
+    [[file:./functional-programming-progress.org][Functional programming progress]]
+    [[file:./dataset-topology.org][Dataset Topology]]
+    [[file:./visualization-techniques.org][Visualization techniques]]
+    [[file:./annotation-tooling.org][Annotation Tooling]]
+    [[file:./emacs-howtos.org][Emacs How-to]]
+
+
+
+(defun asdf () (interactive) (message (region-or-non-nil-symbol-name-nearest-point)))
+(defun qwer () (interactive) 
+  (let ((ff (function-called-at-point))) 
+       (and ff (symbolp ff) (symbol-name ff)))
+)
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/googleapis/0.0.4/googleapis.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/jsapi"></script>
+<script type="text/javascript" src="//www.accountchooser.com/client.js"></script>
+<script type="text/javascript">
+  google.load("identitytoolkit", "2", {packages: ["ac"], language:"en"});
+</script>
+<script type="text/javascript">
+  $(function() {
+    window.google.identitytoolkit.setConfig({
+        developerKey: "AIzaSyCDrvgUcMyiUhu8dwUzZoE9gvMamzNsu5Q",
+        companyName: "Rexa",
+        callbackUrl: "http://vinci9.cs.umass.edu:9000/auth/authenticate/google",
+        realm: "",
+        userStatusUrl: "http://vinci9.cs.umass.edu:9000/profile",
+        loginUrl: "http://vinci9.cs.umass.edu:9000/auth/login",
+        signupUrl: "http://vinci9.cs.umass.edu:9000/auth/login",
+        homeUrl: "http://vinci9.cs.umass.edu:9000/",
+        logoutUrl: "http://vinci9.cs.umass.edu:9000/auth/logout",
+        idps: ["Gmail", "GoogleApps", "Yahoo"],
+        tryFederatedFirst: true,
+        useContextParam: true,
+        language: "en"
+    });
+    window.google.identitytoolkit.init();
+  });
+</script>
+
+
+    b= creator.name
+    i.icon-arrow-right
+    b= target.name
+
+
+
+-import play.api.mvc._
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-# -implicit val bootstrapFormFieldConstructor = h.twitterBootstrap.twitterBootstrapField
+-implicit val twitterBootstrapField = new h.FieldConstructor { def apply(elts: h.FieldElements) = views.html.myBootstrapFieldConstructor(elts) }
+
+-@ val request: RequestHeader
+
+- implicit val req = request
+
+-@ val authProviders: Iterable[securesocial.core.IdentityProvider]
+-@ val errorMsg: Option[String] = None
+
+
+.main
+  .row-fluid
+    .span4.offset2
+      form.well.form-vertical(action="/auth/login" method="POST")
+        fieldset
+          legend Sign In
+          legend
+
+          input(name="email" type="text" placeholder="Email")
+          input(name="password" type="password" placeholder="Password")
+          label.checkbox
+            input(name="rememberme" type="checkbox") Remember me 
+          button.btn(type="submit") Sign In
+          span #{errorMsg}
+
+    
+
+
+
+
+
+-import play.api.mvc._
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-# -implicit val bootstrapFormFieldConstructor = h.twitterBootstrap.twitterBootstrapField
+-implicit val twitterBootstrapField = new h.FieldConstructor { def apply(elts: h.FieldElements) = views.html.myBootstrapFieldConstructor(elts) }
+
+-@ val request: RequestHeader
+
+- implicit val req = request
+
+-@ val authProviders: Iterable[securesocial.core.IdentityProvider]
+-@ val loginForm: Form[controllers.AuthController.LoginInfo]
+-@ val errorMsg: Option[String] = None
+
+-@ val registrationForm: Form[controllers.AuthController.RegistrationInfo]
+-val rform = registrationForm
+
+.main
+  .row-fluid
+    .span4.offset2
+      form.well.form-vertical(action="/auth/login" method="POST")
+        fieldset
+          legend Sign In
+          legend
+            =for(p <- authProviders if p.authMethod != securesocial.core.AuthenticationMethod.UserPassword) 
+              = securesocial.views.html.provider(p.id)(req)
+
+          input(name="email" type="text" placeholder="Email")
+          input(name="password" type="password" placeholder="Password")
+          label.checkbox
+            input(name="rememberme" type="checkbox") Remember me 
+          button.btn(type="submit") Sign In
+          span #{errorMsg}
+
+    
+
+    .span4
+      form.well.form-horizontal(action="/auth/signup" method="POST")
+        legend Sign Up
+        =unescape(h.inputText(rform("email")                   , '_label -> "Email"           , '_showConstraints -> false, '_showErrors -> true, 'placeholder -> "email"))
+        =unescape(h.inputText(rform("firstName")               , '_label -> "First name"      , '_showConstraints -> true,  '_showErrors -> true, 'placeholder -> "first name"))
+        =unescape(h.inputText(rform("lastName")                , '_label -> "Last name"       , '_showConstraints -> true,  '_showErrors -> true, 'placeholder -> "last name"))
+        =unescape(h.inputText(rform("userName")                , '_label -> "Username"        , '_showConstraints -> false, '_showErrors -> true, 'placeholder -> "username"))
+        =unescape(h.inputPassword(rform("password.p1")           , '_label -> "Password"        , '_showConstraints -> true,  '_showErrors -> true, 'placeholder -> "password"))
+        =unescape(h.inputPassword(rform("password.p2")           , '_label -> "Retype Password" , '_showConstraints -> true,  '_showErrors -> true, 'placeholder -> "password"))
+        =unescape(h.checkbox(rform("rememberme")               , '_label -> "Remember Me"     , '_showConstraints -> true,  '_showErrors -> true, 'placeholder -> ""))
+        button.btn(type="submit") Sign Up
+        =rform.errors.mkString(", ")
+
+
+
+
+
+.emails
+  ul.unstyled-ul
+  
+    li
+      ul.inline-ul
+        li
+          a(href="#" rel="tooltip" title="primary contact email")
+            i.icon-star
+        li
+          = it.email
+        li
+          span.dropdown
+            a.dropdown-toggle(id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/todo")
+              i.icon-ok
+              | Verified |
+              i.icon-lock 
+              | Login |
+              i.icon-eye-open
+              | Public |
+              b.caret
+            ul.dropdown-menu(role="menu" aria-labelledby="dLabel")
+              li
+                a(href="/verifyemail") Make private
+              li
+                a(href="/verifyemail") Remove password
+  
+    li
+  
+      ul.inline-ul
+        li
+          a(href="#" rel="tooltip" title="primary contact email")
+            i.icon-star-empty
+        li
+          = it.email
+        li
+          span.dropdown
+            a.dropdown-toggle(id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/todo")
+              i.icon-question-sign
+              | Unverified |
+              i.icon-eye-close
+              | Private |
+              b.caret
+            ul.dropdown-menu(role="menu" aria-labelledby="dLabel")
+              li
+                a(href="/verifyemail") Set as contact email
+              li
+                a(href="/verifyemail") Verify 
+              li
+                a(href="/verifyemail") Make public
+              li
+                a(href="/verifyemail") Set login password
+  
+  
+    li
+      ul.inline-ul
+        li
+          i.icon-plus
+          | Add email |
+
+
+
+
+  def fromBaseDocumentZ[T](d: Document, f: T) = {
+    (some(d.created) <*>
+       (some((d.inResponseTo map (_.uuid))) <*>
+          (some(d.nextRevision map (_.uuid)) <*>
+             (some((d.lastRevision map (_.uuid))) <*>
+                (some(d.summary) <*>
+                   (some((d.authors map (_.uuid))) <*>
+                      (some(d.title) <*>
+                         (some(d.creator.uuid) <*>
+                            (some(d.uuid) <*>
+                               {UrlDocumentDAO.curry}.some)))))))))
+  }
+
+
+  def fromBaseDocument[T, S <: DocumentDAO](d: Document, f: Function1[T, S]): S = {
+    (some(d.created) <*>
+       (some((d.inResponseTo map (_.uuid))) <*>
+          (some(d.nextRevision map (_.uuid)) <*>
+             (some((d.lastRevision map (_.uuid))) <*>
+                (some(d.summary) <*>
+                   (some((d.authors map (_.uuid))) <*>
+                      (some(d.title) <*>
+                         (some(d.creator.uuid) <*>
+                            (some(d.uuid) <*>
+                               f.some)))))))))
+  }
+
+  def urlDocumentDAO = UrlDocumentDAO.curried
+
+
+
+
+  ul.unstyled-ul
+    - it.primaryEmail.map
+      | Primary |
+      li(class={"email-row"+0} data-refresh-url={"/user/email/"+0+"/index"})
+        - attributes("email") = 
+        - attributes("i") = 0L
+        = view(it, "email")
+
+    - for ((email, i) <- it.emails.zipWithIndex) 
+      li(class={"email-row"+i} data-refresh-url={"/user/email/"+i+"/index"})
+        - attributes("email") = email
+        - attributes("i") = i.toLong
+        = view(it, "email")
+
+    li
+      ul.inline-ul.add-email
+        li
+          i.icon-plus
+
+        li
+          form.ajax.form-horizontal(action="/user/email/add" method="POST" data-replace={".add-email"})
+            input(name="username" type="text" placeholder="Email")
+            button.btn(type="submit") Add Email
+
+
+
+ul.inline-ul(name={"email-"+i})
+  li
+    = email.email
+  li
+    span.dropdown
+      a.dropdown-toggle(id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#")
+        b.caret
+        - if (email.verified)
+          i.icon-ok
+          | Verified |
+        - else
+          i.icon-question-sign
+          | Unverified |
+
+      ul.dropdown-menu(role="menu" aria-labelledby="dLabel")
+        li
+          - if (i<0)
+            a.ajax(
+              id={"id"+i}
+              href={"/user/email/"+i+"/setprimary"}
+              data-replace={".email-row"+i})
+              | Set as primary email |
+
+
+              li
+                = if (attributes("message-"+i).fold
+                  - case Left(m)
+                    .span6.offset3.center.alert.alert-success
+                      = message
+                      button.close(type="button" data-dismiss="alert")
+                        i.icon-remove
+                  - case Right(m)
+                    .span6.offset3.center.alert.alert-success
+                      = message
+                      button.close(type="button" data-dismiss="alert")
+                        i.icon-remove
+
+
+
+
+- import play.api.data._
+- import play.api.data.Forms._
+- import edu.umass.cs.iesl.scalacommons.StringUtils._
+
+-@ val it : admin.ReviewerInvite
+- import it._
+
+-# div.form.ajax.form-horizontal(action="/user/email/add" method="POST" data-append={".invite-list"})
+-#   input(name="email" type="text" placeholder="reviewer email")
+-# 
+-# 
+-# ul.h-indent-ul.invite-list
+-#   li
+-#     | Reviewer emails
+-#   li.invite-tail
+
+
+package model.user
+
+import org.fusesource.scalate.TemplateSource
+import org.fusesource.scalate.Binding
+import org.fusesource.scalate.support.TemplatePackage
+
+
+class ScalatePackage extends TemplatePackage {
+
+  /** Returns the Scala code to add to the top of the generated template method */
+   def header(source: TemplateSource, bindings: List[Binding]) = {
+     """
+import play.api._
+import play.api.mvc._
+
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.Registry
+-import securesocial.core.IdentityProvider
+-import securesocial.core.providers.UsernamePasswordProvider
+-import securesocial.core.AuthenticationMethod._
+-implicit val twitterBootstrapField = new h.FieldConstructor { def apply(elts: h.FieldElements) = views.html.myBootstrapFieldConstructor(elts) }
+
+-@ val authProviders: Iterable[securesocial.core.IdentityProvider]
+-@ val errorMsg: Option[String] = None
+-@ val message: Option[String] = None
+
+
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
+val request: RequestHeader = attribute("request")
+implicit val req = request
+
+def capitalize(s: String) = { s(0).toUpperCase + s.substring(1, s.length).toLowerCase }
+
+     """
+   }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Here's what I did:
+
+
+
+
+Aaron Courville got merged: the DEJ74A user is in the archive, and the bUgbg is active.  References to the old one remain, so just replace them:
+
+
+db.event.update(
+   { creator: BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { creator: BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+db.event.update(
+   { eventProcessor: BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { eventProcessor: BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+// Then -->
+db.event.update(
+   { target: BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { eventProcessor: BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+// but he's a mailing list subscriber too:
+
+db.eventprocessor.find({"subscribers.1":BinData(3,"DEJ74A3VUUH00EsRdYggmg==") })
+
+// don't know how to update any array element, so just use brute force:
+
+db.eventprocessor.update(
+   { "subscribers.1": BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { "subscribers.1": BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+db.eventprocessor.update(
+   { "subscribers.2": BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { "subscribers.2": BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+db.eventprocessor.update(
+   { "subscribers.3": BinData(3,"DEJ74A3VUUH00EsRdYggmg==") },
+   { $set: { "subscribers.3": BinData(3,"bUgbgYoGrgN3RQ1+h9cmmg==") } },
+   { multi: true }
+)
+
+// and there weren't any past 4 anyway.
+
+
+
+Samy Bengio has a User, BinData(3,"mU/dCr0IzsCwqAioc+s2jQ==")}), and the eventprocessor collection has three anonymizers for him (correctly pointing to that ID), but all of his primary eventprocessors are in the archive.  Just restore the one that's supposed to be active:
+
+db.eventprocessor.insert(db.eventprocessor_archive.find({_id:BinData(3,"mU/dCr0IzsCwqAioc+s2jQ==")})[0])
+
+
+
+
+
+A clean database backup is attached.  Here are the merges I ran:
+
+sudo ./sbt "project openreview-front" "run-main net.openreview.model.admin.Iclr2013Tasks openreview-production mergeusersbyemail /home/openreview/iclr-user-merge5"
+
+sudo ./sbt "project openreview-front" "run-main net.openreview.model.admin.Iclr2013Tasks openreview-production mergeusersbyemail /home/openreview/iclr-user-merge6"
+
+Both threw exceptions, but I thought those were just due to an empty line at the end of the input file or something dumb like that.  So perhaps things ended up inconsistent if an exception occurred partway through.

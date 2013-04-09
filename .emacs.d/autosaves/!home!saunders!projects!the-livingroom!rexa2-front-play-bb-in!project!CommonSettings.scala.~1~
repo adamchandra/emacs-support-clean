@@ -1,0 +1,124 @@
+import sbt._
+import Keys._
+
+object CommonHelpers {
+  import Dependencies._
+  
+  val embeddedRepo = Resolver.file("Embedded Repository", file("../repository/local"))(Resolver.ivyStylePatterns) 
+
+
+  object Settings {
+    val publication = Seq (
+      publishTo <<= (version) { (version: String) => {
+        def repo(name: String) = name at "https://dev-iesl.cs.umass.edu/nexus/content/repositories/" + name
+        val isSnapshot = version.trim.endsWith("SNAPSHOT")
+        val repoName = if (isSnapshot) "snapshots" else "releases"
+        Some(repo(repoName))
+      }},
+      credentials += { 
+        Seq("build.publish.user", "build.publish.password").map(k => Option(System.getProperty(k))) match {
+          case Seq(Some(user), Some(pass)) =>
+            Credentials("Sonatype Nexus Repository Manager", "dev-iesl.cs.umass.edu", user, pass)
+          case _ =>
+            Credentials(Path.userHome / ".ivy2" / ".credentials")
+        }
+      }
+    )
+
+    val scalac = Seq (
+      scalaVersion  := "2.9.2",
+      scalacOptions := Seq("-deprecation", "-unchecked", "-Xcheckinit", "-encoding", "utf8"),
+      javacOptions  ++= Seq("-Xlint:unchecked"),
+      // unmanagedJars <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
+      //resolvers     ++= embeddedRepo,
+      resolvers     ++= Dependencies.resolutionRepos,
+      compileOrder := CompileOrder.JavaThenScala
+    ) // ++ publication
+
+
+  }
+
+  def projectIn(path:String) = Project(path, file(path))
+
+  def addDeps: (sbt.ModuleID*) => Project => Project =
+    deps => proj => proj.settings(libraryDependencies ++= deps:_*)
+
+  def set: (Seq[Project.Setting[_]]) => Project => Project =
+    settings => proj => proj.settings(settings:_*)
+}
+
+
+
+object ShellPrompt {
+
+  object devnull extends ProcessLogger {
+    def info (s: => String) {}
+    def error (s: => String) { }
+    def buffer[T] (f: => T): T = f
+  }
+
+  val current = """\*\s+([^\s]+)""".r
+
+  def gitBranches = ("git branch --no-color" lines_! devnull mkString)
+  def hgBranch = ("hg branch" lines_! devnull mkString)
+
+  val buildShellPrompt = {
+    (state: State) => {
+      val currBranch = hgBranch
+      val currProject = Project.extract (state).currentProject.id
+      "%s:%s:%s> ".format (currBranch, currProject, "0.0")
+      // "%s:%s:%s> ".format (currBranch, currProject, BuildSettings.buildVersion)
+    }
+  }
+}
+
+
+
+
+
+
+
+  // import com.typesafe.sbtaspectj.AspectjPlugin
+  // import com.typesafe.sbtaspectj.AspectjPlugin.{ Aspectj, inputs, aspectFilter, weave }
+  //lazy val sampleAspectJEnabled = (
+  //
+  //  Project("..", file("asdf"))
+  //  .settings(Settings.scalac:_*)
+  //  .settings(
+  //    organization  := "cc.rexa2",
+  //    version       := "0.1"
+  //  )
+  //  .settings(AspectjPlugin.settings:_*)
+  //  .settings(
+  //    // AspectJ settings
+  //    // jar weaving
+  //    //inputs in Aspectj <<= update map { report => {
+  //    //  report.matching(moduleFilter(organization = "cc.rexa2", name = "EulerP14$")).sortBy(_.name)
+  //    //}},
+  //    //aspectFilter in Aspectj := {
+  //    //  (jar, aspects) => {
+  //    //    if (jar.name.contains("my-jar-name")) aspects filter (_.name.startsWith("Actor"))
+  //    //    else Seq.empty[File]
+  //    //  }
+  //    //},
+  //  
+  //    // Classpath weaving
+  //    inputs in Aspectj <<= classDirectory in Compile map { Seq(_) },
+  //  
+  //    fullClasspath in Test <<= AspectjPlugin.useInstrumentedJars(Test),
+  //    fullClasspath in Compile <<= AspectjPlugin.useInstrumentedJars(Compile),
+  //    fullClasspath in Runtime <<= AspectjPlugin.useInstrumentedJars(Runtime),
+  //  
+  //    fullClasspath in Test <<= AspectjPlugin.useInstrumentedClasses(Test),
+  //    fullClasspath in Compile <<= AspectjPlugin.useInstrumentedClasses(Compile),
+  //    fullClasspath in Runtime <<= AspectjPlugin.useInstrumentedClasses(Runtime),
+  //  
+  //    products in Compile <<= weave in Aspectj map identity
+  //  )
+  //  .settings(
+  //     (libraryDependencies ++= 
+  //      Seq(
+  //        Container.slf4s,
+  //        Container.logbackClassic
+  //     )))
+  //  ) dependsOn (camelCommons % "test->test;compile->compile")

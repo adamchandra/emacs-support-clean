@@ -1,0 +1,19 @@
+todo
+
+
+
+emacs tea time is not yet in .emacs
+
+go through org files and put many of the notes here instead
+
+write scripts that grep/parse TODO, ASK, NOTE comments in code and compile them into a single file
+
++ remove "IESL" from google openID login "Open review/IESL" is asking permission to ...
+
+
+
+- Need correctly formatted email messages
+- The outgoing email config really needs to use configured sendmail on vinci8, or one registered w/openreview.net
+- I don't think we solved user merging from the event processor perspective
+- user email settings (adding/removing/verifying/setting primary) are working, but need visual polish
+- new invited user signup/user merge flow is very choppy 

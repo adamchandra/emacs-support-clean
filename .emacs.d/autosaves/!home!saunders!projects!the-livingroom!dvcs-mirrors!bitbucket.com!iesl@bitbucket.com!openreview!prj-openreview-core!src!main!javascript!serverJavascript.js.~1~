@@ -1,0 +1,83 @@
+
+var fns = [
+    { _id: "initJSFunctions", 
+      value: function() {
+          String.prototype.repeat = function( num ) { return new Array( num + 1 ).join( this ); }
+      }
+    },
+    { _id: "printIndent", 
+      value: function (level, str) {print(' '.repeat(level*4) + str)}
+    }, 
+    ,
+    { _id:     "appendIndent", 
+      value: function (acc, level, str) {return acc + (' '.repeat(level*4) + str) + '\n'; }
+    },
+    { _id:     "makeString", 
+      value: function (obj) { return objectToString(obj, 0) }
+    },
+
+    { _id:     "initJSFunctions", 
+      value: function() {
+          String.prototype.repeat = function( num ) { return new Array( num + 1 ).join( this ); }
+          function printIndent(level, str) {print(' '.repeat(level*4) + str)}
+          function appendIndent(acc, level, str) {return acc + (' '.repeat(level*4) + str) + '\n'; }
+          function makeString(obj) { return objectToString(obj, 0) }
+      }
+    },
+    { _id:     "objectToString", 
+      value: function (obj, level) { 
+          var ostr = '';
+          for (var fname in obj) { 
+              var fval = obj[fname];
+              var fvaltype = typeof(fval); 
+              if (fvaltype==='object') { 
+                  if (typeof(fval.getTime) === 'function') {
+                      /* It's a date field */
+                      ostr = appendIndent(ostr, level, fname + ': ' + fval.toString());
+                  } else if (fval.hasOwnProperty('len')) {
+                      /* It's a UUID */
+                      ostr = appendIndent(ostr, level, fname + ': ' + fval.toJUUID() + ' = ' + fval.toString());
+                  } else {
+                      ostr = appendIndent(ostr, level, fname +':\n'+ objectToString(fval, level+1));
+                  }
+              } else if (fvaltype !== 'function') { 
+                  ostr = appendIndent(ostr, level, fname + ": " + fval.toString().trim());
+              } 
+          } 
+          return ostr;
+      }
+    },
+    { _id:     "hasUUID", 
+      value: function (obj, uuidStr) {
+          return objectHasUUID(obj, 'JUUID("'+uuidStr+'")')
+      } 
+    },
+    { _id:     "objectHasUUID", 
+      value: function (obj, juuidStr) { 
+          for (var fname in obj) { 
+              var fval = obj[fname];
+              var fvaltype = typeof(fval); 
+              if (fvaltype==='object') {
+                  if (fval.hasOwnProperty('len')) { 
+                      /* Its a UUID */
+                      var fvuuid = fval.toJUUID();
+                      print("comparing "+fvuuid + ' to ' +juuidStr)
+                      if (fvuuid === juuidStr) { 
+                          return true; 
+                      }
+                  } else {
+                      if (objectHasUUID(fval, juuidStr)) {
+                          return true;
+                      }
+                  }
+              }
+          } 
+          return false;
+      }
+    }
+]
+
+
+for (f in funs) {
+    db.system.js.save(f)
+}

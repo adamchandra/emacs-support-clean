@@ -1,0 +1,10 @@
+#!/bin/bash
+
+BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $BIN/common-defs.sh
+
+cd $workdir
+
+find 0/ -type f -print -exec $bin/make-pstotext-script.sh {} ';'
+

@@ -1,0 +1,19 @@
+package net.openreview
+package model
+
+import com.mongodb.casbah.Imports._
+import org.specs2.mutable._
+import org.specs2.specification.{ Scope, Step }
+import com.novus.salat.{ BigDecimalStrategy, Context }
+import com.mongodb.casbah.commons.test.CasbahMutableSpecification
+
+class DocumentStoreSpec extends MongoSpec {
+
+  "a first test" should {
+    "start and stop a db" in {
+      todo
+    }
+  }
+
+}
+

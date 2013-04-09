@@ -1,0 +1,161 @@
+package lib.core
+
+
+ 
+import play.api.Play.current
+import play.api.db.DB
+import play.api.test.Helpers._
+import play.api.test._
+ 
+import anorm._
+import anorm.SqlParser._
+import java.util.Date
+
+import org.specs2.mutable
+import org.specs2.mutable._
+
+class DBEvolutionsTest extends mutable.Specification {
+
+  def testingDatabase(name: String = "default"): Map[String, String] = {
+    Map(
+      ("db." + name + ".driver") -> "org.h2.Driver",
+      ("db." + name + ".url") -> ("jdbc:h2:mem:play-test-" + scala.util.Random.nextInt),
+      ("db." + name + ".user") -> "sa",
+      ("db." + name + ".password") -> ""
+    )
+  }
+
+  // TODO: move this to more general utility class
+  def runInApp(b: => org.specs2.execute.Result): org.specs2.execute.Result = {
+    running(FakeApplication(
+      additionalConfiguration = testingDatabase(),
+      withoutPlugins = Seq(
+        "securesocial.core.providers.GoogleProvider", 
+        "service.InMemoryUserService", 
+        "securesocial.core.providers.UsernamePasswordProvider")
+    )) {
+      evolutionFor("default")
+      b
+    }
+  }
+
+
+
+  import scalaz.Validation, Validation._, scalaz.syntax.validation._
+
+
+  object modelEntity {
+    val userRegInfo = UserRegistrationInfo(
+      "a@b.com",
+      "myname",
+      Some("My Fullname")
+    )
+
+    val linkedAccount = LinkedAccount(
+      id             = 0, 
+      userId           = 0, 
+      providerUserId = "users-provider-id", 
+      providerKey    = "some-provider"
+    )
+  }
+
+
+
+  "Linked accounts" should {
+    "not be creatable w/o a linked user" in {
+      import org.h2.jdbc.JdbcSQLException
+      runInApp {
+        LinkedAccount.create(modelEntity.linkedAccount) must throwA[JdbcSQLException]
+      }
+    }
+
+    "accept username/password for account" in {
+      todo
+    }
+
+    "accept oauth2 credentials (google, etc.)" in {
+      todo
+    } 
+ }
+
+
+  "Users" should {
+
+    "upon creation, always implicitly create a linked account" in {
+      runInApp {
+        // val user = modelEntity.newlyCreatedUser // .addLinkedAccount(modelEntity.linkedAccount)
+
+        val user = User.create(modelEntity.userRegInfo)
+        val user2 = User.findByEmail("a@b.com")
+
+        user2 must not beNone 
+        
+        val accs = user2.get.linkedAccounts
+
+        accs.length must_== 1
+
+        accs.head.providerUserId must_== "users-provider-id"
+      }
+    }
+
+
+
+    "be created and retrieved using email as retrieval key" in {
+      runInApp {
+        val user = User.create(modelEntity.userRegInfo).toOption
+        val user2 = User.findByEmail("a@b.com")
+        
+        user must not beNone 
+
+        user2 must not beNone 
+
+        user2.get.username must_== user.get.username
+
+      }
+    }
+
+
+    "follow email verification protocol" in { runInApp {
+      val user = User.create(modelEntity.userRegInfo).toOption.get
+
+      // val token = TokenAction.createForEmailVerification(user, (10 seconds))
+      // User.verifyEmail(token)
+
+      user.emailValidated must_== false
+
+      val tokens:List[TokenAction] = TokenAction.forUserId(user.id)
+
+      val evTokens = tokens.filter(_.isValid).filter(_.ttype==TokenAction.EmailVerificationToken)
+
+      evTokens.length must_== 1
+
+
+    }}
+
+
+//     "able to set passwords properly" in {
+//       runInApp {
+//         val user = User(
+//           0,
+//           "a@b.com",
+//           "myname",
+//           Some("My Fullname"),
+//           null, 
+//           false, 
+//           false
+//         )
+// 
+//         createUser(user)
+//         val user2 = findUserByEmail("a@b.com")
+//         
+//         user2 must not beNone 
+// 
+//         user2.get.username must_== user.username
+//       }
+//     }
+
+
+  }
+
+}
+

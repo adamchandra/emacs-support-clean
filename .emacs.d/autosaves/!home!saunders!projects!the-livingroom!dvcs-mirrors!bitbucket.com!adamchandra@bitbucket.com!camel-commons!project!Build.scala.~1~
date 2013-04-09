@@ -1,0 +1,74 @@
+import sbt._
+import edu.umass.cs.iesl.sbtbase.Dependencies
+import edu.umass.cs.iesl.sbtbase.IeslProject._
+
+import PlayProject._
+
+object OpenReviewBuild extends Build {
+
+  val vers = "0.1-SNAPSHOT"
+  val organization = "net.openreview"
+
+  implicit val allDeps: Dependencies = new Dependencies()
+
+  import allDeps._
+
+  override def settings = super.settings ++ org.sbtidea.SbtIdeaPlugin.ideaSettings
+
+  // uncomment for local development
+  val ssocial = RootProject(file("../rexa-securesocial"))
+
+  // root project exists only to help the "idea" task generate a root-level module.
+  lazy val root = (PlayProject("root", vers, path = file("."), mainLang = SCALA)
+    .ieslSetup(vers, Seq(), Public, WithSnapshotDependencies)
+    .cleanLogging.standardLogging
+    .dependsOn (openReviewFront)
+    .aggregate (openReviewFront)
+    )
+
+  lazy val openReviewCore = {
+
+    val deps : Seq[ModuleID] =
+      camel("core,test,jms,jetty,http,scala,spring,stream,exec,jsch".split(",").toSeq: _*)() ++ Seq(
+        scalatest(),
+        ieslScalaCommons("latest.integration"),
+        // "cc.rexa2" %% "rexa-securesocial" % "latest.integration",
+        scalazCore(),
+        scalazTypelevel(),
+        specs2(),
+        junit4(),
+        typesafeConfig(),
+        jaxbImpl(),
+        activeMQ(),
+        activeMQCamel(),
+        activeMQPool(),
+        scalatime()
+      )
+
+    (Project("openreview-core", file("prj-openreview-core"))
+      .ieslSetup(vers, deps, Public, WithSnapshotDependencies, org = organization, conflict = ConflictStrict)
+      .cleanLogging.standardLogging
+      .dependsOn(ssocial) // uncomment for local dev
+
+    )
+  }
+
+  lazy val openReviewFront = {
+
+    val deps = Seq(
+      scalateCore(),
+      "edu.umass.cs.iesl" %% "play-scalaz" % "0.1.0-SNAPSHOT",
+      "edu.umass.cs.iesl" %% "play-navigator" % "0.4.0"
+    )
+
+    (PlayProject("openreview-front", vers, path = file("prj-openreview-front"), mainLang = SCALA)
+      .ieslSetup(vers, deps, Public, WithSnapshotDependencies, org = organization, conflict = ConflictStrict)
+      .cleanLogging.standardLogging
+      .settings(templatesImport ++= Seq("nav.nav", "controllers._", "lib.core._"))
+      dependsOn (openReviewCore)
+      )
+  }
+
+}
+
+

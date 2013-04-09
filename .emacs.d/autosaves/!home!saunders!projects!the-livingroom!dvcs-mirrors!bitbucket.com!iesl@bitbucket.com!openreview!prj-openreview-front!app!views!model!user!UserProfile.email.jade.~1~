@@ -1,0 +1,30 @@
+ul.h-indent-ul
+  li
+    = email.email
+
+    - if (!email.verified)
+      li
+        a.btn.ajax(
+          href={"/user/email/verify/"+encEmail}
+          data-replace={".user-emails"})
+          | Verify 
+        | Send a verification email to this address
+      li
+        a.btn.ajax(
+          href={"/user/email/remove/"+encEmail}
+          data-replace={".user-emails"})
+          | Remove
+        | Remove this email address
+    - else
+      li
+        a.btn.ajax(
+          href={"/user/email/setprimary/"+encEmail}
+          data-replace={".user-emails"})
+          | Primary
+        | Make this your primary contact email
+      li
+        a.btn.ajax(
+          href={"/user/email/verify/"+encEmail}
+          data-replace={".user-emails"})
+          | Reverify 
+        | Re-send a verification email to this address

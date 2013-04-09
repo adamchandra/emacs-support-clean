@@ -1,0 +1,108 @@
+# Author: acs
+# name: import-scalaz-std-syntax
+# key: import-scalaz-std-syntax
+# --
+import scalaz.std.anyVal._
+import scalaz.std.stream.streamSyntax._
+import scalaz.std.list._
+import scalaz.std.option._
+import scalaz.std.option.optionSyntax._
+
+import scalaz.std.syntax.all._                             // extends ToSemigroupOps               
+import scalaz.std.syntax.applicative._                     // extends ToMonoidOps                  
+import scalaz.std.syntax.applicativePlus._                 // extends ToGroupOps                   
+import scalaz.std.syntax.apply._                           // extends ToEqualOps                   
+import scalaz.std.syntax.arrId._                           // extends ToLengthOps                  
+import scalaz.std.syntax.arrow._                           // extends ToShowOps                    
+import scalaz.std.syntax.bifoldable._                      // extends ToOrderOps                   
+import scalaz.std.syntax.bifunctor._                       // extends ToEnumOps                    
+import scalaz.std.syntax.bind._                            // extends ToMetricSpaceOps             
+import scalaz.std.syntax.bitraverse._                      // extends ToPlusEmptyOps               
+import scalaz.std.syntax.category._                        // extends ToEachOps                    
+import scalaz.std.syntax.choice._                          // extends ToIndexOps                   
+import scalaz.std.syntax.cojoin._                          // extends ToFunctorOps                 
+import scalaz.std.syntax.comonad._                         // extends ToPointedOps                 
+import scalaz.std.syntax.compose._                         // extends ToContravariantOps           
+import scalaz.std.syntax.contravariant._                   // extends ToCopointedOps               
+import scalaz.std.syntax.copointed._                       // extends ToApplyOps                   
+import scalaz.std.syntax.cozip._                           // extends ToApplicativeOps             
+import scalaz.std.syntax.each._                            // extends ToBindOps                    
+import scalaz.std.syntax.enum._                            // extends ToMonadOps                   
+import scalaz.std.syntax.equal._                           // extends ToCojoinOps                  
+import scalaz.std.syntax.foldable._                        // extends ToComonadOps                 
+import scalaz.std.syntax.functor._                         // extends ToCozipOps                   
+import scalaz.std.syntax.group._                           // extends ToPlusOps                    
+import scalaz.std.syntax.id._                              // extends ToApplicativePlusOps         
+import scalaz.std.syntax.index._                           // extends ToMonadPlusOps               
+import scalaz.std.syntax.kleisli._                         // extends ToTraverseOps                
+import scalaz.std.syntax.length._                          // extends ToZipOps                     
+import scalaz.std.syntax.listenableMonadWriter._           // extends ToUnzipOps                   
+import scalaz.std.syntax.metricSpace._                     // extends ToBifunctorOps               
+import scalaz.std.syntax.monad._                           // extends ToBifoldableOps              
+import scalaz.std.syntax.monadPlus._                       // extends ToBitraverseOps              
+import scalaz.std.syntax.monadWriter._                     // extends ToComposeOps                 
+import scalaz.std.syntax.monoid._                          // extends ToCategoryOps                
+import scalaz.std.syntax.order._                           // extends ToArrIdOps                   
+import scalaz.std.syntax.plus._                            // extends ToArrowOps                   
+import scalaz.std.syntax.plusEmpty._                       // extends ToChoiceOps                  
+import scalaz.std.syntax.pointed._                         // extends ToSplitOps                   
+import scalaz.std.syntax.reducer._                         // extends ToMonadWriterOps             
+import scalaz.std.syntax.semigroup._                       // extends ToListenableMonadWriterOps   
+import scalaz.std.syntax.show._                            // extends ToIdOps                      
+import scalaz.std.syntax.split._                           // extends ToTreeOps                    
+import scalaz.std.syntax.state._                           // extends ToReducerOps                 
+import scalaz.std.syntax.traverse._                        // extends ToWriterOps                  
+import scalaz.std.syntax.tree._                            // extends ToStateOps                   
+import scalaz.std.syntax.unzip._                           // extends ToFoldableOps                
+import scalaz.std.syntax.validation._                      // extends ToValidationOps              
+import scalaz.std.syntax.writer._                          // extends ToKleisliOps                 
+import scalaz.std.syntax.zip._                             // extends ToTypeClassOps with ToDataOps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

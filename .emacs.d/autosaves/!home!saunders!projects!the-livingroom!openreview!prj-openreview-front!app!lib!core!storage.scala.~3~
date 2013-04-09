@@ -1,0 +1,28 @@
+package lib.core
+
+import scalaz._, Scalaz._
+import play.scalaz.json._
+import play.api.Logger
+
+trait Store {
+  def getUser(login: String): Error \/ Option[User]
+  def setUser(user: User): Error \/ Unit
+  def setUserToken(user: User, token: UserToken): Error \/ Unit
+  def getUserToken(user: User): Error \/ Option[UserToken]
+  def getUserByToken(token: UserToken): Error \/ Option[User]
+}
+
+trait NullStoreImpl extends Store {
+
+  def setUser(user: User) = user
+
+
+  def getUser(login: String) = User("some-login", "some-email", "some name")
+
+  def setUserToken(user: User, token: UserToken) = token
+
+  def getUserToken(user: User) = UserToken("user-token")
+
+  def getUserByToken(token: UserToken) = User("some-login", "some-email", "some name")
+
+}

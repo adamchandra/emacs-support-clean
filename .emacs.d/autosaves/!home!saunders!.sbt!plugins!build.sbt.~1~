@@ -1,0 +1,11 @@
+
+// libraryDependencies += "de.hars" %% "ensime-plugin" % "0.1"
+
+// addCompilerPlugin("org.scala-tools.sxr" %% "sxr" % "0.2")
+
+// resolvers += "Scala-Tools Maven2 Snapshots Repository" at "http://scala-tools.org/repo-snapshots"
+
+
+resolvers += "Scala-Tools Repository" at "https://oss.sonatype.org/content/groups/scala-tools"    
+
+addSbtPlugin("org.ensime" %% "ensime-sbt-cmd" % "0.1.0")

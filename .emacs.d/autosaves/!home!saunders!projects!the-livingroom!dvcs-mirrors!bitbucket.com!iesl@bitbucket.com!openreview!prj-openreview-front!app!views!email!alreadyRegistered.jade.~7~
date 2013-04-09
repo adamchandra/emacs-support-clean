@@ -1,0 +1,21 @@
+- attributes("layout") = ""
+
+-import play.api.mvc._
+-import net.openreview.model.raw.users._
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.IdentityProvider
+
+-@ val request: RequestHeader
+- implicit val r = request
+-@ val user: Option[User]
+
+html
+  body
+    p 
+      | Hello {user.firstName},
+    
+    p 
+      | You tried to sign up but you already have an account with us.  If you don't remember your password please go to 
+      a(href={RoutesHelper.startResetPassword().absoluteURL(IdentityProvider.sslEnabled)})
+        | to reset it.
+

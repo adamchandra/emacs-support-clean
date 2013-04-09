@@ -1,0 +1,88 @@
+package net.openreview.model.admin
+
+import scala.tools.nsc.Settings
+import scala.tools.nsc.reporters.ConsoleReporter
+import scala.tools.nsc.interpreter.{ ILoop, ReplReporter, Results }
+import scala.collection.JavaConversions._
+
+
+object ScalaRepl {
+  def newSettings[DummyClassInDesiredClassloaderPath : Manifest]:Settings = {
+    val settings = new Settings
+    settings.deprecation.value = true
+    settings.embeddedDefaults[DummyClassInDesiredClassloaderPath]
+    settings.lint.value = true
+
+    lazy val urls = java.lang.Thread.currentThread.getContextClassLoader match {
+      case cl: java.net.URLClassLoader => cl.getURLs.toList
+      case _ => sys.error("classloader is not a URLClassLoader")
+    }
+    lazy val classpath = urls map {_.toString}
+    settings.classpath.value = classpath.distinct.mkString(java.io.File.pathSeparator)
+    settings
+  }
+
+  val results = Results
+
+}
+
+class ScalaILoop extends ILoop {
+
+  override def prompt = "scala> "
+
+  override def printWelcome() {
+    echo("Welcome to the ScalaRepl")
+  }
+
+  var scalaIntp: ScalaInterpreter = _
+
+  override def createInterpreter() {
+    if (addedClasspath != "")
+      settings.classpath.append(addedClasspath)
+    scalaIntp = new ScalaInterpreter
+    intp = scalaIntp
+  }
+
+  var interpreterSilence = false
+
+  /**Overriden to print out the value evaluated from the specified line. */
+  override def command(line: String): Result = {
+    val result = super.command(line)
+
+    if (result.keepRunning && result.lineToRecord.isDefined) {
+      interpreterSilence = printLastValue(scalaIntp.lastValue)
+    } else {
+      interpreterSilence = false
+    }
+    result
+  }
+
+
+  // Return true to suppress default repl message, false to allow it
+  def printLastValue(replResult: Either[Throwable, Object]): Boolean = {
+    false
+  }
+
+  class ScalaInterpreter extends ILoopInterpreter {
+
+    override lazy val reporter: ReplReporter = new ReplReporter(this) {
+      override def printMessage(msg: String) {
+        if (!interpreterSilence) {
+          super.printMessage(msg)
+          interpreterSilence = false
+        }
+      }
+    }
+    def prevRequest: Option[Request] = prevRequestList.lastOption
+    
+    /**Returns the last value evaluated by this interpreter. See https://issues.scala-lang.org/browse/SI-4899 for details. */
+    def lastValue: Either[Throwable, AnyRef] =
+      prevRequest.getOrElse(throw new NullPointerException()).lineRep.callEither("$result")
+
+  }
+
+}
+
+
+
+

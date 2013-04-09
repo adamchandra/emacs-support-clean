@@ -1,0 +1,49 @@
+!!!5
+-@ val title: String = "OpenReview"
+-@ val body: String = ""
+-@ val styles: List[String] = List()
+-@ val userOpt: Option[org.scalajars.core.User] = None
+-@ val scripts: List[String] = List()
+
+
+html(xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en")
+  head
+    title #{title}
+
+    meta(http-equiv="content-type" content="text/html; charset=UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(name="description" content="")
+    meta(name="author" content="")
+
+    link(rel="stylesheet" type="text/css" href="/assets/jquery-ui-1.8.16/css/ui-lightness/jquery-ui-1.8.16.custom.css")/
+    link(rel="stylesheet" type="text/css" href="/assets/twitter-bootstrap/css/bootstrap.css")/
+    link(rel="stylesheet" type="text/css" href="/assets/stylesheets/application.css")/
+    link(rel="stylesheet" type="text/css" href="/assets/stylesheets/default.css")/
+
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js")
+
+    script(src="/assets/twitter-bootstrap/js/bootstrap.js")
+
+    :css
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+
+
+  body(data-offset="50")
+    .navbar.navbar-inverse.navbar-fixed-top
+      .navbar-inner
+        .container
+          a.brand(href="/") OpenReview
+          ul.nav.pull-right
+            =render("/layout/login-nav.jade", Map('user -> userOpt))
+  
+
+    .container(position="absolute" top="30px")
+      .row
+        .content
+          -unescape(body)
+
+      .row.hbar-red
+

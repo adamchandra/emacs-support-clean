@@ -1,0 +1,10 @@
+
++ Planned features
+  - Allow include regexp as well as exclude
+  - Separate code into file list providers/fstree builders, 
+    such that provided files can come from alternate sources
+  - Save sets of providers in a directory such that they can be created, saved and reused easily
+  - Create provider combinators to construct more complex sets of files
+  - accepts input from e.g. grep/ack/ag such that search hits become subtrees under files
+  - use create read-only org mode so that the trees are not so brittle wrt normal editing commands
+  

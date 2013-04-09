@@ -1,0 +1,8 @@
+# Author: acs
+# name: validation-fold
+# key: validation-fold
+# --
+.fold(fail={err =>
+      },
+      succ={ok =>
+      })

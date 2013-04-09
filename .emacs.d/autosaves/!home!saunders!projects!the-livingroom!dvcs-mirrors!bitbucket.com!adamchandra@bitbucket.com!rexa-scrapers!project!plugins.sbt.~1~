@@ -1,0 +1,10 @@
+resolvers ++= Seq(
+  "Typesafe repository"   at "http://repo.typesafe.com/typesafe/releases/"
+)
+
+logLevel := Level.Warn
+
+addSbtPlugin("play" %% "sbt-plugin" % "2.1-09142012")
+
+
+

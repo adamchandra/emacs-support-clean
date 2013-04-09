@@ -1,0 +1,224 @@
+a                 	                                        { text-decoration: none; font-weight: normal; }
+a:link,.w,.w a:link						{ color:#0000cc}
+a.self:link                                                     { color: inherit; }
+a:visited							{ color:#551a8b}
+a.self:visited                                                  { color: inherit; }
+a:hover                                                         { text-decoration: underline;  font-weight: normal; }
+a.self:hover                                                    { text-decoration: none; }
+a:active							{ color:#ff0000}
+a.self:active                                                   { color: inherit; }
+
+
+.width-50 {
+ width: 50%;
+}
+
+.width-33 {
+ width: 33%;
+}
+
+.float-left {
+ float: left;
+}
+
+.float-right {
+ float: right;
+}
+
+.inline-ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	display: inline;
+}
+
+.inline-ul > li {
+	list-style-type: none;
+	display: inline;
+  padding-right: 5px;
+  // white-space: nowrap;
+}
+
+.inline-ul > li.first {
+	margin-left: 0;
+	display: inline;
+  // white-space: nowrap;
+}
+
+.inline-ul > li.last {
+	margin-left: 0;
+	display: inline;
+  padding-right: 0;
+  // white-space: nowrap;
+}
+
+.h-indent-ul {
+	margin: 0px;
+	padding: 0;
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none;
+}
+
+.h-indent-ul > li {
+	margin-left: 1em;
+	padding-left: 1em;
+	list-style-type: none;
+  padding-right: 0;
+}
+
+.h-indent-ul > li:first-child {
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.naked {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.unstyled-ul {
+	margin: 2px;
+	padding: 0;
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none;
+}
+
+.unstyled-ul > li {
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none;
+  padding-right: 0;
+}
+
+
+.table-unlined th,
+.table-unlined td {
+  border-top: 0;
+}
+
+.hang3 { 
+  text-indent: -3em; 
+  margin-left: 3em; 
+}
+
+.hang2 { 
+  text-indent: -2em; 
+  margin-left: 2em; 
+}
+
+.hang1 { 
+  text-indent: -1em; 
+  margin-left: 1em; 
+}
+
+.focus { 
+  background:#e5ecf9; 
+}
+
+.soft { 
+  color:#777;
+}
+
+.largeBold { 
+    font-weight: bolder; 
+    font-size: large;
+}
+
+.mediumBold { 
+    font-weight: bolder; 
+    font-size: medium;
+}
+
+.bold { 
+    font-weight: bolder; 
+}
+
+.edit-hover { 
+  background:#00ffff; 
+}
+
+.deletable-hover { 
+  background:#ee3333; 
+}
+
+.edit-inprogress { 
+  background:#ffe4b5; 
+}
+
+.hidden { 
+  display:none; 
+}
+
+.info-block { 
+		background-color: #D0DDEE; 
+		min-height: 75px; 
+		padding: 5px; 
+}
+
+#papers tr td {
+    vertical-align: top;
+}
+
+
+#feedback { 
+    font-size: 1.4em; 
+}
+
+/* clear out the jquery datatable even/odd coloring */ 
+tbody tr:nth-child(even) td, tbody tr.even td {
+    background:none;
+	  // border-left: 1px solid #eee;
+	  // border-top: 1px solid #eee;
+}
+
+tbody tr td {
+	  // background-image: -chrome-linear-gradient(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0));
+	  // border-bottom: 1px solid #aaa;
+}
+
+.ref-container .venue {
+    font-style: italic;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Adapted from DataTables display
+ */
+.ec-table.display {
+	margin: 0 auto;
+	clear: both;
+	width: 100%;
+}
+
+// .ec-table.display thead th {
+// 	padding: 3px 18px 3px 10px;
+// 	border-bottom: 1px solid black;
+// 	font-weight: bold;
+// 	cursor: pointer;
+// 	* cursor: hand;
+// }
+// 
+// .ec-table.display tfoot th {
+// 	padding: 3px 18px 3px 10px;
+// 	border-top: 1px solid black;
+// 	font-weight: bold;
+// }
+// 
+// .ec-table.display tr.heading2 td {
+// 	border-bottom: 1px solid #aaa;
+// }
+// 
+// .ec-table.display td {
+// 	padding: 3px 10px;
+// }
+// 
+// .ec-table.display td.center {
+// 	text-align: center;
+// }
+// 
+// .ec-table > tr.odd { background-color: clear; }
+// .ec-table > tr.even { background-color: clear; }
+

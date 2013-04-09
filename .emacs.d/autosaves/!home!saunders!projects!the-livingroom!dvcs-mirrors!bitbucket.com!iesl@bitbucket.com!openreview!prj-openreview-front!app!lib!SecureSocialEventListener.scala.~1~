@@ -1,0 +1,20 @@
+package lib
+
+import com.weiglewilczek.slf4s.Logging
+
+import securesocial.core.{LogoutEvent, LoginEvent, Event, EventListener}
+
+class LoginEventListener(app: Application) extends EventListener with Logging {
+  override def id: String = "loginEventListener"
+
+  def onEvent(event: Event, request: RequestHeader, session: Session): Option[Session] = {
+    event match {
+      case e: LoginEvent => 
+        logger.info("traced login event for user %s".format(e.user.fullName))
+        None // No change in session
+      case e: LogoutEvent => 
+        logger.info("traced logout event for user %s".format(e.user.fullName))
+        Some(session - ControllerOps.ImpersonateUserKey)
+    }
+  }
+}

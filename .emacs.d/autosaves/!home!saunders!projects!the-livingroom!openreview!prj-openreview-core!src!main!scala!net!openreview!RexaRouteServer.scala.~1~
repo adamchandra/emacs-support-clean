@@ -1,0 +1,45 @@
+package cc.rexa2.camel
+package routes
+
+import cc.rexa2.commons.{Props => P}
+import org.scala_tools.subcut.inject._
+import org.apache.camel.spring.Main
+
+object RoutingMain extends App {
+
+  override def main(args: Array[String]) = {
+
+    // Load a configuration file
+    val hostname = java.net.InetAddress.getLocalHost.getCanonicalHostName
+    val hostProps = "./prj-rexa-routes/etc/"+hostname+".application.conf"
+    val commonProps = "./prj-rexa-routes/etc/common.conf"
+
+    implicit val config = P.propertyBindings(hostProps, commonProps)
+
+    val cmain = new Main() {
+      override def afterStart() {
+
+        val contextList = getCamelContexts()
+        val camelContext = contextList.get(0)
+
+        val routes = new Routing
+        routes.loadRoutes
+        
+        // run until you terminate the JVM
+        System.out.println("Starting Camel. Use ctrl + c to terminate the JVM.\n");
+      }
+
+      override def beforeStop() {}
+    }
+
+    cmain.setApplicationContextUri("/camel-context.xml");
+
+    // enable hangup support so you can press ctrl + c to terminate the JVM
+    cmain.enableHangupSupport();
+
+    cmain.run()
+
+  }
+}
+
+

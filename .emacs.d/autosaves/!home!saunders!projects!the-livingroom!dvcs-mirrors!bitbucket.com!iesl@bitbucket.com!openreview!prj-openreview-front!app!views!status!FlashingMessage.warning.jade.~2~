@@ -1,0 +1,6 @@
+-@ val it: Flashing
+
+.span6.offset3.center.flash.alert.alert-warning
+  = it.message
+  button.close(type="button" data-dismiss="alert")
+    i.icon-remove

@@ -1,0 +1,10 @@
+package net.openreview.model.raw
+
+import java.util.UUID
+
+trait PatchableStore {
+  def swapUserIds(id1:UUID, id2:UUID) {
+    // default to noop
+  }
+}
+

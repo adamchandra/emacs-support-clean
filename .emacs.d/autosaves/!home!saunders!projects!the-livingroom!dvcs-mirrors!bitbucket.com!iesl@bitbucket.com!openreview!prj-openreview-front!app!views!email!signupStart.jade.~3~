@@ -1,0 +1,26 @@
+- attributes("layout") = ""
+
+-import play.api.mvc._
+-import net.openreview.model.raw.users._
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.IdentityProvider
+
+-@ val token: String
+-@ val request: RequestHeader
+- implicit val r = request
+-@ val user: Option[User]
+
+html
+  body
+    p 
+      | Hello,
+    
+    p 
+      | Please follow this
+      a(href={RoutesHelper.signUp(token).absoluteURL(IdentityProvider.sslEnabled)})
+        | link
+      | to complete your registration.
+    p
+      | Thanks,
+      | The team at OpenReview.net
+

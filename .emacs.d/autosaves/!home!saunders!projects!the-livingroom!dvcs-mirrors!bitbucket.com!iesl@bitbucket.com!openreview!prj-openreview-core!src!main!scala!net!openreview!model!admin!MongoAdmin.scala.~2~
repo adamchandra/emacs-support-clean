@@ -1,0 +1,192 @@
+package net.openreview.model.admin
+
+import com.weiglewilczek.slf4s.Logging
+import java.util.UUID
+import net.openreview.model.raw.Storage._
+import net.openreview.model.raw._
+import net.openreview.model.raw.casbah._
+import org.joda.time.DateTime
+import ch.qos.logback.classic.LoggerContext
+import org.slf4j.LoggerFactory
+import ch.qos.logback.core.util.StatusPrinter
+import com.mongodb.casbah.Imports._
+
+
+// object MongoAdminImports extends MongoAdminImports
+
+
+trait MongoAdminImports extends TextRendering with Logging {
+
+/*
+ - construct a query via casbah or javascript (save queries for future use?)
+   - use console for this
+ - issue a query to mongo, get an iterator over bsons
+   - finddoc, findep, finduser, etc.
+ - transform each bson w/ a rendering engine (text, html)
+ - send rendered bsons to output stream (stdout, html output, graphviz file, etc)
+
+
+ + html rendering
+   MongoComponent(
+     val dbo:Dbo, 
+     val subtrees: Stream[Dbo]
+
+
+   view(mongoComponent, "iconic")
+   view(mongoComponent, "editable")
+
+   mongoComponent.editable.jade: 
+   
+   form
+     label
+       = it.creator
+     control
+       select.uuid.eventprocessor
+     ...
+   - view(it)
+
+
+  // finddoc("uuid-fragment...")(0) >>= authors |> findep |>
+
+ - for today: 
+   - issue query in console
+   - render to text via boxes (summary view)
+   - 
+   
+
+ */
+
+
+  implicit def str2ops = CasbahOps(_)
+
+  trait CasbahOpsLow {
+    def s: String
+    def $eq(v:String) = MongoDBObject(s -> v)
+  }
+
+  case class CasbahOps(
+    s:String
+  ) extends CasbahOpsLow
+
+
+  lazy val conn = MongoConnection("localhost")
+  def db = conn("openreview-devdb")
+
+  lazy val events = db("event")
+  lazy val eventprocessors = db("eventprocessor")
+  lazy val documents = db("document")
+
+
+  def sampleInteraction() {
+    init("openreview-devdb")
+
+    val q = MongoDBObject("type" -> "identityLicense")
+    val q2 = "type" $exists true
+    val q3 = "type" $eq "request"
+
+    val sdf = events.find(q3).take(4)
+
+    sdf.foreach { o =>
+      println("----------------------------------")
+      println(summarizedObject(o))
+      println()
+    }
+
+  }
+
+  def init(dbname: String) {
+    // assume SLF4J is bound to logback in the current environment
+    val lc:LoggerContext  =LoggerFactory.getILoggerFactory().asInstanceOf[LoggerContext]
+    // print logback's internal status
+    StatusPrinter.print(lc)
+    
+    logger.info("[openreview] using MongoDB backend storage: %s".format(this.getClass))
+
+    com.mongodb.casbah.commons.conversions.scala.RegisterConversionHelpers()
+    com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers()
+    net.openreview.model.mongodb.RegisterURLHelpers()
+
+    StorageSetter(new CasbahStorage(MongoConnection("localhost"), dbname))
+  }
+
+  //dbo.foreach { case (fname, fvalue) => {
+  //  fname match {
+  //    case "type" =>
+  //    case "_id" =>
+  //    case "creator" =>
+  //    case "target" =>
+  //    case "created" =>
+  //
+  //    case "template" =>
+  //    case "due" =>
+  //    case "sticky" =>
+  //    case "ephemeralText" =>
+  //    case "prerequisiteTo" =>
+  //    case "subject" =>
+  //    case "doc" =>
+  //    case "wrapped" =>
+  //    case "_history" =>
+  //    case "eventProcessor" =>
+  //    case "inResponseTo" =>
+  //    case "fulfillingEvent" =>
+  //    case _ =>
+  //      println("don't know how to render "+fname+" -> "+fvalue)
+  //  }
+
+
+}
+
+object MongoAdmin extends MongoAdminImports with TextRendering {
+
+
+}
+
+
+
+trait TextRendering {
+  import net.openreview.util.Boxes._
+
+  def iconic[A](f:String)(implicit dbo: MongoDBObject, m:Manifest[A]): Box = {
+    text(f + ": " +(dbo.getAs[A](f).getOrElse("???")))
+  }
+
+  def iconicField[A](f:String)(implicit dbo: MongoDBObject, m:Manifest[A]): Box = {
+    dbo.getAs[A](f) map (v =>
+      f match {
+        case "creator" | "target" =>
+          val ep = eventProcessorStore.get(v.toString).get
+          text(ep.name+"{"+ep.uuid+"}")
+
+        case "type"|"_id" => text(v.toString)
+        case _            => text(f + ": "+v)
+      }
+    ) getOrElse(nullBox)
+  }
+
+  def summarizedObject(implicit dbo: MongoDBObject): String = {
+    render(_summarizedObject(dbo))
+  }
+
+  def _summarizedObject(implicit dbo: MongoDBObject): Box = {
+    val summary = vcat(left)(List(
+      (iconicField[String]("type") +| iconicField[UUID]("_id")),
+      (emptyBox(1)(2) + vcat(left)(List(
+        (iconicField[UUID]("creator") +| text(" ==> ") +| iconicField[UUID]("target")),
+        iconicField[DateTime]("due"),
+        iconicField[String]("subject"),
+
+        (dbo.getAs[DBObject]("template").map { tdbo =>
+          emptyBox(1)(2) + _summarizedObject(tdbo)
+        }).getOrElse(nullBox),
+
+        (dbo.getAs[DBObject]("docTemplate").map { tdbo =>
+          emptyBox(1)(2) + _summarizedObject(tdbo)
+        }).getOrElse(nullBox)
+      )))
+    ))
+
+    summary
+  }
+
+}
+

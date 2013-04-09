@@ -1,0 +1,358 @@
+MACHINE_NAME=`uname -n`
+
+LOCAL_BASHRC=~/etc/bashrc-$MACHINE_NAME
+
+pathmunge () {
+    if [[ -e $1 ]] ; then 
+	    if ! echo $PATH | /bin/egrep -q "(^|:)$1($|:)" ; then
+	        if [ "$2" = "after" ] ; then
+	            PATH=$PATH:$1
+	        else
+	            PATH=$1:$PATH
+	        fi
+	    fi
+    fi
+}
+
+unset INPUTRC
+# export PYTHON=/home/saunders/projects/pythons/python2.7.1-active
+# export LD_LIBRARY_PATH="$PYTHON/lib:/usr/local/lib:/usr/lib:/lib"
+
+TMUX="/var/lib/gems/1.8/gems/tmuxinator-0.5.0"
+
+# export PLAY_HOME=~/projects/the-toolshed/playframework/play-2.0
+
+# Path
+export PATH=.
+pathmunge ~/bin                    after
+pathmunge ~/.cabal/bin             after
+pathmunge /usr/local/bin           after
+pathmunge /usr/bin                 after
+pathmunge /bin                     after
+pathmunge /exp/rcf/common/bin      after
+pathmunge /exp/rcf/share/bin       after
+pathmunge /exp/rcf/share/X11R5/bin after
+pathmunge $TMUX/bin                after
+pathmunge $PLAY_HOME               after
+
+
+# load system default settings
+if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
+
+# load machine-specific settings
+[[ -f "$LOCAL_BASHRC" ]] && source "$LOCAL_BASHRC"
+
+# If not running interactively, don't do anything else
+[ -z "$PS1" ] && return  
+
+export CABAL_HOME=/usr/dan/users3/saunders/.cabal
+CABAL_BIN=$CABAL_HOME/bin
+
+pathmunge $MAVEN_BIN               after
+pathmunge $CABAL_BIN               after
+
+[[ -f ~/.keychain/$HOSTNAME-sh ]] && source ~/.keychain/$HOSTNAME-sh
+
+export GWT_HOME=~/fs/eclipse-workspace/gwt
+
+## This is required by java/swing applications when running under xmonad. For some unknown reason, I might add...
+export AWT_TOOLKIT=MToolkit  
+
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig
+
+## Directories that will be searched by cd when resolving directory names
+export CDPATH=".:/usr/sen/tmp1/saunders/eclipse-workspace/"
+
+## put this in machine-specific rc files, e.g. bashrc-falstaff
+## keychain -q ~/.ssh/id_dsa ~/.ssh/id_rsa;
+
+[[ -f ~/.keychain/$HOSTNAME-sh ]] && source ~/.keychain/$HOSTNAME-sh
+
+
+export EDITOR='emacsclient --alternate-editor="emacs -nw -q"'
+
+# [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+[[ -f "$TMUX/bin/tmuxinator_completion" ]] && source $TMUX/bin/tmuxinator_completion
+
+alias man="man -M /usr/share/man"
+alias psc="ps -e f --format comm"
+alias create-iso="mkisofs -J -r -v -V vol -o"
+alias burn-iso="cdrecord -v -eject speed=24 dev=0,0,0"
+alias mount-iso="mount -t iso9660 -o ro,loop=/dev/loop0"
+alias perl-install="perl -MCPAN -e shell"
+alias less='less -RSimw~ -x2 -#4'
+export PAGER='less -RSimw~ -x2 -#4'
+
+alias tree="tree -Ca -I 'target|.git|.hg|.svn'"
+                                                                                 
+alias psme='ps fUsaunders'
+alias kmap="xmodmap ~/.xmodmap"
+alias kunmap="xmodmap ~/xmodmap-unswapped"
+alias difflr="diff -B --expand-tabs --side-by-side"
+# alias ssh="export DISPLAY=`uname -n`:0.0; ssh"
+# alias ssh="export DISPLAY=`uname -n`:0.0; ssh -Y"
+alias ssh="ssh -Y"
+alias jetty-reload='touch src/config/jetty/contexts/rexa-context-dev.xml'
+alias debug='ant -Ddebug=true -Dsuspend=y'
+alias run='ant -Ddebug=true -Dsuspend=n'
+alias xi="xargs -i"
+alias svn-ignore="svn propedit svn:ignore . --editor-cmd 'emacs -nw --quick'"
+alias svnst="svn -q --ignore-externals st"
+alias du='du -hs'
+alias ack-scala='ack --type=scala'
+
+
+alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
+alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
+alias gittree-when='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %ci"'
+alias git-ci="git commit -a"
+alias git-cim="git commit -a -m '.'"
+
+
+alias hgs="sudo -u sandy hg"
+alias hg-checkpoint="sudo -u sandy hg ci -m 'checkpoint'"
+alias hgtree="hg log --template '{node|short} {author|email}: {desc} ({date|age})\n'"
+alias hgchanged='hg extdiff -pkdiff3'
+alias hgsan="sudo chown -R sandy .hg; sudo chgrp -R sandy .hg"
+alias hgsau="sudo chown -R saunders .hg; sudo chgrp -R saunders .hg;"
+
+## Maintain a set of directories which can be cycled through:
+##   cd[pn]: cd previous/next directory 
+##   cds: store directory on stack
+##   cdx: pop top dir
+alias cdp='pushd -0 2>&1 > /dev/null; dirs -p'
+alias cdn='pushd +1 2>&1 > /dev/null; dirs -p'
+alias cds='pushd . 2>&1 > /dev/null; dirs -p'
+alias cdx='popd 2>&1 > /dev/null; dirs -p'
+alias dirs='dirs -p'
+alias cdactual='cd $(pwd -P)'
+
+alias ls="ls -hpx --color=always"
+alias l.="ls -a --color=always"
+alias ll='ls -alF --color=always'  
+alias la='ls -Fa --color=always'  
+alias ld='ls -al -d * | egrep "^d"' # only subdirectories  
+alias lt='ls -alt | head -20' # recently changed files  
+  
+alias md='mkdir -p'  
+alias rd=rmdir  
+alias ..='cd ..'  
+alias ...='cd ../..'  
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ..4='cd ../../../..'
+alias ..5='cd ../../../../..'
+alias ..6='cd ../../../../../..'
+
+eval `dircolors ~/.dir_colors`
+
+export DISPLAY=:0
+
+# Set a custom shell prompt.
+## export GXP='`gxpc prompt 2> /dev/null`'
+
+# Text color variables
+# und=$(tput sgr 0 1)    # Underline
+# bld=$(tput bold)       # Bold
+# red=$(tput setaf 1)    # Red
+# grn=$(tput setaf 2)    # Green
+# ylw=$(tput setaf 3)    # Yellow
+# blu=$(tput setaf 4)    # Blue
+# pur=$(tput setaf 5)    # Purple
+# cyn=$(tput setaf 6)    # Cyan
+# wht=$(tput setaf 7)    # White
+# zz=$(tput sgr0)       # Text reset
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+# effect color codes:
+# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+# ==== alias for colors ========
+# bla="tput setaf 0"
+# blu="tput setaf 1"
+# gre="tput setaf 2"
+# cya="tput setaf 3"
+# red="tput setaf 4"
+# mag="tput setaf 5"
+# yel="tput setaf 6"
+# whi="tput setaf 7"
+# zz="tput sgr0"
+# bo="tput bold"
+# rev="tput rev"
+
+# export PS1="`$gre`[\h:\w]`$zz`\n`$yel`${GXP}`$red`\t> `$zz`"
+# export PS1="$gre[\h:\w]$zz\n$yel${GXP}$zz$red\t> $zz"
+
+bla='\[\e[0;30m\]'
+red='\[\e[0;31m\]'
+gre='\[\e[0;32m\]'
+yel='\[\e[0;33m\]'
+blu='\[\e[0;34m\]'
+mag='\[\e[0;35m\]' 
+cya='\[\e[0;36m\]'
+whi='\[\e[0;37m\]'
+BLA='\[\e[1;30m\]'
+RED='\[\e[1;31m\]'
+GRE='\[\e[1;32m\]'
+YEL='\[\e[1;33m\]'
+BLU='\[\e[1;34m\]'
+MAG='\[\e[1;35m\]' 
+CYA='\[\e[1;36m\]'
+WHI='\[\e[1;37m\]'
+
+z='\[\e[m\]' # clear 
+
+#export PS1="$GRE[\h:\w]$z\n$YEL${GXP}$z$RED\t> $z"
+
+export PS1="$GRE[\h:\w]$z\n$RED\t> $z"
+
+
+
+# export PS1="\[\033[01;32m\][\h:\w]\[\033[00m\]\n\[\033[04;31m\]${GXP}\t\[\033[00m\]\[\033[01;31m\]> \[\033[00m\]"
+# export PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]'
+# export PS1='\[\033[01;32m\]\u@\h \[\033[01;33m\]\W \$ \[\033[00m\]'
+# export PS1=$PS1"\[\e]0;\H:\w\a\]" 
+#
+## PS1 reference: http://www-106.ibm.com/developerworks/library/l-tip-prompt/
+## \a	The ASCII bell character (you can also type \007)
+## \d	Date in "Wed Sep 06" format
+## \e	ASCII escape character (you can also type \033)
+## \h	First part of hostname (such as "mybox")
+## \H	Full hostname (such as "mybox.mydomain.com")
+## \j	The number of processes you've suspended in this shell by hitting ^Z
+## \l	The name of the shell's terminal device (such as "ttyp4")
+## \n	Newline
+## \r	Carriage return
+## \s	The name of the shell executable (such as "bash")
+## \t	Time in 24-hour format (such as "23:01:01")
+## \T	Time in 12-hour format (such as "11:01:01")
+## \@	Time in 12-hour format with am/pm
+## \u	Your username
+## \v	Version of bash (such as 2.04)
+## \V	Bash version, including patchlevel
+## \w	Current working directory (such as "/home/drobbins")
+## \W	The "basename" of the current working directory (such as "drobbins")
+## \!	Current command's position in the history buffer
+## \#	Command number (this will count up at each prompt, as long as you type something)
+## \$	If you are not root, inserts a "$"; if you are root, you get a "#"
+## \xxx	Inserts an ASCII character based on three-digit number xxx (replace unused digits with zeros, such as "\007")
+## \\	A backslash
+## \[	This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
+## \]	This sequence should appear after a sequence of non-printing characters.
+
+# Make a long history list and history file.
+export HISTSIZE=1000000
+export HISTFILESIZE=1000000
+# unset HISTSIZE
+# unset HISTFILESIZE
+
+
+# Don't put these command in history file; include '[ \t]*' to disable history for single command by prefixing space
+export HISTIGNORE="&:[bf]g:exit"
+export HISTFILE="$HOME/bash-history/bash-history-$MACHINE_NAME"
+export HISTTIMEFORMAT='[%F %H:%M:%S] '
+touch "$HISTFILE"
+shopt -s histappend
+shopt -s cdspell
+# PROMPT_COMMAND=`history -a`
+
+
+function venv() {
+    if [ -d "$WORKON_HOME/$1-ve" ]; then
+        echo "$WORKON_HOME/$1-ve"
+        source "$WORKON_HOME/$1-ve/bin/activate"
+    elif [ -d "$WORKON_HOME/$1" ]; then
+        echo "$WORKON_HOME/$1"
+        source "$WORKON_HOME/$1/bin/activate"
+    else
+        echo 'no virtualenv "$1" found'
+        ls $WORKON_HOME
+    fi
+}
+
+EMACS=emacs
+
+function emacsd() {
+    # open emacs and detach it from the shell
+    ps -C "$EMACS" >/dev/null && echo "emacs running..." && return 1
+    echo 'please start emacs --daemon'
+}
+
+function ewin() {
+    ( emacsd $1 2>&1 >/dev/null ) || ( emacsclient -c -n )
+}
+
+function visit() {
+    ( emacsd $1 2>&1 >/dev/null ) || ( emacsclient -n $1 )
+}
+
+function jot() {
+    ( emacsd $1 2>&1 >/dev/null ) || ( emacsclient -n -e "(remember-other-frame)" )
+}
+
+function visit-c() {
+    ( emacsd $1 2>&1 >/dev/null ) || ( emacsclient -c -n $1 )
+}
+
+function edit() {
+    emacsclient -tty $1
+}
+
+function hg-pull-all() { 
+    ( hg-repos | xargs -i hg pull {} )
+}
+
+
+
+# This variable specifies default options to be placed in front of any explicit options on the command line.
+# ACK_OPTIONS
+# The color alone sets the foreground color, and on_color sets the background color.
+# clear, reset, dark, bold, underline, underscore, blink, reverse, concealed black, red, green, yellow, blue, magenta, on_black,
+# on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, and on_white.  
+export ACK_COLOR_FILENAME=green
+export ACK_COLOR_MATCH=magenta
+# ACK_PAGER
+# ACK_PAGER_COLOR
+
+function kill-ipython-controllers() {
+    ( ps aux | grep [i]pcontroller | awk '{print $2}' | xargs -i kill {} )
+}
+
+function kill-ipython-engines() {
+    ( ps aux | grep [i]pengine | awk '{print $2}' | xargs -i kill {} )
+}
+
+function kill-ipython-jvms() {
+    ( ps aux | grep '[s]tart-xmlrpc-server' | awk '{print $2}' | xargs -i kill {} )
+}
+
+alias gx='gxpc'
+alias gxe='gxpc e'
+alias gxmw='gxpc mw'
+alias gxsmask='gxpc smask'
+alias gxrmask='gxpc rmask'
+alias gxsavemask='gxpc savemask'
+alias gxexplore='gxpc explore'
+alias gxuse='gxpc use'
+alias sshmount='sshfsm'
+alias sshumount='fusermount -u'
+
+
+BASH_FUNCTIONS=~/etc/bash-functions
+[[ -f "$BASH_FUNCTIONS" ]] && source "$BASH_FUNCTIONS"
+
+
+# export ZGRV_HOME=/usr/local/bin/zgrviewer
+# alias dotview="$ZGRV_HOME/run.sh"
+
+# function print-pdf() {
+#   PFROM="sendak.cs.umass.edu"
+#   PNAME="woper-double"
+#   for f in $@
+#   do
+#     BASENAME=$(basename $f)
+#     scp $f $PFROM:/tmp/$BASENAME
+#     ssh $PFROM "lpr -P$PNAME /tmp/$BASENAME"
+#     echo
+#   done
+# }
+
+

@@ -1,0 +1,17 @@
+package lib
+
+import com.weiglewilczek.slf4s.Logging
+import play.api.Play.current
+import play.api.i18n.Messages
+import play.api.mvc._
+
+
+trait ControllerOps extends Controller with Logging {
+  this: Controller =>
+
+}
+
+
+object ControllerOps extends ControllerOps {
+
+}

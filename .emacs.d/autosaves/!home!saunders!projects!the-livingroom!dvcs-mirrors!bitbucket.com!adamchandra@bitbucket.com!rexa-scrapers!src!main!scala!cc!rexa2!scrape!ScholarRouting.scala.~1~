@@ -1,0 +1,233 @@
+package cc.rexa2
+package scrape
+
+import org.apache.camel.processor.interceptor.Tracer
+import cc.rexa2.camel.commons.CamelOps
+import scalaz.{Scalaz => Z, _}
+import scalaz.Scalaz.{node => _, _}
+import scalaz.camel.core._
+import scalaz.concurrent.Strategy
+import cc.rexa2.commons._
+
+class ScholarScraperRouting extends Camel with CamelOps with UrlUtils {
+  import org.apache.camel.spring.SpringCamelContext._
+
+  val gScholar = new ScholarEndpoint()
+
+  val executor = java.util.concurrent.Executors.newFixedThreadPool(3)
+
+  dispatchConcurrencyStrategy = Strategy.Executor(executor)
+
+  val context = springCamelContext("/camel-context.xml")
+  val template = context.createProducerTemplate
+
+  val tracer  = context.getDefaultTracer.asInstanceOf[Tracer]
+  context.setTracing(true)
+  
+  def log(s:String) = (m: Message) => { println(s); m }
+
+
+  // val tracer: Tracer = new Tracer();
+  // tracer.setLogLevel(LoggingLevel.DEBUG)
+
+  val formatter = tracer.getDefaultTraceFormatter()
+  // val formatter: DefaultTraceFormatter = new DefaultTraceFormatter();
+  formatter.setShowOutBody(true);
+  formatter.setShowOutBodyType(true);
+  formatter.setShowBreadCrumb(true);
+  formatter.setShowNode(true);
+
+  // set to use our formatter
+  // tracer.setFormatter(formatter);
+  // tracer.start
+  context.addInterceptStrategy(tracer);
+
+  // setup and start router
+  implicit val router = new Router(context); router.start
+
+  // TODO use 'transform' pattern/naming convention
+  def createKeywordQuery = (m:Message) =>
+    m.setBody(gScholar.formKeywordQuery(m.bodyAs[List[String]]))
+
+  def createCitedByQuery = (m:Message) =>
+    m.setBody(gScholar.formCitedByQuery(m.bodyAs[String]))
+
+  def createAllVersionQuery = (m:Message) =>
+    m.setBody(gScholar.formCitedByQuery(m.bodyAs[String]))
+
+
+  // TODO spider the pdfs from version results
+  // TODO route the spidered pdfs into extraction pipeline
+  // TODO hide my ip using TOR
+
+
+
+  def searchAndRouteResults = (m:Message) => {
+    val q = m.bodyAs[List[(String, String)]];
+    println("searching: " + q.mkString("&"))
+    val r = gScholar.doSearch(q);
+
+    // TODO remove pending query from backing store when processed
+
+    // TODO store returned page in its entirety
+    val parses = gScholar.filterAndParseResults(r)
+    println("parsed:" + parses)
+    // filter valid parses from errors, send errors to err queue
+    val validParses = parses.filter(_.isSuccess).map(_.toOption).sequence getOrElse(Seq())
+    val errParses = parses.filter(_.isFailure).map(_.fail.toOption).sequence getOrElse(Seq())
+    for (p <- validParses) {
+      template.sendBody("activemq:queue:parsedEntrySuccess", p)
+    }
+    for (p <- errParses) {
+      template.sendBody("activemq:queue:parsedEntryFailure", p)
+    }
+    m
+  }
+    
+  val mdb = (s:String) => "database" -> s
+  val mcoll = (s:String) => "collection" -> s
+
+  def mongoComponent = "mongodb:mongoConnection?"
+
+  val scraperDB = mdb("ScholarScraper")
+  val scholarEntry = mcoll("scholarEntry")
+  val scholarPage = mcoll("scholarPage")
+
+  def findOneByQuery  = (mongoComponent |> addParam("operation", "findOneByQuery"));
+
+
+  import scala.collection.JavaConversions._
+  
+  def javaMap[A, B](m:Tuple2[A, B]*): java.util.Map[A, B] = 
+    mapAsJavaMap(m.toMap)
+
+  // TODO: set current date  
+  def persistScholarEntry = (m:Message) => {
+    val entry = m.bodyAs[ScholarResultParse]
+    m.setBody(
+      javaMap("numCitations" -> entry.numCitations,
+              "numVersions" -> entry.numVersions,
+              "scholarId" -> entry.scholarId,
+              "title" -> entry.title,
+              "url" -> entry.url))
+  }
+
+  def persistScholarPage = (m:Message) => {
+    val entry = m.bodyAs[xml.Node]
+    m
+  }
+
+  def persistError = ((m:Message) => m);
+
+  // create a query to mongodb that gets the 
+  def createNextScholarQuery = (m:Message) =>
+    m.setBody(gScholar.formKeywordQuery(m.bodyAs[List[String]]))
+
+  def setupRoutes() {
+
+    //// read from mongodb every 5 seconds
+    //from("timer:scholarQuery?fixedRate=true&period=5000") {
+    //  (createNextScholarQuery
+    //   >=> to(findOneByQuery)
+    //   >=> to())
+    //}
+
+    // expects a list[String]
+    from("direct:keywordQuery") {
+      (oneway
+       >=> log("submitting keyword query")
+       >=> createKeywordQuery
+       >=> to("activemq:queue:pendingQueries"))
+    }
+
+    // expects a string (gscholar id)
+    from("direct:citedByQuery") {
+      (oneway
+       >=> log("submitting citedBy query")
+       >=> createCitedByQuery
+       >=> to("activemq:queue:pendingQueries"))
+    }
+
+    // expects a string (gscholar id)
+    from("direct:allVersionsQuery") {
+      (oneway
+       >=> log("submitting all-versions (pdfs) query")
+       >=> createAllVersionQuery
+       >=> to("activemq:queue:pendingQueries"))
+    }
+
+    // TODO stop all routes on error of any kind
+    from("activemq:queue:pendingQueries") {
+      attempt {
+        (log("new pending query")
+         >=> delay(5000) // 5 second delay between queries
+         >=> searchAndRouteResults
+       )
+      } fallback {
+        case e:Throwable => log("ERROR: " + e)
+      }
+    }
+
+    from("activemq:queue:parsedEntrySuccess") {
+      attempt {
+        (((m:Message) => {
+          // persist the result
+          val result = m.bodyAs[ScholarResultParse]
+          println("persisting " + result)
+          m
+        })
+         >=> ((_:Message).transform[ScholarResultParse](_.scholarId))
+         >=> multicast(
+           to("direct:allVersionsQuery"),
+           to("direct:citedByQuery")
+         )
+       )
+      } fallback {
+        case e:Throwable => log("ERROR: " + e)
+      }
+    }
+
+
+    from("activemq:queue:parsedEntryFailure") {
+      (((m:Message) => {
+         val res = m.bodyAs[String]
+         println("err: " + res)
+         m
+       })
+     )
+    }
+
+  }
+
+  setupRoutes()
+
+  def submitKewordQuery(terms: List[String]) {
+    template.sendBody("direct:keywordQuery", terms)
+  }
+
+  def quit {
+    router.stop
+    context.stop
+  }
+
+}
+
+
+
+    //// write to mongodb
+    //from("direct:insertMongo") {
+    //  (to("mongodb:myDb?" + fmtUrlParams("database" -> "scholarScraper",
+    //                                   "collection" -> "tickets",
+    //                                   "operation" -> "insert")))
+    //}
+
+  // Tailable cursors only work for capped collections in mongodb
+  //val tailTracking = (_:String) + fmtUrlParams(
+  //  "tailTrackIncreasingField" -> "departureTime")
+  //
+  //val persistentTailTracking = (s:String) => joinParamStrs(tailTracking(s), fmtUrlParams(
+  //  "persistentTailTracking" -> "true",
+  //  "persistentId" -> "cancellationsTracker",
+  //  "tailTrackDb" -> "trackers",
+  //  "tailTrackCollection" -> "camelTrackers",
+  //  "tailTrackField" -> "lastProcessedDepartureTime"))

@@ -1,0 +1,348 @@
+package cc.rexa2
+package scrape
+
+import java.io._
+import org.xml.sax
+import scala.xml._
+import scalaz._
+import Scalaz._
+
+
+object Main extends App {
+  override def main(args: Array[String]) = {
+    runTests()
+    // val scholar = new ScholarEndpoint()
+    // scholar.search(List("machine", "learning"))
+  }
+
+
+
+  def runTests() {
+    val scholar = new ScholarEndpoint()
+    val samples = this.getClass.getResourceAsStream("/samples.html")
+    val in = new sax.InputSource(samples)
+    val html = scholar.parseHtml(in)
+    for {
+      div <- html \ "body" \ "div"
+    } {
+      // scholar.parseGsRDiv2(div)
+      println("======DIV=========")
+      // println(div)
+      // println("===============")
+
+      val hrefs = for {
+        a <- div \\ "a" if a.text.contains("[PDF]")
+        val _ = println("a: " + a)
+        hrefA <- a \ "@href" 
+        val _ = println("href: " + hrefA)
+      } yield  {
+        hrefA
+      }
+
+      val hrefCites = for {
+        a <- div \\ "a" if a.text.contains("[PDF]")
+        hrefB <- a \ "@href" if hrefB.text.contains("cites=")
+        val _ = println("href: " + hrefB)
+      } yield  {
+        hrefB
+        val query = scholar.stringToURI(hrefCites).getQuery()
+        val params = queryParamsToMap(query)
+ 
+        val gsId = params("cites")
+      }
+
+      val title =  for(t<- div \\ "h3" if (t \ "@class").text == "gs_rt") yield t.text
+
+      println("title: " + title.headOption.getOrElse("(no title)"))
+
+      
+
+// val parsed = for {
+//   a <- div \\ "a"
+//   href <- a \ "@href" if href.text.contains("cites=")
+//   titleh3 <- div \\ "h3"
+//   titleSpan <- titleh3 \ "@class" if titleSpan.text == "gs_rt"
+//   pdfUrl <- titleh3 \ "a"
+//   pdfHref <- pdfUrl \ "@href"
+// } yield  {
+//   val hreft = href.text
+//   val query = stringToURI(hreft).getQuery()
+//   val params = queryParamsToMap(query)
+// 
+//   val gsId = params("cites")
+// 
+//   val digitsRE = "(\\d+)".r
+//   val citedCountOpt = digitsRE.findFirstIn(a.text).map(_.toInt.right)
+// 
+//   // todo: handle malformed URIs
+//   // new java.net.URI(pdfHref.text)
+// 
+//   val res = ScholarResultParse(
+//     scholarId = gsId,
+//     title = titleh3.text,
+//     // url = new java.net.URI(pdfHref.text),
+//     url = List(pdfHref.text),
+//     numCitations = 0,
+//     numVersions = 0
+//   )
+//   res
+// }
+
+    }
+  }
+}
+
+case class ScholarResultParse(
+  scholarId: String, 
+  title: String, 
+  // url: java.net.URI,
+  url: List[String],
+  numCitations: Int,
+  numVersions: Int
+)
+
+class ScholarEndpoint { 
+  import dispatch._
+
+  val gschEndpoint = "scholar.google.com"
+
+  val searcher = :/(gschEndpoint) / "scholar"
+
+  /**
+   * Read Html file as scala.xml.Node
+   * (note: dispatch also has a module that does this,
+   *  perhaps try that as alternative to the tagsoup lib)
+   */
+  def parseHtml(source: sax.InputSource): xml.Node = {
+    val parserFactory = new org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
+    val parser = parserFactory.newSAXParser()
+    val adapter = new scala.xml.parsing.NoBindingFactoryAdapter
+    adapter.loadXML(source, parser)
+  }
+
+  def parseHtmlAsXml(s:String) = parseHtml(new sax.InputSource(new StringReader(s)))
+  
+  /**
+   * dispatch http call/handler w/shutdown
+   */
+  def http[T](handler: => Handler[T]): T = {
+    val h = new Http
+    try { h(handler) }
+    finally { h.shutdown() }
+  }
+
+  def formAllVersionsQuery(id: String) = List(
+    "cluster"         -> id.toString,
+    "hl"              -> "en"
+  )
+
+  def formKeywordQuery(terms: List[String]) = List(
+    "q"                   -> terms.mkString("+"),
+    "as_vis"              -> "1",
+    "hl"                  -> "en",
+    "as_sdt"              -> "1,22"
+  )
+
+  def formCitedByQuery(id: String) = List(
+    "cites"               -> id.toString,
+    "as_vis"              -> "1",
+    "hl"                  -> "en",
+    "oe"                  -> "ASCII",
+    "as_sdt"              -> "40000005",
+    "sciodt"              -> "1,22"
+  )
+
+  /**
+   * Search scholar
+   */
+  def doSearch(query: Seq[(String, String)]): xml.Node = {
+    http((searcher <<? query) >- { (response) => {
+      parseHtmlAsXml(response)
+    }})
+  }
+
+  /**
+   * Search for papers w/given keywords
+   */
+  def keywordSearch(terms: List[String]): xml.Node = 
+    doSearch(formKeywordQuery(terms))
+
+  /**
+   * Find all papers citing the paper returned by scholar,
+   * using ID parsed from previous search results. Don't know
+   * how stable those IDs are...
+   */
+  def citedBySearch(gsId: String): xml.Node = 
+    doSearch(formCitedByQuery(gsId))
+
+
+  def allVersionsSearch(gsId: String): xml.Node = 
+    doSearch(formAllVersionsQuery(gsId))
+
+  /**
+   * scholar wraps a  <div class="gs_r"> around each search
+   * result. This selects just those nodes.
+   */
+  def selectGsRDivs(node:xml.Node): Seq[xml.Node] = for {
+    div <- node \\ "div"
+    cls <- div \ "@class" if cls.text == "gs_r"
+  } yield div
+
+
+  def stringToURI(s:String) = new java.net.URI(s)
+
+  /**
+   * break up /zz?a=b&c=d into Map(a->b, c->d)
+   */
+  def queryParamsToMap(qp:String):Map[String, String] = {
+    (qp.split("&").toList.map(_.split("=").toList) map {
+      case k :: v :: Nil => (k, v);
+      case _ => sys.error("malformed params");
+    }).toMap
+  }
+
+
+  def parseGsRDiv(div: xml.Node): Validation[String, ScholarResultParse] = {
+    val pdfLinks = for {
+      a <- div \\ "a" if a.text.contains("[PDF]")
+      href <- a \ "@href" if href.text.contains("cites=")
+    } yield  {
+      href
+    }
+
+    val parsed = for {
+      a <- div \\ "a"
+      href <- a \ "@href" if href.text.contains("cites=")
+      titleh3 <- div \\ "h3"
+      titleSpan <- titleh3 \ "@class" if titleSpan.text == "gs_rt"
+      pdfUrl <- titleh3 \ "a"
+      pdfHref <- pdfUrl \ "@href"
+    } yield  {
+      val hreft = href.text
+      val query = stringToURI(hreft).getQuery()
+      val params = queryParamsToMap(query)
+
+      val gsId = params("cites")
+
+      val digitsRE = "(\\d+)".r
+      val citedCountOpt = digitsRE.findFirstIn(a.text).map(_.toInt.right)
+
+      // todo: handle malformed URIs
+      // new java.net.URI(pdfHref.text)
+
+      val res = ScholarResultParse(
+        scholarId = gsId,
+        title = titleh3.text,
+        // url = new java.net.URI(pdfHref.text),
+        url = List(pdfHref.text),
+        numCitations = 0,
+        numVersions = 0
+      )
+      res
+    }
+    parsed.headOption map (_.success) getOrElse "could not parse div".failure
+  }
+
+
+  def pdfLinks(div: xml.Node): List[String] = (for {
+    a <- div \\ "a" if a.text.contains("[PDF]")
+    href <- a \ "@href"
+  } yield href.text).toList
+
+
+  def parseGsRDiv2(div: xml.Node): Validation[String, ScholarResultParse] = {
+
+    // val gsIdxx = for {
+    //   a <- div \\ "a"
+    //   titleh3 <- div \\ "h3"
+    //   href <- a \ "@href" if href.text.contains("cites=")
+    //   pdfUrl <- titleh3 \ "a"
+    //   pdfHref <- pdfUrl \ "@href"
+    // } yield  {
+    //   val hreft = href.text
+    //   val query = stringToURI(hreft).getQuery()
+    //   val params = queryParamsToMap(query)
+    // 
+    //   val gsId = params("cites")
+    // 
+    //   val digitsRE = "(\\d+)".r
+    //   val citedCountOpt = digitsRE.findFirstIn(a.text).map(_.toInt.right)
+    // 
+    //   // todo: handle malformed URIs
+    //   // new java.net.URI(pdfHref.text)
+    // 
+    //   res
+    // }
+
+    val result = for {
+      a <- div \\ "a"
+      titleh3 <- div \\ "h3"
+    } yield  {
+
+      val href = a \ "@href" // if href.text.contains("cites=")
+
+      val hreftext = href.text
+      val query = stringToURI(hreftext).getQuery()
+      val params = queryParamsToMap(query)
+      val gsId = params("cites")
+
+      ScholarResultParse(
+        scholarId = gsId,
+        title = titleh3.text,
+        // url = new java.net.URI(pdfHref.text),
+        url = pdfLinks(div),
+        numCitations = 0,
+        numVersions = 0
+      )
+    }
+
+
+    result.headOption map (_.success) getOrElse "could not parse div".failure
+  }
+
+  def filterAndParseResults(gsResults:xml.Node): Seq[Validation[String, ScholarResultParse]] = {
+    // filter results to just the interesting divs
+    val divNodes = selectGsRDivs(gsResults)
+    // try to parse out information (citedBy counts, id, title, ...)
+    divNodes map (parseGsRDiv2(_))
+  }
+
+
+  // example search over keyword terms
+  def search(terms: List[String]) {
+    // find papers by keyword
+    val htmlNodes = keywordSearch(terms)
+
+    val keywordResultList = filterAndParseResults(htmlNodes)
+// 
+//     for {
+//       kwResultEntry <- keywordResultList.filter(_.isSuccess).map(_.toOption.get)
+//       citedResultEntry <- filterAndParseResults(citedBySearch(kwResultEntry.scholarId)).filter(_.isSuccess).map(_.toOption.get)
+//     }  {
+//       println("keyword result: " + kwResultEntry)
+//       println("   cited by: " + citedResultEntry)
+//     }
+// 
+
+    for {
+      kwResultV <- keywordResultList
+      kwEntry <- kwResultV
+      val _ = println("keyword result: " + kwEntry)
+      kwEntryVersion <- (for {
+        kwVersionV <- filterAndParseResults(allVersionsSearch(kwEntry.scholarId))
+        val _ = println("    with pdf: " + kwVersionV)
+      } yield kwVersionV)
+
+      citedByResultV <- filterAndParseResults(citedBySearch(kwEntry.scholarId))
+      citedByEntry <- citedByResultV
+      val _ = println("   cited by: " + citedByEntry)
+      cbEntryVersion <- (for {
+        kwVersionV <- filterAndParseResults(allVersionsSearch(citedByEntry.scholarId))
+        val _ = println("    with pdf: " + kwVersionV)
+      } yield kwVersionV)
+    } ()
+
+  }
+
+}
+

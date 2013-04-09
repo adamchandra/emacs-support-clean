@@ -1,0 +1,18 @@
+package net.openreview.model
+package mongodb
+
+
+// trait Storage extends DocumentStorage with EventStorage {
+class MongoStorage extends Storage {
+
+  def documentStore: DocumentStore = new MongoDocumentStore
+  def eventStore: EventStore = new MongoEventProcessorStore()
+}
+
+// trait DocumentStorage {  def documentStore: DocumentStore
+// trait EventStorage {}
+
+
+new Storage {
+}
+

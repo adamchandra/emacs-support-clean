@@ -1,0 +1,82 @@
+package lib.core
+package model
+
+// import scalaz._, Scalaz._
+
+import play.api.db._
+import anorm._
+import anorm.SqlParser._
+import java.util.Date
+
+import play.api.Play.current
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+import scalaz.syntax.std.option._
+
+
+
+// TODO: move this code into a core lib so that it can be shared with other projects
+
+object LinkedAccount {
+  def forUser(userId: Long): List[LinkedAccount] = { // TODO: Make NonEmptyList?
+    val simple = {
+      get[Pk[Long]]("id") ~
+      get[Long]("user_id") ~
+      get[String]("provider_user_id") ~
+      get[String]("provider_key") map {
+        case (
+          id ~
+          userId ~
+          providerUserId ~
+          providerKey
+        ) => LinkedAccount(id.get, userId, providerUserId, providerKey)
+      }
+    }
+
+    DB.withConnection { implicit c =>
+      val result: List[LinkedAccount] =
+        SQL(
+          """
+          select id, user_id, provider_user_id, provider_key
+          from linked_account
+          where user_id = {userId};
+          """
+        ) on (
+          "userId" -> userId
+        ) as (simple *)
+      result
+    }
+  }
+
+
+  def create(linkedAccount: LinkedAccount): LinkedAccount = {
+    DB.withConnection { implicit connection =>
+      SQL( """|
+        | insert into linked_account(id, user_id, provider_user_id, provider_key)
+        | values (
+        | 0, {userId}, {providerUserId}, {providerKey}
+        | )
+        """.stripMargin
+      ).on (
+        'userId -> linkedAccount.userId,
+        'providerUserId -> linkedAccount.providerUserId,
+        'providerKey -> linkedAccount.providerKey
+      ).executeUpdate()
+
+      // TODO: this should fetch the value rather than just returning the input
+      linkedAccount
+    }
+  }
+
+}
+
+/**
+ * for username/password, providerUserId=<hashed-user-password>, providerKey="password"
+ */
+case class LinkedAccount(id:Long, userId: Long, providerUserId: String, providerKey: String)  {
+  //   def update(authUser: AuthUser) {
+  //     this.providerKey = authUser.getProvider
+  //     this.providerUserId = authUser.getId
+  //   }
+}
+

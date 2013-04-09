@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cd prj-openreview-front && target/start -DapplyEvolutions.default=true -Dconfig.file=conf/prod-alpha.conf

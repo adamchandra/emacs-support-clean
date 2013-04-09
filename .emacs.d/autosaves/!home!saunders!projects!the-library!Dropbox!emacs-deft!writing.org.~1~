@@ -1,0 +1,40 @@
+* Writing
+
+*** LightTable and other distractions
+
+
+* answer to the following question
+  http://stackoverflow.com/questions/9776753/how-to-generalize-a-method
+
+
+  >> I'm trying to generalize the following code:
+  >> 
+  >> def fetchUrl = {
+  >>   try {
+  >>     val lineList = Source.fromURL(url).getLines.toList
+  >>     process(lineList)
+  >>   }
+  >>   catch {
+  >>     case ex: java.net.UnknownHostException => ex.printStackTrace()
+  >>   }
+  >> }
+  >> I want to be able to fetch URL's (fromURL) and files (fromFile) with the same method. Is it possible to generalize this code to archive this?
+  >> 
+  >> I figured I could use pattern matching for this but I don't know how.
+  >> 
+  >> def fetchSource(src: Source, str: String) = src match {
+  >>   case ??? => Source.fromURL(url).getLines.toList
+  >>   case ??? => Source.fromFile(str).getLines.toList
+  >> }
+  >> Is there a way to get this right?
+  >> 
+  >> Thanks in advance.
+
+
+  0. Turn this function inside out!
+
+  1. get push vs. pull interface correct:
+
+  2. prefer statement-breaks at function boundaries, rather than at values
+
+  3. build up functionality through function composition

@@ -1,0 +1,248 @@
+package net.openreview.model
+package mongodb
+
+import io.Source
+import java.util.{UUID, Date}
+import java.net.URL
+import org.joda.time.DateTime
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+import se.radley.plugin.salat._
+import com.novus.salat.global._
+import edu.umass.cs.iesl.scalacommons.NonemptyString
+import pov.{EventPoVStore, MemoryDocumentPoVStoreImpl, DocumentPoV, DocumentPoVStore}
+
+
+
+import scalaz._
+
+
+object Identifiers {
+  sealed trait DocumentTag
+  sealed trait EventTag
+  sealed trait EventProcessorTag
+
+  type DocumentID       = UUID // @@ DocumentTag
+  type EventID          = UUID // @@ EventTag
+  type EventProcessorID = UUID // @@ EventProcessorTag
+
+}
+
+import Identifiers._
+
+
+@Salat
+trait BaseDAO {
+  @Key("_id") val uuid: DocumentID
+
+  def getDocument(ouuid: Option[DocumentID]): Option[Document] = for (
+    id <- ouuid;
+    d <- DocumentModelStore.findOneById(id)
+  ) yield {d.toDocument}
+
+  def getAuthors(ouuid: Option[UUID]): Option[EventProcessor] = None
+
+  def getEventProcessor(_uuid: EventProcessorID): EventProcessor = {
+    // TODO 
+    new EventProcessor {
+      def uuid : EventProcessorID = _uuid
+      def name: String = "TODO"
+      def sent(m:Event) {}
+      def received(m:Event) {}
+    }
+  }
+
+  def getEvent(ouuid: Option[EventID]): Option[Event] = for (
+    id <- ouuid;
+    o <- EventModelStore.findOneById(id)
+  ) yield {o.toEvent}
+
+  def getEvent(_uuid: UUID): Event = {
+    EventModelStore.findOneById(_uuid).getOrElse(sys.error("event '"+_uuid+"' not found")).toEvent
+  }
+
+}
+
+trait DocumentDAO extends BaseDAO {
+  val created: DateTime
+  val creator: UUID 
+  val title: Option[NonemptyString] 
+  val authors: Option[UUID] 
+  val summary: Option[NonemptyString]
+  val lastRevision: Option[DocumentID]
+  val nextRevision: Option[DocumentID]
+  val inResponseTo: Option[DocumentID]
+  def toDocument: Document
+}
+
+object DocumentDAO {
+
+  def fromDocument(document: UrlDocumentT): UrlDocumentDAO = {
+    UrlDocumentDAO(uuid         = document.uuid,
+                   creator      = document.creator.uuid,
+                   title        = document.title,
+                   authors      = document.authors map (_.uuid),
+                   summary      = document.summary,
+                   lastRevision = document.lastRevision map (_.uuid),
+                   nextRevision = document.nextRevision map (_.uuid),
+                   inResponseTo = document.inResponseTo map (_.uuid),
+                   created      = document.created,
+                   url          = document.url
+    ) 
+  }
+
+  def fromDocument(document: PlainTextDocumentT): PlainTextDocumentDAO = {
+    PlainTextDocumentDAO(uuid         = document.uuid,
+                         creator      = document.creator.uuid,
+                         title        = document.title,
+                         authors      = document.authors map (_.uuid),
+                         summary      = document.summary,
+                         lastRevision = document.lastRevision map (_.uuid),
+                         nextRevision = document.nextRevision map (_.uuid),
+                         inResponseTo = document.inResponseTo map (_.uuid),
+                         created      = document.created
+    )
+  }
+
+  def fromDocument(document: EndorsementT): EndorsementDAO = {
+    EndorsementDAO(uuid         = document.uuid,
+                   doc          = document.doc.uuid,
+                   creator      = document.creator.uuid,
+                   title        = document.title,
+                   authors      = document.authors map (_.uuid),
+                   summary      = document.summary,
+                   lastRevision = document.lastRevision map (_.uuid),
+                   nextRevision = document.nextRevision map (_.uuid),
+                   inResponseTo = document.inResponseTo map (_.uuid),
+                   created      = document.created
+    )
+  }
+
+}
+
+case class UrlDocumentDAO(override val uuid: UUID = UUID.randomUUID(),
+                          override val creator: UUID,
+                          override val title: Option[NonemptyString],
+                          override val authors: Option[UUID],
+                          override val summary: Option[NonemptyString],
+                          override val lastRevision: Option[DocumentID] = None,
+                          override val nextRevision: Option[DocumentID] = None, 
+                          override val inResponseTo: Option[DocumentID] = None,
+                          override val created: DateTime = DateTime.now,
+                          val url: URL
+) extends DocumentDAO {
+  override def toDocument: Document = {
+    new UrlDocumentT {
+      val dao: UrlDocumentDAO = UrlDocumentDAO.this
+
+      val uuid: UUID                       = dao.uuid
+      val created: DateTime                = dao.created
+      override def creator: EventProcessor = getEventProcessor(dao.creator)
+      override val title: Option[NonemptyString]    = dao.title
+      override def authors: Option[EventProcessor] = getAuthors(dao.authors)
+      override val summary: Option[NonemptyString]  = dao.summary
+
+      override def lastRevision = getDocument(dao.lastRevision)
+      override def nextRevision = getDocument(dao.nextRevision)
+      override def inResponseTo = getDocument(dao.inResponseTo)
+
+      override val url: URL = dao.url
+    }
+  }
+}
+
+
+case class PlainTextDocumentDAO(override val uuid: UUID = UUID.randomUUID(),
+                                override val creator: UUID,
+                                override val title: Option[NonemptyString],
+                                override val authors: Option[UUID],
+                                override val summary: Option[NonemptyString],
+                                override val lastRevision: Option[DocumentID] = None,
+                                override val nextRevision: Option[DocumentID] = None,
+                                override val inResponseTo: Option[DocumentID] = None,
+                                override val created: DateTime = DateTime.now
+) extends DocumentDAO {
+  override def toDocument: Document = {
+    new PlainTextDocumentT {
+      val dao  = PlainTextDocumentDAO.this
+
+      val uuid: UUID                       = dao.uuid
+      val created: DateTime                = dao.created
+      override def creator: EventProcessor = getEventProcessor(dao.creator)
+      override val title: Option[NonemptyString]    = dao.title
+      override def authors: Option[EventProcessor] = getAuthors(dao.authors)
+      override val summary: Option[NonemptyString]  = dao.summary
+
+      override def lastRevision = getDocument(dao.lastRevision)
+      override def nextRevision = getDocument(dao.nextRevision)
+      override def inResponseTo = getDocument(dao.inResponseTo)
+    }
+  }
+}
+
+
+case class EndorsementDAO(override val uuid: DocumentID = UUID.randomUUID(),
+                          override val creator: UUID,
+                          override val title: Option[NonemptyString],
+                          override val authors: Option[UUID],
+                          override val summary: Option[NonemptyString],
+                          override val lastRevision: Option[DocumentID] = None,
+                          override val nextRevision: Option[DocumentID] = None,
+                          override val inResponseTo: Option[DocumentID] = None,
+                          override val created: DateTime = DateTime.now,
+                          val doc: UUID
+) extends DocumentDAO {
+  override def toDocument: Document = {
+    new EndorsementT {
+      val dao: EndorsementDAO = EndorsementDAO.this
+
+      override def doc: Document           = getDocument(Some(dao.doc)).getOrElse(sys.error("no document found for endorsement"))
+      val uuid: UUID                       = dao.uuid
+      val created: DateTime                = dao.created
+      override def creator: EventProcessor = getEventProcessor(dao.creator)
+      override def lastRevision = getDocument(dao.lastRevision)
+      override def nextRevision = getDocument(dao.nextRevision)
+    }
+  }
+}
+
+
+object DocumentModelStore extends ModelCompanion[DocumentDAO, UUID] {
+  // TODO parameterize
+  val collection = MongoConnection()("my_db")("url_document_coll")
+  val dao = new SalatDAO[DocumentDAO, UUID](collection = collection) {}
+}
+
+class MongoDocumentStore extends DocumentStore {
+
+  def foreach[U](f: (Document) => U) {
+    for (doc <- DocumentModelStore.findAll()) {
+      // map doc to 
+
+    }
+    throw new RuntimeException("not implemented")
+  }
+
+  def fromPoV(to: StatefulEventProcessor): DocumentPoVStore = {
+    // val mappedValues: Map[UUID, Option[DocumentPoV]] = contents.toMap mapValues (DocumentPoV(_, to))
+    // val flattenedValues: Map[UUID, DocumentPoV] = (mappedValues map {
+    //   case (u, o) => o.map((u, _))
+    // }).flatten.toMap
+    // new MemoryDocumentPoVStoreImpl(flattenedValues, to)
+    throw new RuntimeException("not implemented")
+  }
+
+  def get(uuid: UUID): Option[Document] = {
+    for (
+      d <- DocumentModelStore.findOneById(uuid)
+    ) yield d.toDocument
+  }
+}
+
+
+
+
+
+

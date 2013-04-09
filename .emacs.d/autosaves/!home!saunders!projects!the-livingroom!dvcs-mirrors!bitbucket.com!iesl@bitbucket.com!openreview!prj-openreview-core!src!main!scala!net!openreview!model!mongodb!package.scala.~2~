@@ -1,0 +1,11 @@
+package net.openreview.model
+package mongodb
+
+import com.mongodb.casbah.Imports._
+
+package object storage {
+  implicit lazy val mongoStorage = new MongoStorage(
+    MongoConnection(), 
+    "openreview"
+  )
+}

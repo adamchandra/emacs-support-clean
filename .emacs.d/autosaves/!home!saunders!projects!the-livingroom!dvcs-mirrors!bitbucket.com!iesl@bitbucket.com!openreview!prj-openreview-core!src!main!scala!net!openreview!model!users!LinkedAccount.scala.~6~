@@ -1,0 +1,289 @@
+package net.openreview.model
+package users
+
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+import net.openreview.model.mongodb.salatContext._
+
+// import securesocial.core.{AuthenticationMethod}
+// import securesocial.core.PasswordInfo
+// import io.Source
+// import java.util.{UUID, Date}
+// import java.net.URL
+// import org.joda.time.DateTime
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+import scalaz.syntax.std.option._
+
+import java.util.UUID
+
+
+case class LinkedAccount(
+  @Key("_id") id:UUID = UUID.randomUUID,
+  userId: Long, 
+  providerUserId: String, 
+  providerKey: String, 
+  authMethod: String
+) {
+
+
+}
+
+object LinkedAccount {
+  def forUser(userId: Long): List[LinkedAccount] = { // TODO: Make NonEmptyList?
+
+    // // insert()
+    // val obj = get(MongoDBObject("userId" -> userId))
+    // 
+    // DB.withConnection { implicit c =>
+    //   val result: List[LinkedAccount] =
+    //     SQL(
+    //       """
+    //       select id, user_id, provider_user_id, provider_key, auth_method
+    //       from linked_account
+    //       where user_id = {userId};
+    //       """
+    //     ) on (
+    //       'userId -> userId
+    //     ) as (parser *)
+    //   result
+    // }
+    List()
+  }
+
+  def findByProviderId(providerName: String, providedId: String): Option[LinkedAccount] = {
+    // DB.withConnection { implicit c =>
+    //   SQL(
+    //     """
+    //     select id, user_id, provider_user_id, provider_key, auth_method
+    //     from linked_account
+    //     where provider_user_id = {providedId} and provider_key = {providerName};
+    //     """
+    //   ) on (
+    //     'providerName -> providerName,
+    //     'providedId -> providedId
+    //   ) as (parser.singleOpt)
+    // }
+    None
+  }
+
+  def find(): List[LinkedAccount] = { 
+    // DB.withConnection { implicit c =>
+    //   SQL( """select id, user_id, provider_user_id, provider_key, auth_method from linked_account;""" ) 
+    //   .as (parser *)
+    // }
+    List()
+  }
+
+  def findById(id: Long): Option[LinkedAccount] = { 
+    //DB.withConnection { implicit c =>
+    //  SQL(
+    //    """
+    //    select id, user_id, provider_user_id, provider_key, auth_method
+    //    from linked_account
+    //    where id = {id};
+    //    """
+    //  ) on (
+    //    "id" -> id
+    //  ) as (parser.singleOpt)
+    //}
+    None
+  }
+
+
+  def create(linkedAccount: LinkedAccount): Validation[String, LinkedAccount] = {
+    //   val oid = DB.withConnection { implicit connection =>
+    //     SQL( """|
+    //       | insert into linked_account(id, user_id, provider_user_id, provider_key)
+    //       | values (
+    //       | 0, {userId}, {providerUserId}, {providerKey}
+    //       | )
+    //       """.stripMargin
+    //     ).on (
+    //       'userId -> linkedAccount.userId,
+    //       'providerUserId -> linkedAccount.providerUserId,
+    //       'providerKey -> linkedAccount.providerKey
+    //     ).executeInsert()
+    //   }
+    //
+    //   for {
+    //     id <- oid.toSuccess("linked account insert failed")
+    //     acc <- findById(id).toSuccess("linked account find on newly inserted failed")
+    //   } yield acc
+    "TODO".failure
+
+  }
+
+  def create(user:User, providerUserId: String, providerKey: String, authMethod: String): Validation[String, LinkedAccount] = {
+    // val oid = DB.withConnection { implicit connection =>
+    //   SQL( """
+    //     insert into linked_account(id, user_id, provider_user_id, provider_key, auth_method)
+    //     values ( NULL, {userId}, {providerUserId}, {providerKey}, {authMethod} )
+    //     """.stripMargin
+    //   ).on (
+    //     'userId -> user.id,
+    //     'providerUserId -> providerUserId, // linkedAccount.providerUserId,
+    //     'providerKey -> providerKey, // linkedAccount.providerKey
+    //     'authMethod -> authMethod
+    //   ).executeInsert()
+    // }
+    //
+    // for {
+    //   id <- oid.toSuccess("linked account insert failed")
+    //   acc <- findById(id).toSuccess("linked account find on newly inserted failed")
+    // } yield acc
+    "TODO".failure
+  }
+
+
+  // def createForEmailPassword(user: User, info: PasswordResetInfo): Validation[String, LinkedAccount] = {
+  //   // // TODO saltier password
+  //   // create(user, info.password, AuthenticationMethod.UserPassword.method, AuthenticationMethod.UserPassword.method)
+  //   "TODO".failure
+  // }
+
+}
+
+// class LinkedAccountDAO(
+//   conn: MongoConnection,
+//   dbname: String, 
+//   collname: String = "linked_account"
+// ) extends ModelCompanion[LinkedAccount, Long] {
+//   val collection = conn(dbname)(collname)
+//   val dao = new SalatDAO[LinkedAccount, Long](collection = collection) {}
+//   // Ensure indices
+//   // collection.ensureIndex(DBObject("email" -> 1), "user_email", true)
+// 
+// //   // def delete(): Validation[String, Unit] = 
+// // 
+// //   def updateProviderUserId(newProviderUserId: String): Validation[String, Unit] = {
+// //     val updated = DB.withConnection { implicit connection => {
+// //       SQL("""
+// //         update linked_account 
+// //         set provider_user_id={providerUserId} 
+// //         where id = {id};"""
+// //       ).on (
+// //         'id -> id,
+// //         'providerUserId -> newProviderUserId
+// //       ).executeUpdate()
+// //     }}
+// //     if (updated==1) ().success else "error updating linked account".failure
+// //   }
+// 
+// 
+// 
+//   def forUser(userId: Long): List[LinkedAccount] = { // TODO: Make NonEmptyList?
+// 
+//     // // insert()
+//     // val obj = get(MongoDBObject("userId" -> userId))
+//     // 
+//     // DB.withConnection { implicit c =>
+//     //   val result: List[LinkedAccount] =
+//     //     SQL(
+//     //       """
+//     //       select id, user_id, provider_user_id, provider_key, auth_method
+//     //       from linked_account
+//     //       where user_id = {userId};
+//     //       """
+//     //     ) on (
+//     //       'userId -> userId
+//     //     ) as (parser *)
+//     //   result
+//     // }
+//     List()
+//   }
+// 
+//   def findByProviderId(providerName: String, providedId: String): Option[LinkedAccount] = {
+//     // DB.withConnection { implicit c =>
+//     //   SQL(
+//     //     """
+//     //     select id, user_id, provider_user_id, provider_key, auth_method
+//     //     from linked_account
+//     //     where provider_user_id = {providedId} and provider_key = {providerName};
+//     //     """
+//     //   ) on (
+//     //     'providerName -> providerName,
+//     //     'providedId -> providedId
+//     //   ) as (parser.singleOpt)
+//     // }
+//     None
+//   }
+// 
+//   def find(): List[LinkedAccount] = { 
+//     // DB.withConnection { implicit c =>
+//     //   SQL( """select id, user_id, provider_user_id, provider_key, auth_method from linked_account;""" ) 
+//     //   .as (parser *)
+//     // }
+//     List()
+//   }
+// 
+//   def findById(id: Long): Option[LinkedAccount] = { 
+//     //DB.withConnection { implicit c =>
+//     //  SQL(
+//     //    """
+//     //    select id, user_id, provider_user_id, provider_key, auth_method
+//     //    from linked_account
+//     //    where id = {id};
+//     //    """
+//     //  ) on (
+//     //    "id" -> id
+//     //  ) as (parser.singleOpt)
+//     //}
+//     None
+//   }
+// 
+// 
+//   def create(linkedAccount: LinkedAccount): Validation[String, LinkedAccount] = {
+//     //   val oid = DB.withConnection { implicit connection =>
+//     //     SQL( """|
+//     //       | insert into linked_account(id, user_id, provider_user_id, provider_key)
+//     //       | values (
+//     //       | 0, {userId}, {providerUserId}, {providerKey}
+//     //       | )
+//     //       """.stripMargin
+//     //     ).on (
+//     //       'userId -> linkedAccount.userId,
+//     //       'providerUserId -> linkedAccount.providerUserId,
+//     //       'providerKey -> linkedAccount.providerKey
+//     //     ).executeInsert()
+//     //   }
+//     //
+//     //   for {
+//     //     id <- oid.toSuccess("linked account insert failed")
+//     //     acc <- findById(id).toSuccess("linked account find on newly inserted failed")
+//     //   } yield acc
+//     "TODO".failure
+// 
+//   }
+// 
+//   def create(user:User, providerUserId: String, providerKey: String, authMethod: String): Validation[String, LinkedAccount] = {
+//     // val oid = DB.withConnection { implicit connection =>
+//     //   SQL( """
+//     //     insert into linked_account(id, user_id, provider_user_id, provider_key, auth_method)
+//     //     values ( NULL, {userId}, {providerUserId}, {providerKey}, {authMethod} )
+//     //     """.stripMargin
+//     //   ).on (
+//     //     'userId -> user.id,
+//     //     'providerUserId -> providerUserId, // linkedAccount.providerUserId,
+//     //     'providerKey -> providerKey, // linkedAccount.providerKey
+//     //     'authMethod -> authMethod
+//     //   ).executeInsert()
+//     // }
+//     //
+//     // for {
+//     //   id <- oid.toSuccess("linked account insert failed")
+//     //   acc <- findById(id).toSuccess("linked account find on newly inserted failed")
+//     // } yield acc
+//     "TODO".failure
+//   }
+// 
+// 
+//   // def createForEmailPassword(user: User, info: PasswordResetInfo): Validation[String, LinkedAccount] = {
+//   //   // // TODO saltier password
+//   //   // create(user, info.password, AuthenticationMethod.UserPassword.method, AuthenticationMethod.UserPassword.method)
+//   //   "TODO".failure
+//   // }
+// 
+// }

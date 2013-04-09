@@ -1,0 +1,15 @@
+-@ val token: String
+-@ val request: RequestHeader
+- import securesocial.core.IdentityProvider
+
+html
+  body
+    p 
+      | Hello,
+    
+    p 
+      | Please follow this
+      a(href={RoutesHelper.signup(token).absoluteURL(IdentityProvider.sslEnabled)})
+        | link
+      | to complete your registration.
+

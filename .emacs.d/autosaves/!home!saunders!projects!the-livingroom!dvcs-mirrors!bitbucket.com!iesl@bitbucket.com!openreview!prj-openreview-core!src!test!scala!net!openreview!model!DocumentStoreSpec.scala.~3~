@@ -1,0 +1,93 @@
+package net.openreview
+package model
+package mongodb
+
+import com.mongodb.casbah.Imports._
+import org.specs2.mutable._
+import org.specs2.specification.{ Scope, Step }
+import com.novus.salat.{ BigDecimalStrategy, Context }
+import com.mongodb.casbah.commons.test.CasbahMutableSpecification
+import java.util.UUID
+import edu.umass.cs.iesl.scalacommons.NonemptyString
+import edu.umass.cs.iesl.scalacommons.StringUtils._
+
+class DocumentStoreSpec extends MongoSpec {
+  import net.openreview.model.stub.DevData
+
+  // TODO register w/application
+  RegisterURLHelpers()
+
+  "a first test" should {
+
+    "convert a document to DAO" in {
+      val doc1 = DevData.doc1
+      val daoDoc1 = DocumentDAO.fromDocument(doc1)
+    
+      for {
+        docId <- DocumentModelStore.insert(daoDoc1) 
+        docR <- DocumentModelStore.findOneById(docId)
+      } {
+        println("==============================")
+        println(doc1)
+        println("==============================")
+        println(docR.toDocument)
+        println("==============================")
+        println(docR)
+        println("==============================")
+        // doc1 must_== docR
+      }
+    
+      success
+    }
+
+    // "start and stop a db" in {
+    // 
+    //   val urlDoc = UrlDocumentDAO(
+    //     url = new java.net.URL("http://some.url"),
+    //     uuid = UUID.randomUUID,
+    //     // date = new java.util.Date()
+    //     created = new org.joda.time.DateTime(),
+    //     creator = UUID.randomUUID, // EventProcessor
+    //     title= Some("this is a title".n), // : Option[NonemptyString]
+    //     authors = None,
+    //     summary = Some("a summary".n), // : Option[NonemptyString] = None,
+    //     lastRevision = Some(UUID.randomUUID) // Option[UUID] = None,
+    //   )
+    // 
+    //   val textDoc = PlainTextDocumentDAO(
+    //     uuid = UUID.randomUUID,
+    //     // date = new java.util.Date()
+    //     created = new org.joda.time.DateTime(),
+    //     creator = UUID.randomUUID, // EventProcessor
+    //     title= Some("this is a title".n), // : Option[NonemptyString]
+    //     authors = None,
+    //     summary = Some("the text of the document".n), // : Option[NonemptyString] = None,
+    //     lastRevision = Some(UUID.randomUUID) // Option[UUID] = None,
+    //     // nextRevision: Option[UUID] = None,
+    //     // inResponseTo: Option[UUID] = None
+    //   )
+    // 
+    //   for {
+    //    urlDocId <- DocumentModelStore.insert(urlDoc) // DevData.doc1
+    //    urlDocR <- DocumentModelStore.findOneById(urlDocId)
+    //    textDocId <- DocumentModelStore.insert(textDoc) // DevData.doc1
+    //    textDocR <- DocumentModelStore.findOneById(textDocId)
+    //   } {
+    //     // val j = DocumentModelStore.toPrettyJson(doc)
+    //     println(urlDocR)
+    //     println(textDocR)
+    //   }
+    // 
+    //   // val doc = DocumentModelStore.findOneById(DevData.doc1.uuid)
+    //   // println("got doc: " + doc )
+    //   // doc.foreach { d =>
+    //   //   val j = UrlDocumentModelStore.toPrettyJson(d)
+    //   //   println(j)
+    //   // }
+    // 
+    //   todo
+    // }
+  }
+
+}
+

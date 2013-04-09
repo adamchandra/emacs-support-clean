@@ -1,0 +1,86 @@
+
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-# -implicit val fc = h.FieldConstructor(views.html.formFieldConstructor.f)
+
+-@ val authProviders: Iterable[securesocial.core.IdentityProvider]
+-@ val loginForm: play.api.data.Form[(String,String)]
+-@ val errorMsg: Option[String] = None
+
+-# -@ val rform: Form[controllers.RexaLogin.RegistrationInfo]
+
+-@ val registrationForm: Form[securesocial.controllers.Registration.RegistrationInfo]
+-val rform = registrationForm
+
+.main
+  .row-fluid
+    .span4.offset2
+      form.well.form-vertical(action="/auth/login" method="POST")
+        fieldset
+          legend Sign In
+          legend
+            =for(p <- authProviders if p.authMethod != securesocial.core.AuthenticationMethod.UserPassword) 
+              - val imageUrl = "/assets/images/providers/%s.png".format(p.providerId)
+              a(href="#{p.authenticationUrl}")
+                img(src="#{imageUrl}")
+
+          input(name="email" type="text" placeholder="Email")
+          input(name="password" type="password" placeholder="Password")
+          label.checkbox
+            input(name="rememberme" type="checkbox") Remember me 
+          button.btn(type="submit") Sign In
+          span #{errorMsg}
+
+    
+
+    .span4
+      form.well.form-horizontal(action="/auth/signup" method="POST")
+        legend Sign Up
+        .control-group
+          label.control-label(for="inputEmail") Email
+          .controls
+            input#inputEmail(type="text" placeholder="Email")
+  
+        .control-group
+          label.control-label(for="firstName") First Name
+          .controls
+            input#firstName(type="text" placeholder="first name")
+  
+        .control-group
+          label.control-label(for="lastName") Last Name
+          .controls
+            input#lastName(type="text" placeholder="lastname")
+  
+        .control-group
+          label.control-label(for="userName") Username
+          .controls
+            input#userName(type="text" placeholder="username")
+  
+        .control-group
+          label.control-label(for="password1") Password
+          .controls
+            input#password1(type="password" placeholder="password")
+  
+        .control-group
+          label.control-label(for="password2") Retype Password
+          .controls
+            input#password2(type="password" placeholder="password")
+  
+        .control-group
+          label.control-label(for="rememberMe") Remember me
+          .controls
+            input#rememberMe(type="checkbox")
+            button.btn(type="submit") Sign Up
+
+
+  .row-fluid
+    .span4.offset2
+      form.well.form-horizontal(action="/auth/signup" method="POST")
+        =unescape(h.inputText(rform("email"),         '_label -> "Email"))
+        =unescape(h.inputText(rform("firstName"),     '_label -> "First name"))
+        =unescape(h.inputText(rform("lastName"),      '_label -> "Last name"))
+        =unescape(h.inputText(rform("userName"),      '_label -> "Username"))
+        =unescape(h.inputPassword(rform("passwords.password1"), '_label -> "Password"))
+        =unescape(h.inputPassword(rform("passwords.password2"), '_label -> "Retype Password"))
+        =unescape(h.checkbox(rform("rememberme"), '_label -> "Remember Me"))

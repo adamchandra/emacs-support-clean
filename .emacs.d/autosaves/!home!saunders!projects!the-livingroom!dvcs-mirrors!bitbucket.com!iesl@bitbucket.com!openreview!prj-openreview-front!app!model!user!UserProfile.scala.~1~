@@ -1,0 +1,22 @@
+package model.user
+
+import net.openreview.model.raw.users._
+
+/**
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
+ */
+case class UserProfileComponent(user: User) {
+  def id = user.id
+  def fullname = user.fullname
+  def emails: List[Email] = user.emails.toList
+
+  // primary email is first email in list, but only if it's verified
+  def primaryEmail:Option[Email] = emails.headOption.filter(_.verified)
+  // all the rest:
+  def nonPrimaryEmails: List[Email] = primaryEmail match {
+    case Some(e) => emails.drop(1)
+    case None => emails
+  }
+
+}
+

@@ -1,0 +1,5 @@
+org fstree
+
+This mode could potentially be used to dynamically generate subsets of files in a project that are meant to 
+be operated on together, like all related jade/scala/less files as one set, etc.
+

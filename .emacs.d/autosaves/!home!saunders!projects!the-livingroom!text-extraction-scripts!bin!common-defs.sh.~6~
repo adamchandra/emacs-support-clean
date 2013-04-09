@@ -1,0 +1,9 @@
+
+declare workdir="work"
+declare papers="papers"
+
+declare metatagger="../the-world/the-livingroom/rexa1-metatagger/bin/runcrf"
+
+# declare pstotext_bin="../the-world/the-livingroom/pstotext/bin"
+declare pstotext_bin="/home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/pstotext/bin"
+

@@ -1,0 +1,26 @@
+*** Emacs how-tos
+    + Creating and inserting org-links
+      http://orgmode.org/guide/Handling-links.html#Handling-links
+
+    + date/time stamps M-x org-time-stamp
+
+
+
+*** Icicles project creation
+    1. icicle-dired-save-marked-as-project
+       creates *.icy
+    2. icicle-dired-project
+       choose *.icy file
+
+*** Aligning sbt maven imports
+    (table-capture BEG END 
+      &optional 
+      COL-DELIM-REGEXP 
+      ROW-DELIM-REGEXP 
+      JUSTIFY 
+      MIN-CELL-WIDTH 
+      COLUMNS)
+
+      (table-align-imports)
+      (table-release)
+      ..delete, 

@@ -1,0 +1,135 @@
+# This is the main configuration file for the application.
+# ~~~~~
+
+# Secret key
+# ~~~~~
+# The secret key is used to secure cryptographics functions.
+# If you deploy your application to several instances be sure to use the same key!
+application.secret="x<04CFWG=EWmTOy13EC^ErsbUT:tSUZ8B^4p5let9EcvV?dMm7G5LdxJylb`/f2["
+
+# The application languages
+# ~~~~~
+application.langs="en"
+
+# Database configuration
+# ~~~~~
+# You can declare as many datasources as you want.
+# By convention, the default datasource is named `default`
+db.default.driver=org.h2.Driver
+# db.default.url="jdbc:h2:tcp://localhost:9092/or-users;IFEXISTS=TRUE;AUTO_RECONNECT=TRUE"
+db.default.url="jdbc:h2:file:~/h2-data/or-users;MVCC=true;AUTO_RECONNECT=TRUE"
+db.default.user=openreview
+db.default.password=openreview
+db.default.logStatements=true
+
+# Evolutions
+# ~~~~~
+# You can disable evolutions if needed
+# evolutionplugin=disabled
+
+# ehcacheplugin=disabled
+
+# Logger
+# ~~~~~
+# You can also configure logback (http://logback.qos.ch/), by providing a logger.xml file in the conf directory .
+
+# Root logger:
+logger.root=DEBUG
+
+# Logger used by the framework:
+logger.play=DEBUG
+
+logger.org.fusesource=INFO
+logger.securesocial=DEBUG
+logger.com.jolbox.bonecp=INFO
+logger.net.sf.ehcache=INFO
+
+# Logger provided to your application:
+logger.application=TRACE
+logger.net.openreview=TRACE
+logger.controllers=TRACE
+
+
+
+#####################################################################################
+#
+# SecureSocial 2 Settings
+#
+#####################################################################################
+
+securesocial {
+	#
+	# Where to redirect the user if SecureSocial can't figure that out from
+	# the request that led the use to the login page
+	#
+	onLoginGoTo=/
+
+	#
+	# Where to redirect the user when he logs out. If not set SecureSocial will redirect to the login page
+	#
+	onLogoutGoTo=/
+
+  ssl=false
+
+  userpass {      
+      withUserNameSupport=false
+      sendWelcomeEmail=true
+      enableGravatarSupport=true
+      tokenDuration=60
+      tokenDeleteInterval=15
+      minimumPasswordLength=8
+  }
+
+  google {
+  	authorizationUrl="https://accounts.google.com/o/oauth2/auth"
+  	accessTokenUrl="https://accounts.google.com/o/oauth2/token"
+  	clientId="967463295956-9eobdqs5im180f8fo1s6piomqejrsdg8.apps.googleusercontent.com"
+  	clientSecret="O_ykb1r_VishaAroyDjI4xyT"
+  	scope="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+    redirectHost="openreview.net"
+  }
+
+
+  twitter {
+      requestTokenUrl="https://twitter.com/oauth/request_token"
+      accessTokenUrl="https://twitter.com/oauth/access_token"
+      authorizationUrl="https://twitter.com/oauth/authenticate"
+      consumerKey=your_consumer_key
+      consumerSecret=your_consumer_secret
+  }
+  
+  facebook {
+      authorizationUrl="https://graph.facebook.com/oauth/authorize"
+      accessTokenUrl="https://graph.facebook.com/oauth/access_token"
+      clientId=your_client_id
+      clientSecret=your_client_secret
+      # this scope is the minimum SecureSocial requires.  You can add more if required by your app.
+      scope=email
+  }
+  
+  
+  linkedin {
+      requestTokenUrl="https://api.linkedin.com/uas/oauth/requestToken"
+      accessTokenUrl="https://api.linkedin.com/uas/oauth/accessToken"
+      authorizationUrl="https://api.linkedin.com/uas/oauth/authenticate"
+      consumerKey=your_consumer_key
+      consumerSecret=your_consumer_secret
+  }
+  
+  github {
+      authorizationUrl="https://github.com/login/oauth/authorize"
+      accessTokenUrl="https://github.com/login/oauth/access_token"
+      clientId=your_client_id
+      clientSecret=your_client_secret
+  }
+}
+
+
+smtp {
+    host=smtp.gmail.com
+    port=465
+    ssl=true
+    user="saunders@iesl.cs.umass.edu"
+    password="9&Kk^#fb"
+    from="noreply@openreview.net"
+}

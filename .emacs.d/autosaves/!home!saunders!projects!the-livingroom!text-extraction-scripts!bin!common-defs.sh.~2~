@@ -1,0 +1,6 @@
+
+declare workdir="work"
+declare papers="papers"
+
+declare runcrf="../the-world/the-livingroom/rexa1-metatagger/bin/runcrf"
+declare pstotext="../the-world/the-livingroom/pstotext/bin/pstotext"

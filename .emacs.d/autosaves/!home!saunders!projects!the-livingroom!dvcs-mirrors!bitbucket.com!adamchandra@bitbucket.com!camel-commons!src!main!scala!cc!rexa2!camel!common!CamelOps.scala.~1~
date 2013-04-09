@@ -1,0 +1,54 @@
+package cc.rexa2.camel.commons
+
+import scalaz.camel.core._
+import scalaz.concurrent.Strategy
+import scalaz._, scalaz.{Scalaz => Z}, Z.{node => _, _}
+
+
+trait CamelOps extends Camel  {
+  /** Concurrency strategy for each created processor */
+  var processorConcurrencyStrategy: Strategy = Strategy.DefaultStrategy
+
+  /** Creates an CPS processor direct-style processor */
+  def cps(p: Message => Message): MessageProcessor = messageProcessor(p, processorConcurrencyStrategy)
+
+  /** Prints message to stdout (direct-style processor) */
+  def ds_printMessage = (prefix:String) => (m: Message)  => { println(prefix+m); m }
+  /** Prints message to stdout */
+  def printMessage = cps(ds_printMessage(""))
+
+  def prefixPrintMessage(prefix:String) = (m: Message) => { println(prefix+m); m } 
+
+  def delay(delay: Long): MessageProcessor = (m: Message, k: MessageValidation => Unit) => {
+    processorConcurrencyStrategy.apply { Thread.sleep(delay); k(m.success) }
+  }
+
+  import cc.rexa2.commons.{Props => P, PropertyInterpolation => PI}
+  import com.typesafe.config.Config
+
+  /**
+   * Format Camel component URIs using a more readable syntax,
+   * one line per parameter, with property substitution, like so:
+   *
+   * Given property definitions:
+   *   file.name=/path/to/file
+   *   delay.value=1000
+   *
+   * Then
+   *    ccomp("file:{{file.name}}", """
+   *          |  initialDelay={{delay.value}}
+   *          |  delay=1000
+   *          """)
+   * becomes
+   *    "file://path/to/file?initialDelay=1000&delay=1000"
+   *
+   */
+  def fmtComp(component:String, args:String)(implicit conf:Config): String = {
+    val lines = args.trim.stripMargin.split("\n").toList.map(PI.propSub(conf, _).trim)
+    val uristr = PI.propSub(conf, component).trim + "?" + lines.mkString("&")
+    uristr
+  }
+
+}
+
+object CamelOps extends CamelOps

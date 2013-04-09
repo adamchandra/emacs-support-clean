@@ -1,0 +1,277 @@
+
+
+
+String zipper
+
+
+(str, ctx)
+
+lift: s -> szip = 
+  (s, rootctx)
+
+
+rangeContext  = (r1, r2)
+
+
+// navigation: 
+downRange: range -> szip -> szip =
+   (str, ctx):szip -> (str[r1:r2], (r1, r2))
+  
+
+
+#+BEGIN_EXAMPLE
+
+egrep --color -E '^\[[^]]\]' combined.txt  | less
+egrep --color -E '^\[[^]]\]' combined.txt  
+egrep --color=always -E '^\[[^]]\]' combined.txt  | less
+egrep --color=always -E '[[:alpha:]]{3,8},[[:space:]][[:alpha:]]\.' combined.txt  | less
+
+
+- Name initials, from 1-3, with or without spaces
+[[:upper:]]\.([[:space:]]?[[:upper:]]\.){0,2}
+
+
+- last names, no spaces or specials
+[[:upper:]][[:alpha:]]{2,20}
+
+
+([¨´][[:space:]])
+- last names w/ special characters 
+\b[[:upper:]]([[:alpha:]]([¨´][[:space:]]?)){2,20}\b
+
+
+
+egrep --color=always -E '\b[[:upper:]]([[:alpha:]]([¨´][[:space:]]?)){2,20}\b'
+
+
+- e.g, Smith, B. A.
+egrep --color=always -E '[[:upper:]][[:alpha:]]{2,8},[[:space:]][[:upper:]]\.([[:space:]][[:upper:]]\.){0,2}' 
+     [39] K.     (Setter, B.)          A. thesis Swarthmore College (2001) in preparation. 
+
+- e.g, A. B. Smith
+egrep --color=always -E '[[:upper:]]\.[[:space:]]?([[:upper:]]\.[[:space:]]?){0,2}[[:upper:]][[:alpha:]]{2,20}' 
+
+
+egrep --color=always -E '\bet'
+
+
+symposium|communications|annals|letters
+
+- all caps, e.g., ICML
+- abbrevs, e.g., J. Amer. Statist. Assoc. 
+
+egrep --color=always -E '([[:upper:]]([[:alpha:]]{0,10})\.)'
+
+egrep --color=always -E '([[:upper:]]([[:alpha:]]{2,10})\.)([[:space:]][[:upper:]]([[:alpha:]]{2,10})\.){2,5}'
+
+
+egrep --color=always -E '([[:upper:]]([[:alpha:]]{0,10})\.)([[:space:]][[:upper:]]([[:alpha:]]{0,10})\.){2, 4}'
+
+
+
+#+END_EXAMPLE
+
+[falstaff:~/projects/datasets]
+  - # > (parse, cat) file://dblp.xml.gz
+  - zcat dblp/dblp.xml.gz | head
+  - zcat dblp/dblp.xml.gz | grep "author" -A 10 | head
+  - # > (parse, cat) file://dblp.xml.gz
+  - # > (parse, json, cat) file://dblp.xml.gz
+  - # > (parse, json, srep, cat) file://dblp.xml.gz
+  - # > (parse, json, srep, (_.author), cat) file://dblp.xml.gz
+  - # > (parse, xml, xpath("/**/author"), (_.apply("author")), (cat 'qsr)) file://dblp.xml.gz
+  - # > (parse, xml, xpath("/**/author"), (_.apply("author")), cat) file://dblp.xml.gz
+  - # > def authors = (parse, xml, xpath("/**/author")) 
+  - # > (authors, ) file://dblp.xml.gz
+  - # > def authors = (parse, xml, xpath("/**/author.text()")) 
+  - # > def sample = (parse, xml, xpath("/article"), (take 100), (choose 10))
+  - # > sample file://dblp.xml.gz
+  - # > val arts = sample 'file://dblp.xml.gz
+  - # > (authors, ) file://dblp.xml.gz
+  - # > (authors, (grep 'v ","), wsv, rotr, sort, (uniq 'c), (sort 'n 'r)) arts
+  - # > (authors, (grep 'v ","), wsv, rotr, sort, (uniq 'c), (sort 'n 'r), cat) arts
+  - # > (authors, (grep 'v ","), wsv, rotr, sort, uniq, (label "last")) arts
+  - # > def sample = (parse, xml, xpath("/article"), (take 100), (choose 10))
+  - # > def sample = (parse, xml, xpath("/article"), (withid ), (take 100), (choose 10))
+  - 16:54:05> zcat dblp/dblp.xml.gz | grep "author" -B 3 -A 10 | head
+  - <!DOCTYPE dblp SYSTEM "dblp.dtd">
+  - <dblp>
+  - <article mdate="2002-01-03" key="persons/Codd71a">
+  - <author>E. F. Codd</author>
+  - <title>Further Normalization of the Data Base Relational Model.</title>
+  - <journal>IBM Research Report, San Jose, California</journal>
+  - <volume>RJ909</volume>
+  - <month>August</month>
+  - <year>1971</year>
+  - <cdrom>ibmTR/rj909.pdf</cdrom>
+
+
+  (article mdate="2002-01-03" key="persons/Codd71a"
+  (dblp:author "E. F. Codd")
+  (dblp:journal "IBM Research Report, San Jose, California"
+
+
+* regex wildfire brush
+  firstInits = /([A-Z]\.?\-?\s){1-3}/
+  lastName = /[:upper:][:lower:]+/
+  name := firstInits ~ lastName | lastName ~ "," ~ firstInits
+
+  names := name and _ | _ and name
+
+
+* Sample text markup
+*** Original Text
+             [MARCIUS enters the gates]
+
+  FIRST SOLDIER. Fool-hardiness; not I.
+  SECOND SOLDIER. Not I.                    [MARCIUS is shut in]
+  FIRST SOLDIER. See, they have shut him in.
+  ALL. To th' pot, I warrant him.             [Alarum continues]
+
+                      Re-enter TITUS LARTIUS
+
+  LARTIUS. What is become of Marcius?
+  ALL. Slain, sir, doubtless.
+  FIRST SOLDIER. Following the fliers at the very heels,
+    With them he enters; who, upon the sudden,
+    Clapp'd to their gates. He is himself alone,
+    To answer all the city.
+
+*** Marked Up Text
+    "FIRST SOLDIER"
+      + labels: [character]             
+      + Extent: [(12, 24)]             // list of begin,end pairs (always present)
+
+    "."
+      + labels: []             
+      + Extent: [(24, 25)]             // list of begin,end pairs (always present)
+
+    "Fool-hardiness; not I."
+      + labels: [line]                 // list of word-tags for span (always present)
+      + Extent: [(27, 35)]             // list of begin,end pairs (always present)
+      + Speaker: FIRST SOLDIER         // key/value pairs (additional k/vs optional)
+
+
+
+* Thing we might want to label
+1. A reference
+    [1. Bishop-Clark, ] [C. and Wheeler, D. The Myers-Briggs personality ]
+       [type and its relationship to computer programming. ][Journal of ]
+       [Research on Computing Education 26, ] [3 (1994), 358--370. ]
+
+2. A name (or other field in a reference)    
+    ... [Bishop-Clark, C.] and [Wheeler, D.] ...
+
+3. The document containing some text or property
+    doc => "has references"
+
+4. A header block:
+    +===================+
+    | Bishop-Clark, C.  |                        |
+    | Univ. of Whatever | => "author-info-block" |
+    | bclark@uow.edu    |                        |
+    +===================+
+    
+5. An entity, entity ref, w/POS, coref and dependency relationships
+    Barak Obama is the President of the United States 
+    ^n--- ^n---        ^n-------
+    ^nnp-------                         ^nnp---------
+    ^nnp-------        ^nnp--------------------------
+    ^per(1)----        ^role(1)---      ^loc(1)------
+                       ^rel(p1,l1)
+ 
+ 6.  Various overlapping spans...
+    "1. Bishop-Clark,  C. and Wheeler, D. and Boehm, B.W.; Software Engineering Economics. Prentice-Hall"
+        ^---------------- ^-- ^----------                                      | two consecutive names /name/ and /name/
+                              ^---------- ^-- ^----------                      |   ..ditto..
+        ^---------------- ^-- ^--------------------                            | /name/ /and/ (a random span of n characters)
+                              ^---------- ^-- ^-------------------             |   ..ditto..
+
+
+* Various ideas on how to represent annotated spans of text (for now.., later, other things)
+*** Tree-like nested structure, e.g., (some (text) (that has (been)) marked up)
+    Strictly nested structure would have rough time with 6 (above). Overlapping
+    spans of the same label type could not easily co-exist
+
+    Relaxing the overlapping span restriction would make it more useful, but perhaps more
+    difficult to use
+
+*** Anchor/arrow structure
+    Similar to GATK (annotation toolkit), annotations are on streams of data, with zero-width
+    anchors and labeled arrows between them. 
+
+*** Tree-like nested bounding-boxes 
+    Easier to markup things like (4), same caveats as nested lists above. Need some way to 
+    represent overlapping spans
+
+
+
+* Annotation challenges
+*** List all of the sentence from the nyt corpus vertically, one sentence per line, 
+    filtered by regex, sorted by # of noun-phrases, displayed with each nnp aligned
+    in a column.
+
+*** Find and list as many references from the rexa research paper corpus, one ref per line,
+    sorted by citation style, then lexically/numerically
+    Try to pull out all author lists and display vertically, aligning by name
+
+
+
+
++ Annotations/tags on anything
+  + Extended URIs
+    + URLs (can drive spidering)
+    + spidered html pages (as files, e.g., ([httP://../~saunders], [filE://some/html/filename])
+    + pdfs [pdf://sha1]
+      + pdf points [pdf://sha1][coord:(20, 34)] // or regions: [rect|]
+    + xml: [xpath:'article/*/heading[@att=true]/']
+    + functional transformations: 
+      [pdfminer], [postagger]
+    + database resources
+    + lucene documents (to allow user ratings for ranking results)
+    + plain text: [str:slice(start,len)]
+
+      
+  - Sift through pdftext output, try to identify bib sections, then 
+    try to identify venue strings, author names, hanging indents, 
+    other features that might be used to drive venue+author coref
+
+
+
+
+
+
+[10] A. Gal.Efﬁcient Bytecode Veriﬁcation and Compilation in a VirtualMachine Dissertation. PhD
+     thesis, University Of California, Irvine,2006.
+
+[11] A. Gal, C. W. Probst, and M. Franz. HotpathVM: An effective JITcompiler for
+     resource-constrained devices. InProceedings of theInternational Conference on Virtual Execution
+     Environments, pages144–153. ACM Press, 2006.
+
+[12] C. Garrett, J. Dean, D. Grove, and C. Chambers. Measurement andApplication of Dynamic Receiver
+     Class Distributions. 1994.
+
+[13] J. Ha, M. R. Haghighat, S. Cong, and K. S. McKinley. A concurrenttrace-based just-in-time
+     compiler for javascript. Dept.of ComputerSciences, The University of Texas at Austin,
+     TR-09-06, 2009.
+
+[14] B. McCloskey. Personal communication.
+
+[15] I.PiumartaandF.Riccardi. Optimizingdirectthreadedcodebyselec-tive inlining. InProceedings of
+     the ACM SIGPLAN 1998 conferenceon Programming language design and implementation, pages 291–300. ACM
+     New York, NY, USA, 1998.
+
+[16] A. Rigo. Representation-Based Just-In-time Specialization and thePsyco Prototype for
+     Python. InPEPM, 2004.
+
+[17] M. Salib. Starkiller: A Static Type Inferencer and Compiler forPython. InMaster’s Thesis, 2004.
+
+[18] T. Suganuma, T. Yasue, and T. Nakatani. A Region-Based Compila-tion Technique for Dynamic
+     Compilers.ACM Transactions on Pro-gramming Languages and Systems (TOPLAS), 28(1):134–174, 2006.
+
+[19] M. Zaleski, A. D. Brown, and K. Stoodley. YETI: A graduallYExtensible Trace
+     Interpreter. InProceedings of the InternationalConference on Virtual Execution Environments, pages
+     83–93. ACMPress, 2007
+
+
+

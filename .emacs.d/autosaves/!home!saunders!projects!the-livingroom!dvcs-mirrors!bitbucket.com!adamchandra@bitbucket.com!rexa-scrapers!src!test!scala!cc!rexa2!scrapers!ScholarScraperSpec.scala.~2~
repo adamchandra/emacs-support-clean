@@ -1,0 +1,161 @@
+package cc.rexa2
+package scrape
+
+import org.specs2.mutable
+import org.specs2.mutable._
+
+import java.io._
+import org.xml.sax
+import scala.xml._
+import scalaz._
+import Scalaz._
+
+object ScholarScraperSpec extends mutable.Specification { 
+
+  "parsing scholar results" should {
+
+    "parse links in footer block" in {
+      val scholar = new ScholarEndpoint()
+      val samples = this.getClass.getResourceAsStream("/scholar-entry-v1.html")
+      val in = new sax.InputSource(samples)
+      val html = scholar.parseHtml(in)
+
+      // val scholarId: String
+      // val title: String, 
+      // val pdfUrls: List[String]
+      // val 
+      // // url: java.net.URI,
+      // url: List[String],
+      // numCitations: Int,
+      // numVersions: Int
+
+
+      // parse out Cited by, Related articles, "All n Versions" urls
+      val linkFooterBlock = Seq((<root><div class="gs_fl">
+        <a href="/scholar?cites=14553887910606988646&amp;as_sdt=40000005&amp;sciodt=1,22&amp;hl=en">Cited by 4639</a> - 
+        <a href="/scholar?q=related:ZuWU5PHL-ckJ:scholar.google.com/&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">Related articles</a> - 
+        <a href="http://direct.bl.uk/research/2A/50/RN100556261.html?source=googlescholar" onmousedown="return scife_clk(this.href,'','docdel','0')">BL Direct</a> - 
+        <a href="/scholar?cluster=14553887910606988646&amp;hl=en&amp;as_sdt=1,22&amp;as_vis=1">All 127 versions</a>
+      </div>
+      </root>))
+
+
+      for {
+        gsFlDiv <- linkFooterBlock \\ "div" if (gsFlDiv \ "@class").text == "gs_fl"
+        
+      } {
+        val citedByLink =  for (a <- gsFlDiv \ "a" if (a \ "@href").text.startsWith("/scholar?cites=")) yield a
+        val relatedArticleLink =  for (a <- gsFlDiv \ "a" if (a \ "@href").text.startsWith("/scholar?q=related")) yield a
+        val allVersionsLink =  for (a <- gsFlDiv \ "a" if (a \ "@href").text.startsWith("/scholar?cluster=")) yield a
+        println(citedByLink)
+        println(relatedArticleLink)
+        println(allVersionsLink)
+
+        def parseInt(s: String): Validation[String, Int] = try { 
+          Success(s.toInt) 
+        } catch { 
+          case ex: NumberFormatException => Failure(ex.getMessage) 
+        }
+
+        import java.net.URI
+
+        def parseCitedByUrl(link: NodeSeq): Validation[String, String \/ URI] = {
+          val digitsRE = "(\\d+)".r
+          for {
+            href <- (link \ "@href").headOption.toSuccess("no href specified")
+            val text  = href.text
+          } yield {
+            try {
+              \/.right(new URI(href.text))
+            }
+            catch {
+              case e:Exception => \/.left(text)
+            }
+          }
+        }
+
+        def parseCitedByCount(link: NodeSeq): Validation[String, Int] = {
+          val digitsRE = "(\\d+)".r
+          // digitsRE.findFirstIn(link.text) >>= ((s:String) => parseInt(s))
+          digitsRE.findFirstIn(link.text) >>= ((s:String) => parseInt(s))
+
+        // val (count, url) = parseCitedByLink(citedByLink)
+        }
+      }
+
+      // TODO parse out [PDF|PS|BOOK|CITATION]
+
+      todo
+    }
+  }
+}
+
+
+
+
+//     for {
+//       div <- html \ "body" \ "div"
+//     } {
+//       // scholar.parseGsRDiv2(div)
+//       println("======DIV=========")
+//       // println(div)
+//       // println("===============")
+// 
+//       val hrefs = for {
+//         a <- div \\ "a" if a.text.contains("[PDF]")
+//         val _ = println("a: " + a)
+//         hrefA <- a \ "@href" 
+//         val _ = println("href: " + hrefA)
+//       } yield  {
+//         hrefA
+//       }
+// 
+//       val hrefCites = for {
+//         a <- div \\ "a" if a.text.contains("[PDF]")
+//         hrefB <- a \ "@href" if hrefB.text.contains("cites=")
+//         val _ = println("href: " + hrefB)
+//       } yield  {
+//         hrefB
+//         val query = scholar.stringToURI(hrefCites).getQuery()
+//         val params = queryParamsToMap(query)
+//  
+//         val gsId = params("cites")
+//       }
+// 
+//       val title =  for(t<- div \\ "h3" if (t \ "@class").text == "gs_rt") yield t.text
+// 
+//       println("title: " + title.headOption.getOrElse("(no title)"))
+
+      
+
+// val parsed = for {
+//   a <- div \\ "a"
+//   href <- a \ "@href" if href.text.contains("cites=")
+//   titleh3 <- div \\ "h3"
+//   titleSpan <- titleh3 \ "@class" if titleSpan.text == "gs_rt"
+//   pdfUrl <- titleh3 \ "a"
+//   pdfHref <- pdfUrl \ "@href"
+// } yield  {
+//   val hreft = href.text
+//   val query = stringToURI(hreft).getQuery()
+//   val params = queryParamsToMap(query)
+// 
+//   val gsId = params("cites")
+// 
+//   val digitsRE = "(\\d+)".r
+//   val citedCountOpt = digitsRE.findFirstIn(a.text).map(_.toInt.right)
+// 
+//   // todo: handle malformed URIs
+//   // new java.net.URI(pdfHref.text)
+// 
+//   val res = ScholarResultParse(
+//     scholarId = gsId,
+//     title = titleh3.text,
+//     // url = new java.net.URI(pdfHref.text),
+//     url = List(pdfHref.text),
+//     numCitations = 0,
+//     numVersions = 0
+//   )
+//   res
+// }
+

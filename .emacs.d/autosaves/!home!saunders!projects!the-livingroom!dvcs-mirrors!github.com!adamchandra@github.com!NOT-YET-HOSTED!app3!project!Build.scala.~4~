@@ -1,0 +1,100 @@
+import sbt._
+import Keys._
+import play.Project._
+
+import edu.umass.cs.iesl.sbtbase.{Dependencies, IeslProject}
+import edu.umass.cs.iesl.sbtbase.IeslProject._
+
+object ApplicationBuild extends Build {
+  implicit val deps = new Dependencies()
+  import deps._
+  
+  val appFront         = "app3-front"
+  val appCore          = "app3-core"
+  val organization     = "edu.umass.cs.iesl"
+
+  def prjPath = (s:String) => new java.io.File("prj-"+s)
+
+  val scalaSettings = Seq(
+    scalaVersion := "2.10.0",
+    scalacOptions := Seq("-Xlint", "-deprecation", "-unchecked", "-Xcheckinit", "-encoding", "utf8"),
+    javacOptions ++= Seq("-Xlint:unchecked", "-encoding", "utf8")
+  )
+
+  val vers      = "0.1-SNAPSHOT"
+
+  val coreDependencies = Seq(
+    "org.scalaz" %% "scalaz-core" % "7.0.0-M7" withSources(),
+    "edu.umass.cs.iesl" %% "play-navigator" % "0.4.1-SNAPSHOT",
+    // "eu.teamon" %% "play-navigator" % "0.4.0",
+    "org.specs2" %% "specs2" % "latest.release" % "test",
+    scalateCore()
+  ) ++ CleanLogging.standardLogging()
+
+  // val core = Project(appCore, prjPath(appCore), applicationVersion=vers, dependencies=coreDependencies).settings(
+
+  val core = Project(
+    id = appCore,
+    base = prjPath(appCore),
+    aggregate = Nil, // : => Seq[ProjectReference] = Nil,
+    dependencies = Nil, // coreDependencies, // : => Seq[ClasspathDep[ProjectReference]] = Nil,
+    delegates = Nil // : => Seq[ProjectReference] = Nil,
+  ).ieslSetup (
+    vers, coreDependencies, Public, WithSnapshotDependencies, org = organization, conflict = ConflictStrict
+  ) .cleanLogging.standardLogging 
+    .settings(libraryDependencies ++= coreDependencies)
+    .settings(scalaSettings:_*)
+
+
+
+  val front = play.Project(
+    name = appFront,
+    applicationVersion = vers,
+    dependencies = Nil, 
+    path = prjPath(appFront)
+  ).ieslSetup (
+    vers, coreDependencies, Public, WithSnapshotDependencies, org = organization, conflict = ConflictStrict
+  ).cleanLogging.standardLogging.settings(
+    // 
+  ) dependsOn core
+
+}
+
+object CleanLogging {
+  val deps = new Dependencies()
+  import deps._
+  val cleanLogging = ivyXML :=
+    <dependencies>
+      <exclude module="log4j"/>
+      <exclude module="slf4j-log4j12"/>
+      <exclude module="commons-logging"/>
+    </dependencies>
+
+  def standardLogging(slf4jVersion:String="latest.release") = Seq(
+    // see http://www.slf4j.org/legacy.html
+
+    // ultimately log everything via Logback
+
+    logbackCore(),
+    logbackClassic(),
+
+    // use the slf4j wrapper API
+    slf4j(slf4jVersion),
+
+    // nice Scala syntax for slf4j
+    slf4s(),
+
+    // direct legacy Jakarta Commons Logging calls to slf4j
+    jclOverSlf4j(slf4jVersion),
+
+    // direct legacy log4j calls to slf4j
+    log4jOverSlf4j(slf4jVersion),
+
+    // direct legacy java.util.logging calls to slf4j
+    julToSlf4j(slf4jVersion),
+
+    // direct grizzled-slf4j calls to slf4j
+    grizzledSlf4j(slf4jVersion)
+  )
+
+}

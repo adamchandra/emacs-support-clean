@@ -1,0 +1,200 @@
+package net.openreview.model.seed
+
+import edu.umass.cs.iesl.scalacommons.StringUtils._
+import java.net.URL
+import java.util.UUID
+import net.openreview.model.raw._
+import memory._
+import org.joda.time.DateTime
+import net.openreview.model.raw.MemoryEndorsementTemplate
+import net.openreview.model.raw.MemoryPlainTextDocumentTemplate
+import net.openreview.model.raw.MemoryLicenseTemplate
+import net.openreview.model.raw.MemoryPlainTextDocument
+import scala.Some
+import net.openreview.model.raw.MemoryUrlDocument
+import net.openreview.model.raw.MemoryFulfill
+import net.openreview.model.raw.MemoryEndorsement
+import net.openreview.model.raw.MemoryLicense
+import net.openreview.model.raw.MemoryFulfillTemplate
+import net.openreview.model.raw.MemoryRequest
+import net.openreview.model.raw.Storage._
+import net.openreview.model.raw.MemoryEndorsementTemplate
+import net.openreview.model.raw.MemoryPlainTextDocumentTemplate
+import net.openreview.model.raw.MemoryLicenseTemplate
+import net.openreview.model.raw.MemoryIdentityLicense
+import net.openreview.model.raw.MemoryPlainTextDocument
+import scala.Some
+import net.openreview.model.raw.MemoryUrlDocument
+import net.openreview.model.raw.MemoryFulfill
+import net.openreview.model.raw.MemoryEndorsement
+import net.openreview.model.raw.MemoryLicense
+import net.openreview.model.raw.MemoryFulfillTemplate
+import net.openreview.model.raw.MemoryRequest
+
+/**
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
+ */
+class TestingData {
+  implicit val world = Storage.world
+
+
+
+  lazy val iesl = new MemoryBasicMailingList(List(users("soergel"), users("saunders"), users("mccallum")), 
+    uuid = UUID.randomUUID(), created = new DateTime(2013, 1, 1, 12, 0))
+
+
+  val noopEPs = (List(
+    "Aditya Menon, Xiaoqian Jiang, Shankar Vembu, Charles Elkan, Lucila Ohno-Machado".n,
+    "Mark Reid".n,
+    "ICLR reviewer".n,
+    "Charles Elkan".n,
+    "Robert Busa-Fekete, Djalel Benbouzid, Balazs Kegl".n,
+    "Nando de Freitas, Alex Smola, Masrour Zoghi".n
+  ) map (new MemoryStatefulEventProcessorImpl(_, uuid = UUID.randomUUID(), created = new DateTime(2013, 1, 1, 12, 0)))
+                 map (Storage.eventProcessorStore.createIfNeeded(_))
+                 map (Some(_)))
+
+  val doc1 = MemoryUrlDocument(users("apassos"),
+    "Predicting accurate probabilities with a ranking loss",
+    noopEPs(0),
+    ("In many real-world applications of machine learning classifiers, it is essential to predict the probability of " +
+     "an example belonging to a particular class. This paper proposes a simple technique for predicting probabilities" +
+     " based on optimizing a ranking loss, followed by isotonic regression. This semi-parametric technique offers " +
+     "both good ranking and regression performance, and models a richer set of probability distributions than " +
+     "statistical workhorses such as logistic regression. We provide experimental results that show the effectiveness" +
+     " of this technique on real-world applications of probability prediction.").opt,
+    new URL("http://icml.cc/2012/papers/372.pdf"),
+    created = DateTime.parse("2012-02-01"), uuid = UUID.randomUUID()
+  )
+
+  val doc1r1 = MemoryPlainTextDocument(users("none"), None, noopEPs(1),
+    "I really enjoyed this paper and, " +
+                                                                        "regarding your use of the AUC as an " +
+                                                                        "objective, " +
+                                                                        "I thought you might be interested in its " +
+                                                                        "relationship to f-divergences and proper " +
+                                                                        "losses.\n\nAs discussed in section 6.1 of " +
+                                                                        "our paper, Information, " +
+                                                                        "Divergence and Risk for Binary Experiments, " +
+                                                                        "the AUC of a prediction problem with " +
+                                                                        "positive (resp. negative) instances " +
+                                                                        "distributed according to $P$ (resp. $Q$) is " +
+                                                                        "precisely the variational divergence between" +
+                                                                        " $P\\times Q$ and $Q\\times P$. It is " +
+                                                                        "therefore related to the 0-1 loss of a " +
+                                                                        "classifier that can predict the correct " +
+                                                                        "ordering of a pair $(x_1, " +
+                                                                        "x_2)$.\n\nExtending this observation to " +
+                                                                        "other f-divergences and related them to " +
+                                                                        "objective functions for ranking would be an " +
+                                                                        "interesting line of work.", 
+    inResponseTo = Some(doc1), created = DateTime.parse("2012-06-01"), uuid = UUID.randomUUID())
+
+  val doc1r2 = MemoryPlainTextDocument(users("none"), None, noopEPs(2), 
+    "Summary:\nThe main strength of the paper is " +
+                                                                        "that it gives a simple and highly effective " +
+                                                                        "methodology for an important class of " +
+                                                                        "real-world problems.\n\nThe main weakness is" +
+                                                                        " that the comparisons could be fleshed out " +
+                                                                        "more thoroughly to justify the choice of " +
+                                                                        "isotonic regression as opposed to other " +
+                                                                        "forms of post-processing. Also, " +
+                                                                        "novelty is a bit limited" +
+                                                                        ".\n--------------------------------------------------------\nDetailed Comments:\nThe paper shows that a simple combination of isotonic regression and rank-based learning does very well at the goal of learning a predictor that gives both good ranking loss and well calibrated probability estimates. This is a simple twist but an effective and practical one.\n\nI agree that isotonic regression is a reasonable choice for a post-processing transformation. However, I feel that the paper could have usefully explored alternatives in the empirical evaluation. It may be that several post-processing transformations give reasonable results, or that isotonic regression is clearly superior. Either way, teasing this apart would strengthen the paper.\n\nThe use of a post-processing step introduces a complexity that is not addressed in the paper. If the model is deployed in a real-world setting, it may be updated frequently. In such a case, a fixed isotonic regression model may become poorly calibrated over time. Showing a way to update the isotonic regression at the same time as the model is updated would provide additional value to the paper.\n\nNote that the use of rank-based loss and isotonic regression is not strictly novel. However, this paper is indeed the first to my knowledge to carefully detail this approach and provide a full empirical comparison.", inResponseTo = Some(doc1), created = DateTime.parse("2012-06-02"), uuid = UUID.randomUUID())
+
+  val doc1r2r1 = MemoryPlainTextDocument(users("none"), None, noopEPs(3), "Some clarifications:\n\n\"It may be that several post-processing transformations give reasonable results, or that isotonic regression is clearly superior.\"Other transformations may give reasonable results in practice, but isotonic regression (IR) has the property that it simultaneously optimizes every proper loss, and is nonparametric. Any parametric transformation may be misspecified.\n\n\"If the model is deployed in a real-world setting, it may be updated frequently. In such a case, a fixed isotonic regression model may become poorly calibrated over time. Showing a way to update the isotonic regression at the same time as the model is updated would provide additional value to the paper.\"The time complexity of IR is O(n * log n) to sort all scores, then O(n) to run PAV. This is independent of the dimensionality d of the data. Any reasonable base learning algorithm has complexity O(n * d) at least (although SGD can converge in less than one epoch). So the cost of retraining the IR transformation is less than the cost of retraining the ranking model, and hence not an obstacle.\"the use of rank-based loss and isotonic regression is not strictly novel. However, this paper is indeed the first to my knowledge to carefully detail this approach and provide a full empirical comparison.\" We would appreciate any citation, from any reader here, to a previous published (or unpublished) use of a rank-based loss followed by IR.", inResponseTo = Some(doc1r2), created = DateTime.parse("2012-06-03"), uuid = UUID.randomUUID())
+
+
+  val doc1r2r2 = MemoryPlainTextDocument(users("soergel"), None, Some(users("soergel")), "I'm sure my friend Bob was the anonymous reviewer, and he told me he was bribed to write a good review!", inResponseTo = Some(doc1r2), created = DateTime.parse("2012-06-06"), uuid = UUID.randomUUID())
+
+
+  val doc2 = MemoryUrlDocument(users("apassos"),
+    "Fast classification using sparse decision DAGs",
+    noopEPs(4),
+    "In this paper we propose an algorithm that builds sparse decision DAGs (directed acyclic graphs) out of a list of base classifiers provided by an external learning method such as AdaBoost. The basic idea is to cast the DAG design task as a Markov decision process. Each instance can decide to use or to skip each base classifier, based on the current state of the classifier being built. The result is a sparse decision DAG where the base classifiers are selected in a data-dependent way. The method has a single hyperparameter with a clear semantics of controlling the accuracy/speed trade-off. The algorithm is competitive with state-of-the-art cascade detectors on three object-detection benchmarks, and it clearly outperforms them in the regime of low number of base classifiers. Unlike cascades, it is also readily applicable for multi-class classification. Using the multi-class setup, we show on a benchmark web page ranking data set that we can significantly improve the decision speed without harming the performance of the ranker.".opt,
+    new URL("http://icml.cc/2012/papers/501.pdf"),
+    created = DateTime.parse("2012-02-02"), uuid = UUID.randomUUID()
+  )
+
+
+  val doc3 = MemoryUrlDocument(users("apassos"),
+    "Exponential Regret Bounds for Gaussian Process Bandits with Deterministic Observations",
+    noopEPs(5),
+    "This paper analyzes the problem of Gaussian process (GP) bandits with deterministic observations. The analysis uses a branch and bound algorithm that is related to the UCB algorithm of (Srinivas et al, 2010). For GPs with Gaussian observation noise, with variance strictly greater than zero, Srinivas et al proved that the regret vanishes at the approximate rate of $O(1/\\sqrt{t})$, where t is the number of observations. To complement their result, we attack the deterministic case and attain a much faster exponential convergence rate. Under some regularity assumptions, we show that the regret decreases asymptotically according to $O(e^{-\\frac{\\tau t}{(\\ln t)^{d/4}}})$ with high probability. Here, d is the dimension of the search space and tau is a constant that depends on the behaviour of the objective function near its global maximum.".opt,
+    new URL("http://icml.cc/2012/papers/853.pdf"),
+    created = DateTime.parse("2012-02-03"), uuid = UUID.randomUUID()
+  )
+
+  val doc3r1 = MemoryPlainTextDocument(users("mccallum"), None, Some(users("mccallum")), "Looks great!", inResponseTo = Some(doc3), created = DateTime.parse("2012-12-05"), uuid = UUID.randomUUID())
+
+
+  val doc4 = MemoryUrlDocument(users("soergel"),
+    "OpenReview.net architecture (draft)",
+    Some(iesl),
+    "This is an early draft with no abstract".opt,
+    new URL("http://openreview.net/OpenReview-20121127.pdf"),
+    created = DateTime.parse("2012-11-27"), uuid = UUID.randomUUID())
+
+  val doc5 = MemoryUrlDocument(users("soergel"),
+    "OpenReview.net: a flexible infrastructure for open evaluation of scholarly articles.",
+    Some(iesl),
+    "We describe our implementation of a system to support reviewing and ongoing discussion of scholarly articles. This system, available at OpenReview.net, allows flexible design of journal or conference policies regarding the reviewing workflow, and provides for both open and private discussion at all stages of the publication lifecycle.".opt,
+    new URL("http://openreview.net/OpenReview-20121128.pdf"),
+    created = DateTime.parse("2012-11-28"), uuid = UUID.randomUUID()
+    //lastRevision = Some(doc4)
+  )
+
+
+  val docs = List(doc1, doc2, doc3, doc4, doc5)
+  val authorNodes: Seq[EventProcessor] = docs.flatMap(_.authors)
+  val groupNodes: Seq[EventProcessor] = List(iesl)
+
+
+  for (n <- authorNodes) {
+    val ep = Storage.eventProcessorStore.createIfNeeded(n)
+    MemoryIdentityLicense(world,ep,ep, uuid=UUID.randomUUID()).send
+  }
+  for (n <- groupNodes) {
+    val ep = Storage.eventProcessorStore.createIfNeeded(n)
+    MemoryIdentityLicense(world,ep,ep, uuid=UUID.randomUUID()).send
+  }
+
+  val licenses = List(MemoryLicense(world, users("apassos"), doc1, uuid = UUID.randomUUID()),
+    MemoryLicense(world, users("apassos"), doc1r1, uuid = UUID.randomUUID()),
+    MemoryLicense(world, users("apassos"), doc1r2, uuid = UUID.randomUUID()),
+    MemoryLicense(world, users("apassos"), doc1r2r1, uuid = UUID.randomUUID()),
+    MemoryLicense(iesl, users("soergel"), doc1r2r2, uuid = UUID.randomUUID()),
+    MemoryLicense(world, users("apassos"), doc2, uuid = UUID.randomUUID()),
+    MemoryLicense(world, users("apassos"), doc3, uuid = UUID.randomUUID()),
+    MemoryLicense(iesl, users("soergel"), doc4, uuid = UUID.randomUUID()),
+    MemoryLicense(iesl, users("soergel"), doc5, uuid = UUID.randomUUID()))
+
+
+  val doc1endorsementRequest = MemoryRequest(iclrConference, users("apassos"), MemoryLicenseTemplate(Some(world), Some(iclrConference), MemoryEndorsementTemplate(doc1, Some(iclrConference))), uuid = UUID.randomUUID())
+
+  val doc2endorsementRequest = MemoryRequest(iclrConference, users("apassos"), MemoryLicenseTemplate(Some(world), Some(iclrConference), MemoryEndorsementTemplate(doc2, Some(iclrConference))), uuid = UUID.randomUUID())
+  val doc2reviewerAssignment1 = MemoryRequest(users("mccallum"), iclrConference, MemoryLicenseTemplate(Some(iclrConference), Some(users("mccallum")), MemoryPlainTextDocumentTemplate(None, None, None, inResponseTo = Some(doc2))), due = Some(DateTime.parse("2013-01-25")), ephemeralText = "Hi Andrew, what do you think of this?", prerequisiteTo = Some(doc2endorsementRequest), uuid = UUID.randomUUID())
+
+  val doc3endorsementRequest = MemoryRequest(iclrConference, users("apassos"), MemoryLicenseTemplate(Some(world), Some(iclrConference), MemoryEndorsementTemplate(doc3, Some(iclrConference))), uuid = UUID.randomUUID())
+  val doc3reviewerAssignment1 = MemoryRequest(users("mccallum"), iclrConference, MemoryLicenseTemplate(Some(iclrConference), Some(users("mccallum")), MemoryPlainTextDocumentTemplate(None, None, None, inResponseTo = Some(doc3))), due = Some(DateTime.parse("2013-01-25")), ephemeralText = "Hi Andrew, I thought you would enjoy this paper.", prerequisiteTo = Some(doc3endorsementRequest), uuid = UUID.randomUUID())
+  val doc3review1license = MemoryLicense(iclrConference, users("mccallum"), doc3r1, uuid = UUID.randomUUID())
+  val doc3review1fulfill = MemoryFulfill(iclrConference, users("mccallum"), Some(doc3reviewerAssignment1), doc3review1license, uuid = UUID.randomUUID())
+
+  val doc3endorsement = MemoryLicense(world, iclrConference, MemoryEndorsement(iclrConference, Some(doc3), Some(iclrConference), uuid = UUID.randomUUID()), uuid = UUID.randomUUID()
+  )
+  // yann tells iclr to tell apassos that the request was fulfilled
+  val doc3endorsementFulfillRequest = MemoryRequest(iclrConference, users("yann"), MemoryFulfillTemplate(Some(users("apassos")), Some(iclrConference), Some(doc3endorsementRequest), doc3endorsement), uuid = UUID.randomUUID())
+  // iclr does what yann says
+  val doc3endorsementFulfill = MemoryFulfill(users("apassos"), iclrConference, Some(doc3endorsementRequest), doc3endorsement, uuid = UUID.randomUUID())
+  // iclr tells yann that it did the jobi
+  val doc3endorsementeFulfillRequestFulfill = MemoryFulfill(users("yann"), iclrConference, Some(doc3endorsementFulfillRequest), doc3endorsementFulfill, uuid = UUID.randomUUID())
+
+
+  val endorsements = List(doc1endorsementRequest, doc2endorsementRequest, doc2reviewerAssignment1, doc3endorsementRequest, doc3reviewerAssignment1, doc3review1license, doc3review1fulfill, doc3endorsement, doc3endorsementFulfillRequest, doc3endorsementFulfill, doc3endorsementeFulfillRequestFulfill)
+
+  licenses.map(_.send)
+
+  endorsements.map(_.send)
+
+}
+

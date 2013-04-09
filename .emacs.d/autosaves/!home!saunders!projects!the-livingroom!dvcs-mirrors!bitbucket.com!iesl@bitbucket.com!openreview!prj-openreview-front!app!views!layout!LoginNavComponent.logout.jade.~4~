@@ -1,0 +1,12 @@
+-@ val it : LoginNavComponent
+- import it._
+-@ val user : User
+
+.btn-group
+  a.loginbtn.btn(href="/login") Login
+
+:javascript
+  returnTo = location.href.replace(/^http.?:\/\/[^/]+\//, '/');
+  $(".loginbtn").attr('href', '/secure'+returnTo);
+
+

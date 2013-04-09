@@ -1,0 +1,209 @@
+package net.openreview.model
+package mongodb
+
+import net.openreview.model._
+import edu.umass.cs.iesl.scalacommons.StringUtils._
+import net.openreview.model.Request
+import net.openreview.model.Decline
+import pov.{DocumentPoVStore, EventPoVStore}
+import scala.Some
+import net.openreview.model.Acknowledge
+import java.net.URL
+import com.weiglewilczek.slf4s.Logging
+import org.joda.time.DateTime
+import java.util.UUID
+
+//import cc.rexa2.rexa-securesocial
+
+/**
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
+ */
+/*object StubLoginA extends Login {
+  def asNode = StubStatefulEventProcessorImplA
+  def displayName = "Aaaa User".n
+  def email = Email("aaaaa", "iesl.cs.umass.edu")
+}*/
+
+object StubEvents {
+
+
+  val df: UrlDocument = UrlDocument(StubStatefulEventProcessorImplA, "The Google", Some(StubStatefulEventProcessorImplA), "method and process of finding information on the internet", new URL("http://www.google.com"),uuid=new UUID(1L,1L),created= DateTime.parse("2012-02-01"))
+  val dg: UrlDocument = UrlDocument(StubStatefulEventProcessorImplB, "Piecewise Training for Undirected Models", Some(StubStatefulEventProcessorImplB), "For many large undirected models that arise in real-world applications, exact maximumlikelihood training is intractable, because it requires computing marginal distributions of the model. Conditional training is even more difficult, because the partition function depends not only on the parameters, but also on the observed input, requiring repeated inference over each training example. An appealing idea for such models is to independently train a local undirected classifier over each clique, afterwards combining the learned weights into a single global model. In this paper, we show that this piecewise method can be justified as minimizing a new family of upper bounds on the log partition function. On three natural-language data sets, piecewise training is more accurate than pseudolikelihood, and often performs comparably to global training using belief propagation.", new URL("http://arxiv.org/pdf/1207.1409v1"),uuid=new UUID(2L,2L),created=DateTime.parse("2012-02-02"))
+
+  val a = Request(StubStatefulEventProcessorImplB, StubStatefulEventProcessorImplA, LicenseTemplate(Some(StubStatefulEventProcessorImplB), Some(StubStatefulEventProcessorImplA), Some(dg)),uuid=new UUID(3L,3L),created= DateTime.parse("2012-02-03"))
+  val b = Acknowledge(StubStatefulEventProcessorImplA, StubStatefulEventProcessorImplB, Some(a),uuid=new UUID(4L,4L),created=DateTime.parse("2012-02-04"))
+  val bb = License(StubStatefulEventProcessorImplA, StubStatefulEventProcessorImplB, dg)
+  val c = Fulfill(StubStatefulEventProcessorImplA, StubStatefulEventProcessorImplB, Some(a),bb,uuid=new UUID(5L,5L),created=DateTime.parse("2012-02-05")) 
+  val d = Request(StubStatefulEventProcessorImplB, StubStatefulEventProcessorImplA, LicenseTemplate(Some(StubStatefulEventProcessorImplB), Some(StubStatefulEventProcessorImplA),Some(df)),uuid=new UUID(6L,6L),created=DateTime.parse("2012-02-06"))
+  val e = Decline(StubStatefulEventProcessorImplA, StubStatefulEventProcessorImplB, Some(a),uuid=new UUID(7L,7L),created=DateTime.parse("2012-02-07"))
+
+  val f = License(World, StubStatefulEventProcessorImplA, df,uuid=new UUID(8L,8L),created=DateTime.parse("2012-02-08"))
+
+  val g = License(World, StubStatefulEventProcessorImplB, dg,uuid=new UUID(9L,9L),created=DateTime.parse("2012-02-09"))
+
+
+  val events: EventStore = StubEventStoreImpl((List(a, b, bb, c, d, e, f, g) map (x => (x.uuid, x))).toMap)
+  val docs: DocumentStore = MemoryDocumentStoreImpl((List(df, dg) map (x => (x.uuid, x))).toMap)
+}
+
+object StubStatefulEventProcessorImplA extends StatefulEventProcessor with inWorld  {
+  def uuid = new UUID(1000L,1000L)
+  def name = "Adam Apple Processor"
+  // how target enforce uniqueness?
+  def owner = None
+  /**
+   * Take some action based on the message contents and local state.
+   * Should store the message, together with any actions taken, in a persistent journal.
+   * @param m
+   */
+  def +(m: Event) = {
+    events + m;
+    this
+  }
+  def events = StubEvents.events
+  implicit def world = World.eventsLocalView
+}
+object StubStatefulEventProcessorImplB extends StatefulEventProcessor with inWorld {
+  def uuid = new UUID(1001L,1001L)
+  def name = "Big Bob Processor"
+  // how target enforce uniqueness?
+  def owner = None
+  /**
+   * Take some action based on the message contents and local state.
+   * Should store the message, together with any actions taken, in a persistent journal.
+   * @param m
+   */
+  def +(m: Event) = {
+    events + m
+    this
+  }
+  def events = StubEvents.events
+  implicit def world = World.eventsLocalView
+}
+
+/*
+object SuperAdmin extends Login {
+  def asNode = StubStatefulEventProcessorImplA
+  def displayName = "Super Admin".n
+  def email = Email("superadmin", "openreview.net")
+}*/
+
+
+object World extends StatefulEventProcessor {
+  def uuid = new UUID(10000L,10000L)
+  def name = "World"
+  // how target enforce uniqueness?
+  def owner = None
+  /**
+   * Take some action based on the message contents and local state.
+   * Should store the message, together with any actions taken, in a persistent journal.
+   * @param m
+   */
+  def +(m: Event) = this
+  def events = StubEvents.events
+}
+
+
+import play.api.Play.current
+
+object DBEventProcessorStoreImpl extends EventProcessorStore with Logging {
+  import play.api.db._
+  import anorm._
+  import anorm.SqlParser._
+  import anorm.{SqlParser=>sql}
+  import java.util.Date
+
+  // create table token_action (
+  //   id                        bigint not null auto_increment,
+  //   token                     varchar(255),
+  //   target_user_id            bigint,
+  //   type                      varchar(2),
+  //   created                   timestamp,
+  //   duration                  bigint,
+  //   constraint ck_token_action_type check (type in ('EV','PR')),
+  //   constraint uq_token_action_token unique (token),
+  //   constraint pk_token_action primary key (id))
+  // ;
+
+  """
+  create table event_processor_store (
+    id                        bigint not null auto_increment,
+    uuid                      varchar(255),
+    name                      bigint, // unique key
+    // owner                      varchar(2),
+                       timestamp,
+    duration                  bigint,
+    constraint ck_token_action_type check (type in ('EV','PR')),
+    constraint uq_token_action_token unique (token),
+    constraint pk_token_action primary key (id))
+  ;
+  """
+
+  val parser = {
+    sql.get[Pk[Long]]("id") ~
+    sql.get[String]("uuid") ~
+    sql.get[String]("name") map {
+      case (id~name) => StubStatefulEventProcessorImplB // StatefulEventProcessor(id.get, name)
+      
+    }
+  }
+
+
+  val byUserId = Map[Long, StatefulEventProcessor](1L -> StubStatefulEventProcessorImplA, 2L -> StubStatefulEventProcessorImplB)
+  // def byUserId = "select .. from where .."
+  def byUserId(userId: Long): Option[StatefulEventProcessor] = {
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+        select id, uuid, name, owner
+        from stateful_event_processor
+        where user_id = {userId};
+        """
+      ) on (
+        'userId -> userId
+      ) as (parser.singleOpt)
+    }
+  }
+
+  
+  // 
+  val byUuid = List(World,StubStatefulEventProcessorImplA,StubStatefulEventProcessorImplB) map (x=>(x.uuid,x)) toMap
+  // val byUuid = "select .. from where .."
+
+
+
+  def getNodeForUserId(userId: Long): Option[StatefulEventProcessor] = {
+    val result = byUserId.get(userId)
+    logger.debug("Finding node for user " + userId + " => " + result)
+    result
+  }
+  def getWorldNode: StatefulEventProcessor = World
+  def getEventsForUserId(userId: Long): Option[EventPoVStore] = getNodeForUserId(userId).map(_.eventsLocalView)
+  def getDocumentsForUserId(userId: Long): Option[DocumentPoVStore] = getNodeForUserId(userId).map(_.docsLocalView)
+
+  
+  
+  def getWorldEvents: EventPoVStore = getWorldNode.eventsLocalView
+  def getWorldDocuments: DocumentPoVStore = getWorldNode.docsLocalView
+  def get(uuid: UUID) = byUuid.get(uuid)
+}
+
+object StubEventProcessorStoreImpl extends EventProcessorStore with Logging {
+  val byUserId = Map[Long, StatefulEventProcessor](1L -> StubStatefulEventProcessorImplA, 2L -> StubStatefulEventProcessorImplB)
+  val byUuid = List(World,StubStatefulEventProcessorImplA,StubStatefulEventProcessorImplB) map (x=>(x.uuid,x)) toMap
+
+  def getNodeForUserId(userId: Long): Option[StatefulEventProcessor] = {
+    val result = byUserId.get(userId)
+    logger.debug("Finding node for user " + userId + " => " + result)
+    result
+  }
+  def getWorldNode: StatefulEventProcessor = World
+  def getEventsForUserId(userId: Long): Option[EventPoVStore] = getNodeForUserId(userId).map(_.eventsLocalView)
+  def getDocumentsForUserId(userId: Long): Option[DocumentPoVStore] = getNodeForUserId(userId).map(_.docsLocalView)
+
+  
+  
+  def getWorldEvents: EventPoVStore = getWorldNode.eventsLocalView
+  def getWorldDocuments: DocumentPoVStore = getWorldNode.docsLocalView
+  def get(uuid: UUID) = byUuid.get(uuid)
+}

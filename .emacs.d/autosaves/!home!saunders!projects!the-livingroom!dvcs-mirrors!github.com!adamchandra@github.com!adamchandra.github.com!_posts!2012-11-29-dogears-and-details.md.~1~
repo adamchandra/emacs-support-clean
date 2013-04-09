@@ -1,0 +1,14 @@
+---
+layout: post
+title: First Post
+---
+
+{{ page.title }}
+================
+
+Title page
+-----------------------------------------------------
+
+**it's the right thing to do**
+
+

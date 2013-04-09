@@ -1,0 +1,53 @@
+package net.openreview.model
+package mongodb
+
+import io.Source
+import java.util.{UUID, Date}
+import java.net.URL
+import org.joda.time.DateTime
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+import se.radley.plugin.salat._
+import com.novus.salat.global._
+import edu.umass.cs.iesl.scalacommons.NonemptyString
+import pov.{EventPoVStore, MemoryDocumentPoVStoreImpl, DocumentPoV, DocumentPoVStore}
+
+// type DocumentId = UUID
+
+@Salat
+trait EventDAO {
+  @Key("_id") val uuid: UUID
+
+}
+
+object EventDAO {
+
+}
+
+
+
+object EventModelStore extends ModelCompanion[Event, UUID] {
+  val collection = MongoConnection()("my_db")("event_coll")
+  val dao = new SalatDAO[EventProcessor, UUID](collection = collection) {}
+}
+
+class MongoEventProcessorStore extends DocumentStore {
+
+  def foreach[U](f: (Document) => U) {
+    for (doc <- EventProcessorModelStore.findAll()) {
+      // map doc to 
+
+    }
+    throw new RuntimeException("not implemented")
+  }
+
+  def fromPoV(to: StatefulEventProcessor): DocumentPoVStore = {
+    throw new RuntimeException("not implemented")
+  }
+
+  def get(uuid: UUID): Option[EventProcessor] = {
+    EventProcessorModelStore.findOneById(uuid)
+  }
+}

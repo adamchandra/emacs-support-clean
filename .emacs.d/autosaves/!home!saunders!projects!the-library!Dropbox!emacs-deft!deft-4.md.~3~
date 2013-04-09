@@ -1,0 +1,8 @@
+todo
+
+emacs tea time is not yet in .emacs
+
+go through org files and put many of the notes here instead
+
+write scripts that grep/parse TODO, ASK, NOTE comments in code and compile them into a single file
+

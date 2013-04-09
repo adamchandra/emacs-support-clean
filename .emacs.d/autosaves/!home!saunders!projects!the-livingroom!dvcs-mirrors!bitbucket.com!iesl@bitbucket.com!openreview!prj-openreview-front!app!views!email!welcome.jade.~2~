@@ -1,0 +1,23 @@
+- attributes("layout") = ""
+
+-import play.api.mvc._
+-import net.openreview.model.raw.users._
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.IdentityProvider
+
+-@ val request: RequestHeader
+- implicit val r = request
+-@ val user: Option[User]
+
+html
+  body
+    p 
+      | Welcome {user.firstName},
+    
+    p 
+      | Your new account is ready.  Click 
+      a(href={RoutesHelper.login.absoluteURL(IdentityProvider.sslEnabled)})
+        | here
+      | to log in.
+
+

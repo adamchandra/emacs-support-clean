@@ -1,0 +1,17 @@
+package controllers
+
+import lib._
+
+import play.api._
+import play.api.mvc._
+
+object SiteMap extends Controller with ControllerOps with ScalateOps {
+  def register() = {
+
+  }
+
+  def index() = OptUserAction { implicit request => implicit user =>
+    Ok(scalate("groups")('user -> user))
+  }
+}
+

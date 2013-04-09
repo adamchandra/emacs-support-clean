@@ -1,0 +1,6 @@
+object scratchpad {
+  println("HereIAm")                              //> HereIAm
+  val q = 4                                       //> q  : Int = 4
+  val sdf = "a b c"                               //> sdf  : java.lang.String = a b c
+
+}

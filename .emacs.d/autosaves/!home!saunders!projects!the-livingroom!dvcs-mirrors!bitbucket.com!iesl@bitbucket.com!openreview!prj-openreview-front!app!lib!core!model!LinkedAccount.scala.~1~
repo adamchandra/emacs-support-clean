@@ -1,0 +1,526 @@
+package lib.core
+package model
+
+// import scalaz._, Scalaz._
+
+import play.api.db._
+import anorm._
+import anorm.SqlParser._
+import java.util.Date
+
+import play.api.Play.current
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+import scalaz.syntax.std.option._
+
+
+trait Users {
+  this: Store =>
+
+  def saveUser(user: User) = {
+    setUser(user)
+    // getUserToken(user).map(_.toRightDisjunction(TokenNotFound)).join ||| setUserToken(user, UserToken.random)
+  }
+
+  // def resetUserToken(user: User) = setUserToken(user, UserToken.random)
+}
+
+
+// TODO: move this code into a core lib so that it can be shared with other projects
+
+object LinkedAccount {
+  def forUser(userId: Long): List[LinkedAccount] = { // TODO: Make NonEmptyList?
+    val simple = {
+      get[Pk[Long]]("id") ~
+      get[Long]("user_id") ~
+      get[String]("provider_user_id") ~
+      get[String]("provider_key") map {
+        case (
+          id ~
+          userId ~
+          providerUserId ~
+          providerKey
+        ) => LinkedAccount(id.get, userId, providerUserId, providerKey)
+      }
+    }
+
+    DB.withConnection { implicit c =>
+      val result: List[LinkedAccount] =
+        SQL(
+          """
+          select id, user_id, provider_user_id, provider_key
+          from linked_account
+          where user_id = {userId};
+          """
+        ) on (
+          "userId" -> userId
+        ) as (simple *)
+      result
+    }
+  }
+
+
+  def create(linkedAccount: LinkedAccount): LinkedAccount = {
+    DB.withConnection { implicit connection =>
+      SQL( """|
+        | insert into linked_account(id, user_id, provider_user_id, provider_key)
+        | values (
+        | 0, {userId}, {providerUserId}, {providerKey}
+        | )
+        """.stripMargin
+      ).on (
+        'userId -> linkedAccount.userId,
+        'providerUserId -> linkedAccount.providerUserId,
+        'providerKey -> linkedAccount.providerKey
+      ).executeUpdate()
+
+      // TODO: this should fetch the value rather than just returning the input
+      linkedAccount
+    }
+  }
+
+}
+
+/**
+ * for username/password, providerUserId=<hashed-user-password>, providerKey="password"
+ */
+case class LinkedAccount(id:Long, userId: Long, providerUserId: String, providerKey: String)  {
+  //   def update(authUser: AuthUser) {
+  //     this.providerKey = authUser.getProvider
+  //     this.providerUserId = authUser.getId
+  //   }
+}
+
+object SecurityRole {
+  //
+  //   // val find = new Model.Finder[Long, SecurityRole](classOf[Long], classOf[SecurityRole])
+  //
+  //   def findByRoleName(roleName: String): SecurityRole = {
+  //     find.where().eq("roleName", roleName).findUnique()
+  //   }
+}
+
+
+case class SecurityRole(id:String, roleName: String)
+
+
+object TokenAction {
+
+  sealed trait TokenType 
+
+  object TokenType {
+    def fromString(s: String): TokenType = s match {
+      case "EV" => EmailVerification
+      case "PR" => PasswordReset
+      case tt @ _ => throw new RuntimeException("unknown TokenType: '" + tt + "'")
+    }
+
+    case object EmailVerification extends TokenType {
+      override def toString = "EV"
+    }
+    case object PasswordReset extends TokenType {
+      override def toString = "PR"
+    }
+  }
+
+  import TokenType._
+
+
+
+  def validation(token: TokenAction): Validation[String, TokenAction] = {
+    if (token.isValid) token.success else "token is expired".failure
+  }
+
+  //   def findByToken(token: String, `type`: Type): TokenAction = {
+  //   def deleteByUser(u: User, `type`: Type) {
+
+
+  def createForEmailVerification(user: User, duration: Long): Validation[String, TokenAction] = {
+    create(user.id, EmailVerification, duration)
+  }
+
+  def createForPasswordReset(user: User, duration: Long): Validation[String, TokenAction] = {
+    create(user.id, PasswordReset, duration)
+  }
+
+  def create(targetUserId: Long, ttype: TokenAction.TokenType, durationInSeconds:Long): Validation[String, TokenAction] = {
+    import java.util.UUID
+
+    val oid = DB.withConnection { implicit connection =>
+      SQL( """|
+        | insert into token_action(id,  token,  target_user_id,  type,  created,  duration)
+        | values (NULL, {token}, {targetUserId}, {type}, NOW(), {duration})
+        """.stripMargin
+      ).on (
+        'token -> UUID.randomUUID.toString,
+        'targetUserId -> targetUserId,
+        'type -> ttype.toString,
+        'duration -> durationInSeconds
+      ).executeInsert()
+    }
+
+    for {
+      id <- oid.toSuccess("token action insert error")
+      token <- findById(id, ttype).toSuccess("no token with that id")
+    } yield token
+    
+  }
+
+  val parseRow = {
+    get[Pk[Long]]("id") ~
+    get[String]("token") ~
+    get[Long]("target_user_id") ~
+    get[String]("type") ~
+    get[Date]("created") ~
+    get[Long]("duration") map {
+      case (
+        id ~
+        token ~
+        targetUserId ~
+        ttype ~
+        created ~
+        duration
+      ) => TokenAction(id.get, token, targetUserId, TokenAction.TokenType.fromString(ttype), created, duration)
+    }
+  }
+
+  def findById(id: Long, ttype: TokenType): Option[TokenAction] = {
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+        select id,  token,  target_user_id,  type,  created,  duration
+        from token_action
+        where id = {id} AND type={ttype};
+        """
+      ) on (
+        "id" -> id,
+        'ttype -> ttype.toString
+      ) as (parseRow.singleOpt)
+    }
+  }
+
+  def forUserId(id: Long, ttype: TokenType): List[TokenAction] = {
+    DB.withConnection { implicit c =>
+      SQL(
+        """
+        select id,  token,  target_user_id,  type,  created,  duration
+        from token_action
+        where target_user_id = {targetUserId} AND type={ttype};
+        """
+      ) on (
+        'targetUserId -> id, 
+        'ttype -> ttype.toString
+      ) as (parseRow *)
+    }
+  }
+
+}
+
+
+case class TokenAction(id: Long, token: String, targetUserId: Long, ttype: TokenAction.TokenType, created: Date, duration: Long)  {
+  def isValid(): Boolean = {
+    val now = new Date()
+    val expires = new Date(created.getTime + (duration * 1000))
+    expires after now
+  }
+
+  def delete(): Validation[String, Int] = {
+    val updated = 
+      DB.withConnection { implicit connection => {
+        SQL(
+          """ delete from token_action where id = {id}; """
+        ).on (
+          'id -> id
+        ).executeUpdate()
+      }}
+    if (updated==1) 1.success else "error deleting token".failure
+  }
+}
+
+
+
+
+
+object UserPermission {
+
+  //  val find = new Model.Finder[Long, UserPermission](classOf[Long], classOf[UserPermission])
+  //
+  //  def findByValue(value: String): UserPermission = {
+  //    find.where().eq("value", value).findUnique()
+  //  }
+}
+
+case class UserPermission(id: String, value: String) // extends Model with Permission {
+
+
+
+
+object User {
+
+  val parser = {
+    get[Pk[Long]]("id") ~
+    get[String]("email") ~
+    get[String]("username") ~
+    get[Option[String]]("fullname") ~
+    get[Date]("last_login") ~
+    get[Boolean]("active") ~
+    get[Boolean]("email_validated") map {
+      case (
+        id ~
+        email ~
+        username ~
+        fullname ~
+        last_login ~
+        active ~
+        email_validated
+      ) => User(id.get, email, username, fullname, last_login, active, email_validated)
+    }
+  }
+
+  def create(userInfo: UserRegistrationInfo):  Validation[String, User] = {
+    val oid = DB.withTransaction { implicit connection => {
+      SQL( """|
+        | insert into users(id, email, username, fullname, last_login, active, email_validated)
+        | values (NULL, {email}, {username}, {fullname}, NOW(), false, false)
+        """.stripMargin
+      ).on (
+        'email -> userInfo.email,
+        'username -> userInfo.username,
+        'fullname -> userInfo.fullname
+      ).executeInsert()
+    }}
+
+    for {
+      id <- oid.toSuccess("user insert error")
+      user <- findById(id).toSuccess("no user with that id")
+    } yield user
+  }
+
+  def findById(id: Long): Option[User] = {
+    val ouser = DB.withConnection { implicit c =>
+      SQL(
+        """
+        select id, email, username, fullname, last_login, active, email_validated
+        from users
+        where id = {id};
+        """
+      ) on (
+        "id" -> id
+      ) as (parser.singleOpt)
+    }
+
+    for {
+      user <- ouser
+      val accs = LinkedAccount.forUser(user.id)
+    } yield user.withLinkedAccounts(accs)
+  }
+
+
+  def findByEmail(email: String): Option[User] = {
+    val user = DB.withConnection { implicit c =>
+      val result: List[User] =
+        SQL(
+          """
+          select id, email, username, fullname, last_login, active, email_validated
+          from users
+          where email = {email};
+          """
+        ) on (
+          "email" -> email
+        ) as (parser *)
+      result.headOption // TODO: insure only one user exists w/given email
+    }
+
+    user.map{u=>{
+      val accs = LinkedAccount.forUser(u.id)
+      u.copy(linkedAccounts=accs)
+    }}
+  }
+
+
+  //   def existsByAuthUserIdentity(identity: AuthUserIdentity): Boolean = {
+  //   private def getAuthUserFind(identity: AuthUserIdentity): ExpressionList[User] = {
+  //   def findByAuthUserIdentity(identity: AuthUserIdentity): User = {
+  //   def findByUsernamePasswordIdentity(identity: UsernamePasswordAuthUser): User = {
+  //   private def getUsernamePasswordAuthUserFind(identity: UsernamePasswordAuthUser): ExpressionList[User] = {
+  //   def merge(oldUser: AuthUser, newUser: AuthUser) {
+  //   def addLinkedAccount(oldUser: AuthUser, newUser: AuthUser) {
+  //   def setLastLoginDate(knownUser: AuthUser) {
+  //   private def getEmailUserFind(email: String): ExpressionList[User] = {
+}
+
+
+case class UserRegistrationInfo(
+  email           : String,
+  username        : String,
+  fullname        : Option[String]
+)
+
+
+case class User(
+  id              : Long,
+  email           : String,
+  username        : String,
+  fullname        : Option[String],
+  lastLogin       : Date,
+  active          : Boolean,
+  emailValidated  : Boolean,
+  roles           : List[SecurityRole] = List(),
+  linkedAccounts  : List[LinkedAccount] = List(),
+  permissions     : List[UserPermission] = List()
+) { // extends Model with RoleHolder {
+
+  // def addLinkedAccount(acc: LinkedAccount): User = {
+  //   val linkedAcc = acc.copy(userId=id)
+  //   this.copy(
+  //     linkedAccounts=linkedAccounts ++ Seq(linkedAcc)
+  //   )
+  // }
+
+  def withLinkedAccounts(accs: List[LinkedAccount]): User = {
+    this.copy(linkedAccounts=accs)
+  }
+
+
+  def verifyEmail(token: TokenAction): Validation[String, User] = {
+    def update = {
+      DB.withConnection { implicit connection => {
+        SQL( """|
+          | update users
+          | set email_validated=true
+          | where id={id}
+          """.stripMargin
+        ).on (
+          'id -> id
+        ).executeUpdate()
+      }}
+    }
+    // is token correct type?
+    for {
+      t <- TokenAction.validation(token) // if t.isEmailVerification
+      val _ = update
+      user <- User.findById(id).toSuccess("error finding user w/given id after email verification")
+    } yield user
+  }
+
+
+//   def merge(otherUser: User) {
+//     for (acc <- otherUser.linkedAccounts) {
+//       this.linkedAccounts.add(LinkedAccount.create(acc))
+//     }
+//     otherUser.active = false
+//     Ebean.save(Arrays.asList(Array(otherUser, this):_*))
+//   }
+//
+//   def getProviders(): Set[String] = {
+//     val providerKeys = new HashSet[String](linkedAccounts.size)
+//     for (acc <- linkedAccounts) {
+//       providerKeys.add(acc.providerKey)
+//     }
+//     providerKeys
+//   }
+//
+//   def getAccountByProvider(providerKey: String): LinkedAccount = {
+//     LinkedAccount.findByProviderKey(this, providerKey)
+//   }
+//
+//   def changePassword(authUser: UsernamePasswordAuthUser, create: Boolean) {
+//     var a = this.getAccountByProvider(authUser.getProvider)
+//     if (a == null) {
+//       if (create) {
+//         a = LinkedAccount.create(authUser)
+//         a.user = this
+//       } else {
+//         throw new RuntimeException("Account not enabled for password usage")
+//       }
+//     }
+//     a.providerUserId = authUser.getHashedPassword
+//     a.save()
+//   }
+//
+//   def resetPassword(authUser: UsernamePasswordAuthUser, create: Boolean) {
+//     this.changePassword(authUser, create)
+//     TokenAction.deleteByUser(this, Type.PASSWORD_RESET)
+//   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//   def create(userInfo: UserRegistrationInfo):  Validation[String, User] = {
+//     // val oid = DB.withConnection { implicit connection =>
+//     //   SQL( """|
+//     //     | insert into users(id, email, username, fullname, last_login, active, email_validated)
+//     //     | values (
+//     //     | 0, {email}, {username}, {fullname}, NOW(), false, false
+//     //     | )
+//     //     """.stripMargin
+//     //   ).on (
+//     //     'email -> userInfo.email,
+//     //     'username -> userInfo.username,
+//     //     'fullname -> userInfo.fullname
+//     //   ).executeInsert()
+//     val sql = SQL( """|
+//         | insert into users(id, email, username, fullname, last_login, active, email_validated)
+//         | values (
+//         | 1, {email}, {username}, {fullname}, NOW(), false, false
+//         | )
+//         """.stripMargin
+//       ).on (
+//         'email -> userInfo.email,
+//         'username -> userInfo.username,
+//         'fullname -> userInfo.fullname
+//       )
+// 
+//     // def execute1(getGeneratedKeys: Boolean = false)(implicit connection: java.sql.Connection): (java.sql.PreparedStatement, Int) = {
+//     val oid = DB.withConnection { implicit connection => {
+//       val statement = sql.getFilledStatement(connection, true)
+// 
+//       val generatedKeysParser = scalar[Long].singleOpt
+//       val up = statement.executeUpdate()
+//       val keys = statement.getGeneratedKeys()
+// 
+//       val asdf = generatedKeysParser(Sql.resultSetToStream(keys)) match {
+//         case Success(a) => {
+//           println("a: " + a)
+//           a
+//         }
+//         case Error(e) => {
+//           println("e?: " + e)
+//           sys.error(e.toString)
+//         }
+//       }
+//       asdf
+//     }}
+// 
+//     //   (statement, { statement.executeUpdate() })
+//     // }
+//     // 
+//     // Sql.as(generatedKeysParser, execute1(getGeneratedKeys = true)._1.getGeneratedKeys)
+// 
+// 
+//     // user.linkedAccounts.foreach{ la => u.addLinkedAccount(la)}
+//     //   userWithAccounts.linkedAccounts foreach {
+//     //     la => LinkedAccount.create(la)
+//     //   }
+//     //   userWithAccounts.success
+//     // }} getOrElse (
+//     //   new Exception("createUser() failure").failure
+//     // )
+// 
+// 
+//     for {
+//       id <- oid.toSuccess("user insert error")
+//       user <- findById(id).toSuccess("no user with that id")
+//     } yield user
+// 
+//     // "todo".failure
+//   }

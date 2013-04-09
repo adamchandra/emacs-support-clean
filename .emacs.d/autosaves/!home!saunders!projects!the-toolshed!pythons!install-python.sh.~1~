@@ -1,0 +1,28 @@
+#!/bin/bash 
+export PYTHOND="/home/saunders/projects/the-toolshed/pythons"
+export PYTHONVER="python2.7.3"
+# export PYTHOND=`pwd -P`; 
+export MYPYINSTALL="$PYTHOND/$PYTHONVER"
+
+echo "python install = $MYPYINSTALL"
+export PATH="$MYPYINSTALL/bin:$PATH"
+echo "path = $PATH"
+## # cd sources && tar zxvf Python-2.7.1.tgz
+# cd $PYTHOND/sources/Python-2.7.3 && ./configure --prefix=$MYPYINSTALL && make clean && make && make install
+# cd $PYTHOND/sources && tar zxvf distribute-0.6.10.tar.gz
+## cd distribute-0.6.10 && python setup.py install
+## cd $PYTHOND
+## 
+## easy_install pip
+## # pip install pdfminer
+## 
+## # pip install yolk
+## # pip install twisted
+## # pip install foolscap
+## # pip install pyopenssl
+## # pip install ipython
+## # pip install fabric
+## # pip install supervisor
+## # pip install pil
+## # pip install numpy
+## 

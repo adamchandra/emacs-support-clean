@@ -1,0 +1,7 @@
+
+
+object csearching extends App {
+  def main(args: Array[String]) = {
+    println("ok!!")
+  }
+}

@@ -1,0 +1,141 @@
+package net.openreview.model
+package users
+
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+import scalaz.syntax.std.option._
+import java.net.URI
+import org.joda.time.{DateTime, Period}
+import java.util.UUID
+
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+import com.mongodb.casbah.MongoConnection
+import net.openreview.model.mongodb.salatContext._
+
+
+// case class Token(uuid: String, email: String, creationTime: DateTime, expirationTime: DateTime, isSignUp: Boolean) {
+//   def isExpired = expirationTime.isBeforeNow
+// }
+
+
+@Salat
+trait Token {
+  @Key("_id") def id:UUID
+
+  def created: DateTime
+  def duration: Period
+
+  def isNotExpired(): Boolean = {
+    (created plus duration).isAfterNow
+  }
+  
+  def delete(): Validation[String, Int] 
+}
+
+
+case class TokenAction(
+  val id:UUID = UUID.randomUUID,
+  val targetId: UUID,
+  val ttype: TokenAction.TokenType,
+  val action: URI,
+  val created: DateTime,
+  val duration: Period
+) extends Token {
+  def token = id
+
+  def delete(): Validation[String, Int] = {
+    "TODO".failure
+  }
+}
+
+case class SecureSocialToken(
+  val id:UUID,
+  val email: String,
+  val creationTime: DateTime, 
+  val expirationTime: DateTime, 
+  val isSignUp: Boolean
+) extends Token {
+  def token = id
+
+  def delete(): Validation[String, Int] = {
+    "TODO".failure
+  }
+}
+
+
+object TokenAction {
+  sealed trait TokenType 
+
+  object TokenType {
+    def fromString(s: String): TokenType = s match {
+      case "EV" => EmailVerification
+      case "PR" => PasswordReset
+      case "IN" => AcceptInvite
+      case tt @ _ => throw new RuntimeException("unknown TokenType: '" + tt + "'")
+    }
+
+    case object EmailVerification extends TokenType {
+      override def toString = "EV"
+    }
+    case object PasswordReset extends TokenType {
+      override def toString = "PR"
+    }
+    case object AcceptInvite extends TokenType {
+      override def toString = "IN"
+    }
+  }
+
+}
+
+trait TokenMethods {
+  //def create(u: TokenAction): Validation[String, TokenAction] 
+  def createIfNeeded(u: Token): Token
+  def findById(id: UUID): Option[TokenAction] 
+  //adef findByEmail(email: String): Option[TokenAction]
+}
+
+
+trait TokenDAO extends TokenMethods with ModelCompanion[Token, UUID] {
+  val collname: String = "Token"
+  def conn: MongoConnection
+  def dbname: String
+
+  def collection = MongoConnection()(dbname)(collname)
+  // lazy val collection = conn(dbname)(collname)
+  lazy val _dao = new SalatDAO[Token, UUID](collection = collection) {}
+  override def dao = _dao
+
+  def findById(id: UUID): Option[Token] = findOneById(id)
+  def createIfNeeded(ta: Token): Token = {
+    findOneById(ta.id)
+      .getOrElse({
+        (for {
+          id <- insert(ta)
+          ret <- findOneById(id)
+        } yield ret
+        ) getOrElse (
+          sys.error("could not create token: " + ta)
+        )
+      })
+  }
+
+}
+
+//   def validation(token: TokenAction): Validation[String, TokenAction] = {
+//     if (token.isNotExpired) token.success else "token is expired".failure
+//   }
+//   def createForEmailVerification(user: User, duration: Long): Validation[String, TokenAction] = {
+//     create(user.id, EmailVerification, URI.create("/token/emailverify"), duration)
+//   }
+//   def createForPasswordReset(user: User, duration: Long): Validation[String, TokenAction] = {
+//     create(user.id, PasswordReset, URI.create("/token/passwordreset"), duration)
+//   }
+//   def createForAcceptInvite(user: User, inviteeEmail:String, duration: Long): Validation[String, TokenAction] = {
+//     create(user.id, AcceptInvite, URI.create("/token/acceptinvite"), duration)
+//   def create(targetId: Long, ttype: TokenAction.TokenType, action: URI, durationInSeconds:Long): Validation[String, TokenAction] = {
+//   def findById(id: Long, ttype: TokenType): Option[TokenAction] = {
+//   def forUserId(id: Long, ttype: TokenType): List[TokenAction] = {
+

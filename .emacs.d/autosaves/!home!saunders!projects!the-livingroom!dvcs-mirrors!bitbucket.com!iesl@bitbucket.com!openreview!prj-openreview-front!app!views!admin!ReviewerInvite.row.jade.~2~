@@ -1,0 +1,4 @@
+a.ajax(id="ri"
+       href={"/admin/sendReviewerInvites"}
+       rel="tooltip")
+  | 

@@ -1,0 +1,72 @@
+package org.scalajars.web.lib
+
+import play.api._
+import play.api.mvc._
+
+import java.text.DecimalFormat
+import http.{Writeable, ContentTypeOf, ContentTypes}
+import mvc.Codec
+import play.api.Play.current
+import org.fusesource.scalate.layout.DefaultLayoutStrategy
+
+import scalax.file.Path
+import Path._
+import scalax.file.PathSet
+import scalax.file.PathMatcher._
+
+
+// TODO: make number formatting work properly
+object Scalate {
+  
+  import org.fusesource.scalate._
+  import org.fusesource.scalate.util._
+
+  val conf = Play.configuration
+
+  val format = conf.getString("scalate.format").getOrElse("jade")
+
+  val playMode:String = Play.mode match {
+    case Mode.Dev => "dev"
+    case Mode.Prod => "prod"
+  }
+
+  //var df = new DecimalFormat
+  //df.setGroupingUsed(false)
+  //val context = new DefaultRenderContext(uri, engine, pw)
+  //context.numberFormat = df
+  //context.render(uri, model)
+
+  lazy val scalateEngine = {
+    val engine = new TemplateEngine(Seq(Path.fromString("/app/controllers").jfile), "production")
+    engine.resourceLoader = new FileResourceLoader(Some(Play.getFile("/app/views")))
+    // TODO make this a configurable default template
+    engine.layoutStrategy = new DefaultLayoutStrategy(engine, Play.getFile("/app/views/layouts/default." + format).getAbsolutePath)
+    // engine.classpath = Play.getFile("/tmp/classes").getAbsolutePath
+    engine.workingDirectory = Play.getFile("scalate-work")
+    // engine.combinedClassPath = true
+    engine.classLoader = Play.classloader
+    engine
+  }
+
+  def apply(template: String) = Template(template)
+
+  case class Template(name: String) {
+    def render(args: (Symbol, Any)*) = {
+      ScalateContent{
+        scalateEngine.layout(name, args.map {
+          case (k, v) => k.name -> v
+        } toMap)
+      }
+    }
+  }
+
+  case class ScalateContent(val cont: String)
+
+  implicit def writeableOf_ScalateContent(implicit codec: Codec): Writeable[ScalateContent] = {
+    Writeable[ScalateContent](scalate => codec.encode(scalate.cont))
+  }
+
+  implicit def contentTypeOf_ScalateContent(implicit codec: Codec): ContentTypeOf[ScalateContent] = {
+    ContentTypeOf[ScalateContent](Some(ContentTypes.HTML))
+  }
+}

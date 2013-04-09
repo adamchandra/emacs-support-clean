@@ -1,0 +1,9 @@
+# Author: acs
+# name: import-scalaz-validation
+# key: import-scalaz-validation
+# --
+
+import scalaz.{Validation, Success, Failure}
+import scalaz.Validation._
+import scalaz.syntax.validation._
+

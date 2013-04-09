@@ -1,0 +1,9 @@
+
+Simple, hacky scripts to process a set of ps/pdf files.
+
+Given a set of input files to process, generates a set of gridengine scripts that will each process a 
+subset of the files.
+
+Processing includes:
+  pstotext
+  rexa1 metatagger

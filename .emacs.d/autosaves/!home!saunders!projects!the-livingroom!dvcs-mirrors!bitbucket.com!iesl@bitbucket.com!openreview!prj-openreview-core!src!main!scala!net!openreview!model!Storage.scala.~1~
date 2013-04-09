@@ -1,0 +1,3 @@
+package net.openreview.model
+
+trait Storage extends EventProcessorStore with DocumentStore with EventStore with DocumentPoVStore with EventPoVStore

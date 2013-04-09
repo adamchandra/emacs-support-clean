@@ -1,0 +1,10 @@
+# Author: acs
+# name: try-control
+# key: try-control
+# --
+    import  scala.util.control.Exception._
+    import  java.net._
+
+    val s = "http://www.scala-lang.org/"
+    val x1 = catching(classOf[MalformedURLException]) opt new URL(s)
+    val x2 = catching(classOf[MalformedURLException], classOf[NullPointerException]) either new URL(s)

@@ -1,0 +1,82 @@
+- attributes("layout") = "/layout/layout-splash.jade"
+-import play.api.mvc._
+-import play.api.data._
+-import play.api.data.Forms._
+-import views.html.{helper=>h}
+-import securesocial.core.providers.utils.RoutesHelper
+-import securesocial.core.Registry
+-import securesocial.core.IdentityProvider
+-import securesocial.core.providers.UsernamePasswordProvider
+-import securesocial.core.AuthenticationMethod._
+
+
+-# -implicit val bootstrapFormFieldConstructor = h.twitterBootstrap.twitterBootstrapField
+-implicit val twitterBootstrapField = new h.FieldConstructor { def apply(elts: h.FieldElements) = views.html.myBootstrapFieldConstructor(elts) }
+
+-@ val request: RequestHeader
+
+- implicit val req = request
+
+-@ val authProviders: Iterable[securesocial.core.IdentityProvider]
+-@ val errorMsg: Option[String] = None
+- def capitalize(s: String) = { s(0).toUpperCase + s.substring(1, s.length).toLowerCase }
+
+.main
+  .row-fluid
+    .span4.offset2.well
+      h3 Log in with a third-party provider
+      em 
+        | Use your Google account to log in. 
+      hr
+      =for(p <- authProviders if p.authMethod != UserPassword)
+        - val imageUrl = "/assets/images/providers/%s.png".format(p.id)
+        p
+          a(href="/authenticate/#{p.id}")
+            img(src="#{imageUrl}")
+            | Log in with
+            = capitalize(p.id)
+
+    .span4.well
+      h3 Log in with a local account
+      em 
+        | You may create a local account if you prefer not to authenticate yourself through another provider
+      hr
+
+      h4.center Sign in
+
+      form.form-inline(action="/authenticate/userpass" method="POST")
+        .control-group
+          .controls
+            input(name="username" type="text" placeholder="Email")
+            input(name="password" type="password" placeholder="Password")
+        .control-group
+          .controls
+            button.btn(type="submit") Sign In
+
+      h4.center Sign up
+
+      form.form-inline(action={RoutesHelper.handleStartSignUp().absoluteURL(IdentityProvider.sslEnabled)} method="POST")
+        fieldset  
+          .control-group
+            span.help-block
+              | Create a new account by providing an email address, and we will send you instructions to complete the signup process.
+            .controls
+              input(name="email" type="text" placeholder="Email")
+        fieldset  
+          .control-group
+            .controls
+              button.btn(type="submit") Sign Up
+
+      h4.center Forget your password?
+
+      form.form-inline(action={RoutesHelper.handleStartResetPassword().absoluteURL(IdentityProvider.sslEnabled)} method="POST")
+        .control-group
+          .controls
+            .help-block Send yourself an email to reset your password.
+            input(name="email" type="text" placeholder="Email")
+        .control-group
+          .controls
+            button.btn(type="submit") Send Email
+
+
+

@@ -1,0 +1,59 @@
+* Bookmarks
+
+
+*** RC Files
+    [[/home/saunders/projects/the-toolshed/emacsen/emacs-support-clean/etc/.emacs][.emacs]]     
+      [[elisp:(byte-compile-file "/home/saunders/.emacs")][byte-compile .emacs]]
+
+*** Org files
+    [[file:./code-reviews.org][Software/code reviews]]
+    [[file:./rexa2-iesl-wiki-pages.org][Rexa2 Wiki Pages]]
+    [[file:./index.org][Index]]
+    [[file:./writing.org][Writing]]
+    [[file:./daily-practice.org][Daily Practice]]
+    [[file:./uncategorized-notes.org][Uncategorized Notes]]
+    [[file:./rexa-reboot-project.org][Rexa-reboot-project]]
+    [[file:./project-misc.org][Project Miscellany]]
+    [[file:./rosettacode-links.org][Rosetta Code]]
+    [[file:./functional-programming-progress.org][Functional programming progress]]
+    [[file:./dataset-topology.org][Dataset Topology]]
+    [[file:./visualization-techniques.org][Visualization techniques]]
+    [[file:./annotation-tooling.org][Annotation Tooling]]
+    [[file:./emacs-howtos.org][Emacs How-to]]
+    [[file:./music-practice.org][Music Practice Notes]]
+
+*** Rexa
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-rexa-commons/][rexa/commons]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-camel-commons/][rexa2/camel/commons]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-rexa2-core/][rexa2/core]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-rexa2-front/][rexa2/front]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-giraphe/][rexa2/giraphe]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/project/][rexa2/project]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-rexa-routes/][rexa2/routes]]
+    [[/home/saunders/projects/the-livingroom/rexa2-front-play-bb-in/prj-scrapers/][rexa2/scrapers]]
+
+*** Camel
+    [[/home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/apache@github.com/camel/][apache/camel]]
+    [[/home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/apache@github.com/camel/components/camel-scala/][apache/camel/scala]]
+
+*** Misc
+    [[/home/saunders/projects/the-plumbing/home-directory-resources/acs-bin/bash-script-template.sh][bash/template]]
+    [[/home/saunders/emacs/bookmarks/rexa2-bookmarks.bmk][bkm/rexa2]]
+    [[/home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/adamchandra@bitbucket.com/giraphe-bb-in/src/][giraphe/src]]
+    [[/home/saunders/projects/the-library/project-planning/org-files/index.org][journal/index]]
+    [[/home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/iesl-sbt-base/][sbt/iesl-base]]
+    [[/home/saunders/projects/the-study/auto-didactic-crap/][studies/euler]]
+
+*** Scala/libs
+    [[/home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-compiler-src.jar.d/scala/][scala/compiler/src]]
+    [[/home/saunders/projects/the-outhouse/jvm-langs/scala-2.9.2/src/scala-library-src.jar.d/scala/][scala/library/src]]
+    [[/home/saunders/projects/the-livingroom/dvcs-mirrors/github.com/krasserm@github.com/scalaz-camel/][scalaz/camel]]
+    [[/home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-seven-src/src/][scalaz/seven]]
+    [[/home/saunders/projects/the-outhouse/scala/scalazeds/combined-scalaz-six-src/][scalaz/six]]
+    [[/home/saunders/projects/the-outhouse/playframework/play-2.0-gh-in/framework/src/anorm/][play2/anorm/src]]
+    [[/home/saunders/emacs/bookmarks/play2-bookmarks.bmk][play2/bookmarks]]
+    [[/home/saunders/projects/the-outhouse/playframework/play-2.0-gh-in/framework/src/play/][play2/core/src]]
+    [[/home/saunders/projects/the-outhouse/playframework/play-2.0-gh-in/framework/src/][play2/src]]
+    [[/home/saunders/projects/the-outhouse/playframework/play-2.0-gh-in/framework/src/play-test/][play2/tests/src]]
+
+

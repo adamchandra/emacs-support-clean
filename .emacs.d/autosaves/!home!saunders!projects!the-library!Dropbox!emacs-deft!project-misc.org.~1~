@@ -1,0 +1,128 @@
+* CONFIG
+
+******* sbt-like wrapper for the scala console, which does some transformation 
+        of input before actually calling scala code, e.g., ...
+        Mostly this is to make scala look a bit more like haskell at the command prompt.
+
+        + > myfun a b c 
+          rewrites to myfun(a, b, c) or myfun(a)(b)(c)
+          using known type info for function myfun
+        + [a, b, c] => List[X](a, b, c); more generally, json-style datastructures
+
+
+******* Backup system that doesn't suck
+
+******* Capture project directory structure in such a way that tree-view visualizations can
+        be applied to act as either a file navigator, efferent/afferent dep viewer, heat-mapped
+        call-site usage viewer, profiling tool, ...
+
+******* Mindmapped curriculum builder
+        Allow users to create a series of annotated pathways through a subject matter, 
+        linking to external resources (lectures, books, websites), provide discussion, 
+        vote on "most helpful" pathways, and encourage alternative ways to approach material.
+        The idea is based on a few sources: the mindmap through the category theory lectures, 
+        and stackoverflow.
+
+
+******* Bloom filters to checkpoint iteration state
+********* Overview
+
+          When iterating over corpora of millions of documents, the ability to check if
+          a document has been processed, or restart a processing job after failure 
+          can be costly. Try using a bloom filter, shared across threads, cores, and machines, 
+          that is progressively built as documents are processed. Advantages include the 
+          fact that it is not order-dependent, so that new documents can be added to a directory 
+          without screwing up the state of an iterative job, or processes can pick any part of a corpus
+          to work on without having to worry about maintaining what order the documents are in.
+          Also, directory hashes could be added to the filter to decide whether entire sets of 
+          files have been processed.
+
+******* Urbanization 
+********* Overview
+          Use the definitions and "relations" as defined at urbandictionary.com to train an entity/
+          relation tagger to find those relations in arbitrary text
+
+*******  Factorie-floor
+********* Overview
+          Platform for command-line tools Launch a set of related projects, connecting them together
+          via sockets, ports, or any other appropriate means, such that command line tools can
+          communicate with databases, components
+           
+          - Supervisor launches all components
+            - Scripts to check health, restart, shutdown system
+          - need to communicate with scala components 
+            - rpc? redirected stdin? 
+           
+********* Tasks
+          - [ ] Create virtualenv
+          - [ ] Write supervisor conf
+          - [ ] write python-to-scala script (connect python-stdin -> python-stdout -> socket -> scala-stdin
+          - [ ] Write scala component that is launchable by supervisor
+********* Feature wishlist
+********* Demos/Links to *working* functionality    
+
+*** Changes to findgrep
+    - [ ] findgrep should 'do the right thing' when searching binary files (use file command to determine)
+    - [ ] findgrep should preserve permissions on files when replacing (removes executable bit on scripts)
+    - [ ] Allow context around matched terms to be displayed/edited, eg:
+    :MORE:
+      11:52:17> findgrep --context -1:1 -l src/ *.java 'ClusterVertices'
+      file://src/org/rexa/pipeline/UpdatePaperCorefLinksCommand.java
+      18    :     *
+      19*   :     * Sets the version # for ClusterVertices
+      20    :     * propogate that version to ClusterVertices, AuthorMentionVertices, and other vertices in the graph
+
+      19    :     * Sets the version # for ClusterVertices
+      20*   :     * propogate that version to ClusterVertices, AuthorMentionVertices, and other vertices in the graph
+      21    :     *
+
+      (or, better yet)
+
+      11:52:17> findgrep --context -1:2 src/ *.java 'ClusterVertices'
+      file://src/org/rexa/pipeline/UpdatePaperCorefLinksCommand.java
+      18    :     *
+      19*   :     * Sets the version # for ClusterVertices
+      20    :     *
+      21*   :     * propogate that version to ClusterVertices, AuthorMentionVertices, and other vertices in the graph
+      22    :     * ...
+      23    :     * ...
+    :END:
+
+* Tree transforms
+*** Create a 'live' version of gnu tree command
+    Allows tree navigation via prefix matching, '/', '*', '**', etc., as in: 
+    >> sc/sr/m/**/log4j.pr  
+    matches the file in scala/src/main/**/log4j.properties
+    Supported commands are mark, unmark, visit, echo, run command (on marked or current)
+    
+
+* Better stack traces from web output that filters and hyperlinks to source code 
+
+*** rebalancing document loads per shard
+
+* Put this document up on the web
+* Use nosy.py to autocommit files every few minutes
+
+
+*** Rosetta code derivative site
+    - Create a site that allows easy browsing of solutions to particular problems, 
+      and the ability to restrict comparison to just a few of the languages. 
+    - Allow stackoverflow like voting and discussion of each solution, as well as tagging
+    - Code snippets should be hosted on gist or similar, and compiled and run to verify that
+      they actually run and produce correct output. Code snippets that compile and run are tagged
+      as such
+    - Remote access should be easy via command line, emacs, eclipse, or any other dev environment
+    - Parts of code should be annotateable, so that particular techniques or one liners can
+      be expounded upon
+    - Code snippets can be grouped such that those that require additional libs, or use language 
+      fundamentals as opposed to higher level constructs can be differentiated.
+    - possible implementation might be a git clone of a local version of the site, to which 
+      an individual can add bookmarks, annotations, code snippets, and then upload (merge) or
+      fork to a new repo. The web front-end should allow the user to determine which git clone 
+      is providing the backend data
+
+
+******* Heat map view of codebase, showing internal efferent/afferent deps
+        - each class/def/trait/sourcefile etc can be assigned a color, and the other definitions
+          can be color coded to show the frequency of usage within that scope
+          

@@ -1,0 +1,10 @@
+- 
+  attributes("scripts") = 
+    List()
+
+  attributes("styles") = 
+    List()
+
+.main
+
+

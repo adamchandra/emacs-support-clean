@@ -1,0 +1,4 @@
+
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+
+keychain -q ~/.ssh/id_dsa ~/.ssh/id_rsa;

@@ -1,0 +1,54 @@
+package admin.db
+
+import net.openreview.model.admin._
+trait MongoFrontAdminOps extends MongoAdmin {
+
+}
+
+object MongoFrontAdmin {
+}
+
+
+trait HtmlRendering {
+  import net.openreview.util.Boxes._
+
+
+  def iconicField[A](f:String)(implicit dbo: MongoDBObject, m:Manifest[A]): Box = {
+    dbo.getAs[A](f) map (v =>
+      f match {
+        case "creator" | "target" =>
+          val ep = eventProcessorStore.get(v.toString).get
+          text(ep.name+"{"+ep.uuid+"}")
+
+        case "type"|"_id" => text(v.toString)
+        case _            => text(f + ": "+v)
+      }
+    ) getOrElse(nullBox)
+  }
+
+  def summarizedObject(implicit dbo: MongoDBObject): String = {
+    render(_summarizedObject(dbo))
+  }
+
+  def _summarizedObject(implicit dbo: MongoDBObject): Box = {
+    val summary = vcat(left)(List(
+      (iconicField[String]("type") +| iconicField[UUID]("_id")),
+      (emptyBox(1)(2) + vcat(left)(List(
+        (iconicField[UUID]("creator") +| text(" ==> ") +| iconicField[UUID]("target")),
+        iconicField[DateTime]("due"),
+        iconicField[String]("subject"),
+
+        (dbo.getAs[DBObject]("template").map { tdbo =>
+          emptyBox(1)(2) + _summarizedObject(tdbo)
+        }).getOrElse(nullBox),
+
+        (dbo.getAs[DBObject]("docTemplate").map { tdbo =>
+          emptyBox(1)(2) + _summarizedObject(tdbo)
+        }).getOrElse(nullBox)
+      )))
+    ))
+
+    summary
+  }
+
+}

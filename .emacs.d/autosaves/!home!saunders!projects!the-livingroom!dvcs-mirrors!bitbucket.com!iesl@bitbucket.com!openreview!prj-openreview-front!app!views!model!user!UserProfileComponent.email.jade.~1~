@@ -1,0 +1,82 @@
+
+-@ val it : model.user.UserEmailComponent
+
+
+.emails
+  ul.unstyled-ul
+    - for ((email, i) <- it.emails.zipWithIndex) 
+      li(class={"email-row"+i} data-refresh-url={"/user/email/"+i+"/index"})
+        ul.inline-ul(class={"email-"+i})
+          li
+            - if (it.isPrimaryEmail(email))
+              i.icon-star(rel="tooltip" title="primary contact email")
+            - else
+              i.icon-star-empty
+          li
+            = email
+          li
+            span.dropdown
+              a.dropdown-toggle(id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#")
+                b.caret
+                - if (it.isVerifiedEmail(email))
+                  i.icon-ok
+                  | Verified
+                - else
+                  i.icon-question-sign
+                  | Unverified
+
+                - if (it.isLoginEmail(email))
+                  i.icon-lock
+                  | Login
+
+                - if (it.isPublicEmail(email))
+                  i.icon-eye-open
+                  | Public
+                - else
+                  i.icon-eye-close
+                  | Private
+
+              ul.dropdown-menu(role="menu" aria-labelledby="dLabel")
+                li
+                  - if (! it.isPrimaryEmail(email))
+                    a.ajax(
+                      id={"id"+i}
+                      href={"/user/email/"+i+"/setprimary"}
+                      data-replace={".email-row"+i})
+                      | Set as primary email
+
+                li
+                  - if (! it.isLoginEmail(email))
+                    a.ajax(
+                      id={"id"+i}
+                      href={"/user/email/"+i+"/setpassword"}
+                      data-replace={".email-row"+i})
+                      | Set password for login
+                  - else
+                    a.ajax(
+                      id={"id"+i}
+                      href={"/user/email/"+i+"/removepassword"}
+                      data-replace={".email-row"+i})
+                      | Remove password for login
+                      
+                li
+                  - if (it.isPublicEmail(email))
+                    a.ajax(
+                      id={"id"+i}
+                      href={"/user/email/"+i+"/makeprivate"}
+                      data-replace={".email-row"+i})
+                      | Make private
+                  - else
+                    a.ajax(
+                      id={"id"+i}
+                      href={"/user/email/"+i+"/makepublic"}
+                      data-replace={".email-row"+i})
+                      | Make public
+
+    li
+      ul.inline-ul
+        li
+          i.icon-plus
+          | Add email
+
+

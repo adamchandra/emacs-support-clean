@@ -1,0 +1,39 @@
+transforming class objects
+
+case class MyClass(
+    a: String, 
+    b: Int, 
+    c: X
+    d: Y
+    )
+
+
+trait SomeTrait {
+    def a:String
+    def b3: Int
+    val c3: X with Y
+    val daz: Y
+}
+
+class HalfClass {
+    def a:String
+    def b3: Int
+}
+
+trait OtherHalfTrait {
+    val c3: X with Y
+    val daz: Y
+}
+
+val oldMethod = MyClass(a = t.a, b = t.b3, c=t.c3.m(), d=None)
+
+
+Trans[SomeTrait => MyClass] {
+    a.asIs
+    (x,y,z).asIs
+    b3 as b
+    implicit object Ev2UUID[Event, UUID] extends Transformer {
+      apply(e:Event) = e.uuid
+    }
+    obj {_.uuid} as objId
+}

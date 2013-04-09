@@ -1,0 +1,59 @@
+case class MongoSource(
+  val hosts: List[ServerAddress],
+  val dbName: String,
+  val writeConcern: com.mongodb.WriteConcern,
+  val user: Option[String] = None,
+  val password: Option[String] = None,
+  private var conn: MongoConnection = null
+){
+
+  def connection: MongoConnection = {
+    if (conn == null) {
+      conn = MongoConnection(hosts)
+
+      val authOpt = for {
+        u <- user
+        p <- password
+      } yield connection(dbName).authenticate(u, p)
+
+      if (!authOpt.getOrElse(true)) {
+        throw new RuntimeException("mongodb: Access denied to MongoDB database: [" + dbName + "] with user: [" + user.getOrElse("") + "]")
+      }
+
+      conn.setWriteConcern(writeConcern)
+    }
+    conn
+  }
+
+  def reset() {
+    conn.close()
+    conn = null
+  }
+
+  def db: MongoDB = connection(dbName)
+
+  def collection(name: String): MongoCollection = db(name)
+
+  def cappedCollection(name: String, size: Int, max: Option[Int] = None) = {
+    val coll = if (db.collectionExists(name)) {
+      db(name)
+    } else {
+      import com.mongodb.casbah.Implicits.mongoCollAsScala
+      val options = MongoDBObject.newBuilder
+      options += "capped" -> true
+      options += "size" -> size
+      if (max.isDefined)
+        options += "max" -> max.get
+      db.createCollection(name, options.result()).asScala
+    }
+    coll
+  }
+
+  def gridFS(bucketName: String = "fs"): GridFS = GridFS(db, bucketName)
+
+  override def toString() = {
+    (if (user.isDefined) user.get + "@" else "") +
+    hosts.map(h => h.getHost + ":" + h.getPort).mkString(", ") +
+    "/" + dbName
+  }
+}

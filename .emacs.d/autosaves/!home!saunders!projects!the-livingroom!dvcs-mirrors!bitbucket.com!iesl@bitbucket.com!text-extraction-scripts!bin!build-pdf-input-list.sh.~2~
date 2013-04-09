@@ -1,0 +1,12 @@
+#!/bin/bash
+
+BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $BIN/common-defs.sh
+
+declare infile="$1"
+declare outfile="$2"
+
+
+find $infile -type f \( -name "*.pdf" -o -name "*.ps" \) -printf "  \"%p\"\n" > $outfile
+

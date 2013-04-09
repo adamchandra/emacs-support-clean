@@ -1,0 +1,136 @@
+package controllers
+
+import play.api.Logger
+import play.api.mvc._
+import play.api.Play.current
+
+import be.objectify.deadbolt.models.RoleHolder
+import be.objectify.deadbolt.actions.Restrict
+import be.objectify.deadbolt.DeadboltAnalyzer
+
+trait ScalaboltHandler
+{
+  /**
+   * Gets the current role holder e.g. the current user.
+   *
+   * @return the current role holder
+   */
+  def getRoleHolder: RoleHolder
+
+  /**
+   * Invoked when an access failure is detected on <i>controllerClassName</i>.
+   *
+   * @return the action result
+   */
+  def onAccessFailure: Result
+
+  /**
+   * Gets the handler used for dealing with resources restricted to specific users/groups.
+   *
+   * @return the handler for restricted resources. May be null.
+   */
+  def getDynamicResourceHandler: DynamicResourceHandler
+}
+
+
+
+trait DynamicResourceHandler
+{
+  /**
+   * Check the access of the named resource.
+   *
+   * @param name the resource name
+   * @param meta additional information on the resource
+   * @param deadboltHandler the current { @link DeadboltHandler}
+   * @return true if access to the resource is allowed, otherwise false
+   */
+  def isAllowed(name: String,
+                meta: String,
+                deadboltHandler: ScalaboltHandler): Boolean
+
+  /**
+   * Invoked when a {@link be.objectify.deadbolt.actions.DeadboltPattern} with a {@link PatternType#CUSTOM} type is
+   * used.
+   *
+   * @param permissionValue the permission value
+   * @param deadboltHandler the current { @link DeadboltHandler}
+   * @return true if access based on the permission is  allowed, otherwise false
+   */
+  def checkPermission(permissionValue: String,
+                      deadboltHandler: ScalaboltHandler): Boolean
+}
+
+
+/**
+ *
+ * @author Steve Chaloner
+ */
+trait Scalabolt extends Results with BodyParsers
+{
+
+  def SBRestrict[A](roleNames: Array[String],
+                    scalaboltHandler: ScalaboltHandler)
+                   (action: Action[AnyContent]): Action[AnyContent] =
+  {
+
+    val roleHolder = scalaboltHandler.getRoleHolder;
+    if (roleHolder == null || !DeadboltAnalyzer.checkRole(roleHolder, roleNames))
+    {
+      Action(scalaboltHandler.onAccessFailure);
+    }
+    else
+    {
+      action
+    }
+  }
+
+  def SBRestrictions[A](roleGroups: List[Array[String]],
+                        scalaboltHandler: ScalaboltHandler)
+                       (action: Action[AnyContent]): Action[AnyContent] =
+  {
+    // todo implement
+    action
+  }
+
+  def SBDynamic[A](name: String,
+                   meta: String = "",
+                   scalaboltHandler: ScalaboltHandler)
+                  (action: Action[AnyContent]): Action[AnyContent] =
+  {
+
+    val dynamicHandler: DynamicResourceHandler = scalaboltHandler.getDynamicResourceHandler
+    if (dynamicHandler == null)
+    {
+      throw new RuntimeException("A dynamic resource is specified but no dynamic resource handler is provided")
+    }
+    else
+    {
+      if (dynamicHandler.isAllowed(name,
+                                   meta,
+                                   scalaboltHandler))
+      {
+        action
+      }
+      else
+      {
+        Action(scalaboltHandler.onAccessFailure);
+      }
+    }
+  }
+
+  def SBRoleHolderPresent[A](scalaboltHandler: ScalaboltHandler)
+                            (action: Action[AnyContent]): Action[AnyContent] =
+  {
+
+    val roleHolder: RoleHolder = scalaboltHandler.getRoleHolder
+    if (roleHolder != null)
+    {
+      action
+    }
+    else
+    {
+      Action(scalaboltHandler.onAccessFailure);
+    }
+  }
+}
+

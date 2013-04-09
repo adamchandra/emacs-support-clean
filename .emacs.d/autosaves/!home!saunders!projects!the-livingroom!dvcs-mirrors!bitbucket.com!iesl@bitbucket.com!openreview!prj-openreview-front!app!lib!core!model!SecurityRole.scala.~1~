@@ -1,0 +1,27 @@
+package lib.core
+package model
+
+// import scalaz._, Scalaz._
+
+import play.api.db._
+import anorm._
+import anorm.SqlParser._
+import java.util.Date
+
+import play.api.Play.current
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+import scalaz.syntax.std.option._
+
+
+object SecurityRole {
+  //
+  //   // val find = new Model.Finder[Long, SecurityRole](classOf[Long], classOf[SecurityRole])
+  //
+  //   def findByRoleName(roleName: String): SecurityRole = {
+  //     find.where().eq("roleName", roleName).findUnique()
+  //   }
+}
+
+
+case class SecurityRole(id:String, roleName: String)

@@ -1,0 +1,56 @@
+package controllers
+
+import nav.nav
+import lib._
+import lib.core._
+import _root_.model.user._
+
+import play.api._
+import play.api.mvc._
+
+import play.api.data._
+import play.api.data.Forms._
+import play.api.data.validation.Constraints._
+import play.api.data.validation._
+import play.api.data.format.Formats._
+import play.api.i18n.Messages
+
+object TokenActionController extends Controller with ControllerOps {
+
+  def show() = UserAction { implicit request => implicit user =>
+    Ok(scalate("profile")(
+      'request -> request,
+      'user -> user,
+      'profile -> UserProfileComponent(user.get),
+      'inviteForm -> inviteForm
+    ))
+  }
+
+
+  case class Invite(emails: String)
+
+  val inviteForm = Form[Invite](
+    mapping(
+      "emails" -> text
+    )(Invite.apply)(Invite.unapply))
+
+  def invitePostback() = UserAction { implicit request => implicit user =>
+    inviteForm.bindFromRequest.fold (
+      errors => {
+        BadRequest(scalate("profile")(
+          'request -> request,
+          'user -> user,
+          'profile -> UserProfileComponent(user.get),
+          'inviteForm -> errors
+        ))
+      },
+      info => {
+        
+        Redirect("/profile")
+      }
+    )
+  }
+
+  
+}
+

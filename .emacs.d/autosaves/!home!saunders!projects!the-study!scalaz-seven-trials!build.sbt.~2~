@@ -1,0 +1,17 @@
+name := "scalaz-trials"
+
+organization := "cc.acs"
+
+version := "0.1-SNAPSHOT"
+
+scalaVersion := "2.9.2"
+
+libraryDependencies ++=  Seq(
+  "org.scalaz" %% "scalaz-core" % "7.0.0-M3",
+  "org.scalaz" %% "scalaz-typelevel" % "7.0.0-M3",
+)
+
+
+// set Ivy logging to be at the highest level
+ivyLoggingLevel := UpdateLogging.Full
+

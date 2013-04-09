@@ -1,0 +1,18 @@
+package net.openreview.model
+package mongodb
+
+
+import com.mongodb.casbah.Imports._
+
+// trait Storage extends DocumentStorage with EventStorage {
+class MongoStorage(
+  conn: MongoConnection,
+  dbname: String
+) extends StorageContext {
+
+  override val documentStore: DocumentStore = new MongoDocumentStore
+  override val eventProcessorStore: EventProcessorStore = new MongoEventProcessorStore(conn, dbname)
+  override val eventStore: EventStore = new MongoEventStore(conn, dbname)
+  override val world: EventProcessor
+}
+

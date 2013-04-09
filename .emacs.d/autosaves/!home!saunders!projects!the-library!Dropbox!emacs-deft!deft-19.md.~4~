@@ -1,0 +1,36 @@
+scalaz imports ala carte
+
+
+import scalaz.{Validation, Success, Failure}, Validation._, scalaz.syntax.validation._
+
+import scalaz.std.anyVal._
+import scalaz.std.boolean._
+import scalaz.std.double._
+import scalaz.std.either._
+import scalaz.std.float._
+import scalaz.std.function._
+import scalaz.std.indexedSeq._
+import scalaz.std.int._
+import scalaz.std.iterable._
+import scalaz.std.list._
+import scalaz.std.long._
+import scalaz.std.map._
+import scalaz.std.nodeseq._
+import scalaz.std.option._
+import scalaz.std.partialFunction._
+import scalaz.std.set._
+import scalaz.std.short._
+import scalaz.std.stream._
+import scalaz.std.string._
+import scalaz.std.tuple._
+import scalaz.std.typeConstraint._
+import scalaz.std.vector._
+import scalaz.syntax.id._
+import scalaz.syntax.monad._
+
+import scalaz.std.math.bigDecimal      
+import scalaz.std.math.bigInt          
+import scalaz.std.java.math.bigInteger      
+import scalaz.std.math.ordering        
+import scalaz.std.util.parsing.combinator.parser          
+import scalaz.std.java.util.concurrent.callable        

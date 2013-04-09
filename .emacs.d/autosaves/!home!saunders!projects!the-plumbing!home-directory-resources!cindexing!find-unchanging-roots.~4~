@@ -1,0 +1,11 @@
+#!/bin/bash
+
+find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/main' -not -path '*/.hg/*' | grep -v adamchandra | grep -v 'iesl@bitbucket'| egrep -v 'krasserm|camel/components|ipf|target'
+find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/test' -not -path '*/.hg/*' | grep -v adamchandra | grep -v 'iesl@bitbucket'| egrep -v 'krasserm|camel/components|ipf|target'
+find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/app' -not -path '*/.hg/*' | grep -v adamchandra | grep -v 'iesl@bitbucket' | egrep -v 'krasserm|camel/components|ipf|target'
+find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/conf' -not -path '*/.hg/*' | grep -v adamchandra | grep -v 'iesl@bitbucket'| egrep -v 'krasserm|camel/components|ipf|target'
+
+
+
+# find . -maxdepth 10 -type d -path '*/src/main' -not -path '*/.hg/*'
+

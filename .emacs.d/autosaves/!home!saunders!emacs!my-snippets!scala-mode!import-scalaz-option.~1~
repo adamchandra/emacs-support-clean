@@ -1,0 +1,5 @@
+# Author: acs
+# name: import-scalaz-option
+# key: import-scalaz-option
+# --
+import scalaz.syntax.std.option._

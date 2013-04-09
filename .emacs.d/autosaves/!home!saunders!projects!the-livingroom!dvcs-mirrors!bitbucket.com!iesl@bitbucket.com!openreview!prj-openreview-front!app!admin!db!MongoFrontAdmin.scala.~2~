@@ -1,0 +1,33 @@
+package admin.db
+
+import com.weiglewilczek.slf4s.Logging
+import java.util.UUID
+import lib.ScalateCore
+import net.openreview.model.raw._
+import net.openreview.model.raw.casbah._
+import org.joda.time.DateTime
+import org.slf4j.LoggerFactory
+import ch.qos.logback.core.util.StatusPrinter
+
+import net.openreview.model.admin._
+import com.mongodb.casbah.Imports._
+
+trait MongoFrontAdminOps extends MongoAdminImports {
+
+}
+
+object MongoFrontAdmin extends MongoFrontAdminOps {
+  import ScalateCore._
+
+  def sampleFrontInteraction() {
+    // get a dbo from core
+    // val dbocs = events find ("type" $eq "request")
+    val dbocs = events find ("type" $eq "request") map (new MongoDboComponent(_))
+    // Wrap it in Comp()
+    // render it
+    val htmls = dbocs map (viewHtml(_, "core")())
+    println(htmls.mkString("\n"))
+  }
+}
+
+

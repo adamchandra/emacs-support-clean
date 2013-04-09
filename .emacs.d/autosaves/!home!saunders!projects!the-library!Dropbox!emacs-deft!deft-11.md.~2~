@@ -1,0 +1,22 @@
+transforming class objects
+
+case class MyClass(
+    a: String, 
+    b: Int
+    )
+
+
+trait SomeTrait {
+    def a:String
+    def b3: Int
+}
+
+val transformed = MyClass(a = t.a, b = t.b3)
+
+
+Trans[SomeTrait => MyClass] {
+    a.asIs
+    (x,y,z).asIs
+    b3 as b
+    obj {_.id} as objId
+}

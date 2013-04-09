@@ -1,0 +1,37 @@
+// package web
+
+import org.scalajars.core._
+import controllers._
+import play.navigator._
+
+object nav extends PlayNavigator {
+  implicit val PathPathParam: PathParam[Path] = new PathParam[Path] {
+    def apply(path: Path) = path.str
+    def unapply(str: String) = Some(Path(str))
+  }
+
+  implicit val UserTokenPathParam: PathParam[UserToken] = new PathParam[UserToken] {
+    def apply(token: UserToken) = token.token
+    def unapply(str: String) = Some(UserToken(str))
+  }
+
+  val home = GET on root to Application.index
+  val library = GET on "library" to Library.index
+
+  // val index     = GET on "index" / **   to BrowseController.index
+  // val projects  = GET on "projects"     to BrowseController.projects
+  // val project   = GET on "projects" / * to BrowseController.project
+
+  // PUT   on "publish" / * / * / ** to PublishController.put
+  // GET   on "repository" / **      to PublishController.get
+  // HEAD  on "repository" / **      to PublishController.head
+
+  val profile     = GET on "profile" to ProfileController.show
+  val resetToken  = POST on "resetToken" to ProfileController.resetToken
+
+  val auth = new Namespace("auth"){
+    val signin    = GET on "signin"   to AuthController.signin
+    val signout   = GET on "signout"  to AuthController.signout
+    val callback  = GET on "callback" to AuthController.callback
+  }
+}

@@ -1,0 +1,12 @@
+-@ val userOpt: Option[org.scalajars.core.User] = None
+
+- userOpt.map { user =>
+  li
+    a(href="/profile") Hello =user.login
+  li.divider-vertical
+  li
+    a(href="nav.auth.signout()") Sign out
+- } getOrElse {
+  li
+    a(href="nav.auth.signin()") Sign in with Github
+- }

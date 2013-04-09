@@ -1,0 +1,4 @@
+object scratchpad {
+  println("HereIAm")                              //> HereIAm
+  val q = 4                                       //> q  : Int = 4
+}

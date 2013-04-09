@@ -1,0 +1,52 @@
+package net.openreview
+package model
+
+import com.mongodb.casbah.Imports._
+import org.specs2.mutable._
+import org.specs2.specification.{ Scope, Step }
+import com.novus.salat.{ BigDecimalStrategy, Context }
+import com.mongodb.casbah.commons.test.CasbahMutableSpecification
+// import com.novus.salat.conversions.RegisterJodaTimeZoneConversionHelpers
+
+trait MongoSpec extends CasbahMutableSpecification {
+  val testdb = "or-testdb"
+
+  override def is = {
+    Step {
+      log.info("beforeSpec: registering BSON conversion helpers")
+      com.mongodb.casbah.commons.conversions.scala.RegisterConversionHelpers()
+      // TODO: com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers()
+
+      // TODO: RegisterJodaTimeZoneConversionHelpers()
+
+    } ^
+    super.is ^
+    Step {
+      log.info("afterSpec: dropping test MongoDB '%s'".format(testdb))
+      MongoConnection().dropDatabase(testdb)
+    }
+  }
+
+  // TODO: matchmaker, matchmaker, make me a MatchResult[Any]....
+  def checkByteArrays(actual: Array[Byte], expected: Array[Byte]) = {
+    actual.size must_== expected.size
+    actual.zip(expected).foreach {
+      v => v._1 must_== v._2
+    }
+    actual must not beEmpty // i feel so hollow.  maybe i should just return success and have done with it?
+  }
+
+  trait testContext extends Scope {
+    implicit val ctx = new Context {
+      val name = "textCtx_%s".format(System.currentTimeMillis())
+    }
+  }
+
+  case class customBigDecimalCtx(strategy: BigDecimalStrategy) extends Scope {
+    implicit val ctx = new Context {
+      val name = "customBigDecimalCtx_%s".format(System.currentTimeMillis())
+      override val bigDecimalStrategy = strategy
+    }
+    val x = BigDecimal("3.14", ctx.bigDecimalStrategy.mathCtx)
+  }
+}

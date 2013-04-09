@@ -1,0 +1,19 @@
+
+Architecture for the Rexa pipeline, based on Apache Camel routing, Apache ActiveMQ, and a host of other 
+things...
+
+
+Machines:
+    Blake Cluster
+        Head node
+        compute nodes
+    
+    
+    Avon{1-5}
+    
+    
+    Vinci{7,8,9}
+    
+
+Deployment:
+    
