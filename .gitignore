@@ -2,4 +2,7 @@
 syntax: glob
 *.elc
 
+autosaves
+auto-save-list
+
 #  syntax: regexp
