@@ -464,6 +464,7 @@
 			;; general elisp
 			(load-library "my-emisc")
 			(load-library "my-org+deft-mode")
+			(load-library "org-life-in-plain-text")
 			(load-library "ag-code-search")
 			;; (ido-mode nil)
 			(icy-mode nil)
