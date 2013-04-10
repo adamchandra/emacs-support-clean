@@ -190,6 +190,55 @@ as point as well."
         (setq linecount (1- linecount))
         ))))
 
+
+
+
+(defun ask-before-killing-buffer ()
+  (interactive)
+  (defun ask-before-kill-buffer (buffer)
+    (not (and (equal (current-buffer) buffer)
+              (not (y-or-n-p 
+                    "This buffer is protected. Really kill? ")))))
+  (let 
+      ((fn (apply-partially 'ask-before-kill-buffer (current-buffer))))
+    (add-to-list 'kill-buffer-query-functions fn)))
+
+
+(defun table-align-imports ()
+  (interactive)
+  (table-capture (point) (mark) ;; (table-capture BEG END 
+                 "[[:space:]]"  ;;  &optional COL-DELIM-REGEXP 
+                 "\n"           ;;  ROW-DELIM-REGEXP 
+                 "left"         ;;  JUSTIFY 
+                 1              ;;  MIN-CELL-WIDTH 
+                 )              ;;  COLUMNS)
+  ;;(replace-regexp REGEXP TO-STRING &optional DELIMITED START END)
+  ;; (table-release)
+)
+
+
+
+
+
+
+
+(defun zoom-in ()
+  "Increase font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+      		      :height
+		      (+ (face-attribute 'default :height)
+		         10)))
+
+(defun zoom-out ()
+  "Decrease font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+      		      :height
+		      (- (face-attribute 'default :height)
+		         10)))
+
+
 ;;  Copied here to hack it a bit: don't want filename expansion to stop at '-' chars.
 ;;   (defun minibuffer-complete-word ()
 ;;     "Complete the minibuffer contents at most a single word.
