@@ -22,7 +22,7 @@
  '(focus-follows-mouse nil)
  '(global-font-lock-mode t nil (font-lock))
  '(hippie-expand-try-functions-list (quote (try-expand-all-abbrevs try-expand-list try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill)))
- '(ibuffer-saved-filter-groups nil)
+ '(ibuffer-saved-filter-groups nil t)
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-buffers-ido-like-flag t)
  '(icicle-download-dir "~/emacs/site-lisp/icicles")
@@ -39,8 +39,6 @@
  '(mouse-wheel-mode t nil (mwheel))
  '(nxml-child-indent 4)
  '(nxml-outline-child-indent 4)
- '(org-agenda-file-regexp "\\`[^.].*agenda\\.org\\'")
- '(org-agenda-files (quote ("~/projects/the-library/Dropbox/emacs-deft/")))
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "HIDDEN" "MORE")))
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
@@ -683,10 +681,6 @@
             (ibuffer-switch-to-saved-filter-groups "default")
 
             ))
-
-
-
-
 
 
 
