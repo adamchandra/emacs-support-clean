@@ -3,6 +3,7 @@ syntax: glob
 *.elc
 
 autosaves
+autosaves*
 auto-save-list
 
 #  syntax: regexp

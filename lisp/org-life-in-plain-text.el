@@ -1,3 +1,11 @@
+;; ACS added
+;;(add-hook 'org-mode-hook 'my-org-mode-autosave-settings)
+;;(defun my-org-mode-autosave-settings
+;;  (auto-save-mode 1)
+;;  (set (make-local-variable 'auto-save-visited-file-name) t)
+;;  (setq auto-save-interval 5))
+
+
 ;; From: http://doc.norang.ca/org-mode.html
 
 
@@ -824,7 +832,10 @@
 ;; Here are my tag definitions with associated keys for filtering in the agenda views.
 ;; The startgroup - endgroup (@XXX) tags are mutually exclusive - selecting one removes a similar tag already on the task. These are the context tags - you can't be in two places at once so if a task is marked with @farm and you add @office then the @farm tag is removed automagically.
 ;; The other tags PHONE .. FLAGGED are not mutually exclusive and multiple tags can appear on a single task. Some of those tags are created by todo state change triggers. The shortcut key is used to add or remove the tag using C-c C-q or to apply the task for filtering on the agenda.
-;; I have both FARM and @farm tags. FARM is set by a FILETAGS entry and just gives me a way to filter anything farm related. The @farm tag signifies that the task as to be done at the farm. If I have to call someone about something that would have a FARM tag but I can do that at home on my lunch break. I don't physically have to be at the farm to make the call.
+;; I have both FARM and @farm tags. FARM is set by a FILETAGS entry and just gives me a way to
+;; filter anything farm related. The @farm tag signifies that the task as to be done at the farm. If
+;; I have to call someone about something that would have a FARM tag but I can do that at home on my
+;; lunch break. I don't physically have to be at the farm to make the call.
 
      ; ; Tags with fast selection keys
      ; (setq org-tag-alist (quote ((:startgroup)
@@ -1500,10 +1511,13 @@
 
 ;;??: ;;  plantuml_example_states.png
 
-;;??: ;; 16.5 Publishing Single Files
+;; 16.5 Publishing Single Files
 
-;;??: ;; Org-mode exports the current file to one of the standard formats by invoking an export function. The standard key binding for this is C-c C-e followed by the key for the type of export you want.
-;;??: ;; This works great for single files or parts of files &#x2013; if you narrow the buffer to only part of the org-mode file then you only get the narrowed detail in the export.
+;; Org-mode exports the current file to one of the standard formats by invoking an export
+;; function. The standard key binding for this is C-c C-e followed by the key for the type of export
+;; you want.
+;; This works great for single files or parts of files &#x2013; if you narrow the buffer to only
+;; part of the org-mode file then you only get the narrowed detail in the export.
 
 ;; 16.6 Publishing Projects
 

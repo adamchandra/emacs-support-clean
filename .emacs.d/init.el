@@ -381,12 +381,16 @@
           ([f11                       ] ansi-term)
           ))
 
-  ;; mode-specific hooks
-	(add-hook 'org-mode-hook
-						'(lambda ()
-							 (local-set-key [(meta ?.)] 'org-open-at-point)
-							 (local-set-key [(meta ?,)] 'org-mark-ring-goto)
-							 ))
+;;  ;; mode-specific hooks
+;;	(add-hook 'org-mode-hook
+;;						'(lambda ()
+;;							 (local-set-key [(meta ?.)] 'org-open-at-point)
+;;							 (local-set-key [(meta ?,)] 'org-mark-ring-goto)
+;;							 ;; (local-set-key [(meta up)] 'org-timestamp-up)
+;;							 ;; (local-set-key [(meta down)] 'org-timestamp-down)
+;;							 ;; (local-set-key [(meta shift up)] 'org-clock-timestamps-up)
+;;							 ;; (local-set-key [(meta shift down)] 'org-clock-timestamps-down)
+;;							 ))
 
 
   )
@@ -403,7 +407,7 @@
       (add-path "lisp")	   
       ;; other people's stuff
       (add-path "site-lisp") 
-      (add-path "site-lisp/tellib") 
+      (add-path "site-lisp/mtorus") 
       ;; auto install stuff
       (add-path "auto-install-lisp")  
       (add-path "site-lisp/ensime/elisp")
@@ -520,8 +524,6 @@
   ;; (filesets-support-dired)
   )
 
-;; MINI HOWTO: open .scala file. Ensure bin/server.sh is executable. M-x ensime
-
 (defun scala-mode-setup()
   (interactive)
   (require 'ensime)
@@ -530,6 +532,21 @@
   (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
   (defvar ensime-scaladoc-stdlib-url-base "http://www.scala-lang.org/api/current")
   (defvar ensime-scaladoc-compiler-url-base "http://www.scala-lang.org/api/current")
+
+
+  ;; val commonsIo = "http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?"
+
+  (defun make-example-doc-url (type &optional member)
+    (ensime-make-java-doc-url-helper 
+     "http://developer.example.com/apidocs/" type member))
+
+  (add-to-list 
+   'ensime-doc-lookup-map 
+   '("^org\\.apache\\.commons\\.io\\." . 
+     (lambda (type &optional member) (
+                                     (ensime-make-java-doc-url-helper 
+                                      "http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?" type member))
+       )))
   )
 
 (defun haskell-setup()
@@ -941,3 +958,5 @@
                 "\\)"))
            (funcall dired-omit-regexp-orig))))))
 
+
+;; (require 'mtorus)
