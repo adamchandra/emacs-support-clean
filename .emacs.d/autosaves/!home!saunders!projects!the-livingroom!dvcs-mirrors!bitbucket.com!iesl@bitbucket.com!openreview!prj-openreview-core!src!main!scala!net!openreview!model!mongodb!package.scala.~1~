@@ -1,4 +1,0 @@
-package net.openreview.model.mongodb
-
-package object storage {
-}

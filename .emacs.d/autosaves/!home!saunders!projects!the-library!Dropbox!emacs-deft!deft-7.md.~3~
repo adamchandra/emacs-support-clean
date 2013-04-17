@@ -1,9 +1,0 @@
-sbt compile output parser 
-
-
-kept in file: 
-
-prj-openreview-core/target/streams/compile/compile/\$global/out
-
-
-+ Parse sbt compile output as an alternative to ensime jumping

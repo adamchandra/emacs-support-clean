@@ -1,8 +1,0 @@
-#!/bin/bash
-
-BIN="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-source $BIN/common-defs.sh
-
-find "$1" -type f \( -name "*.pdf" -o -name "*.ps" \)  -printf "  \"%p\"\n" > $workdir/papers-to-process-pstotext.txt
-

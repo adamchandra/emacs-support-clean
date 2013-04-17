@@ -1,6 +1,0 @@
-# Author: acs
-# name: import-scalaz-validation
-# key: import-scalaz-validation
-# --
-import scalaz.Validation
-import scalaz.syntax.validation._

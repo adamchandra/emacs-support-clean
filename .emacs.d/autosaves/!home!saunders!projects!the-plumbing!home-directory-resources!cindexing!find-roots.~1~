@@ -1,3 +1,0 @@
-#!/bin/bash
-
-find . -maxdepth 10 -type d -path '*/src/main' -not -path '*/.hg/*'

@@ -1,5 +1,0 @@
-.flash {
-    position: absolute;
-    top: -1px;
-    left: 0px;
-}

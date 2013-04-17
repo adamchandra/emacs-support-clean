@@ -1,5 +1,0 @@
-#!/bin/bash
-
-ack --type=scala -i TODO | perl -pne 's|([^:]+):(\d+):\s*(.*)|[[file:../$1::$2][$3]]        $1|' > docs/autogen-todo-list-from-code.org
-
-# ack --type=scala -i TODO | perl -pne 's/([^:]+):(\d+):\s*(\s*\/\/\s*(.*)\s*$)/[[file:$1::$2][$4]]    $1\n/' > docs/autogen-todo-list-from-code.org

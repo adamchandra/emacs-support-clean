@@ -1,9 +1,0 @@
-package acs.boxes
-
-
-object Box extends App {
-  override def main(args: Array[String]) = {
-    
-  }
-}
-

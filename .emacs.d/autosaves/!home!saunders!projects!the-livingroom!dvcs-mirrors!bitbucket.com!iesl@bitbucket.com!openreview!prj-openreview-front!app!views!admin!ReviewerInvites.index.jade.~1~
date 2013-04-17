@@ -1,7 +1,0 @@
--@ val it : admin.ReviewerInvites
-
-ul
-  - for (invite <- it.invites)
-    = invite.toString
-
-

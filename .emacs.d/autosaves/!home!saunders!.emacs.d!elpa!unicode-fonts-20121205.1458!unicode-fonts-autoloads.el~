@@ -1,13 +1,0 @@
-;;; unicode-fonts-autoloads.el --- automatically extracted autoloads
-;;
-;;; Code:
-
-
-(provide 'unicode-fonts-autoloads)
-;; Local Variables:
-;; version-control: never
-;; no-byte-compile: t
-;; no-update-autoloads: t
-;; coding: utf-8
-;; End:
-;;; unicode-fonts-autoloads.el ends here

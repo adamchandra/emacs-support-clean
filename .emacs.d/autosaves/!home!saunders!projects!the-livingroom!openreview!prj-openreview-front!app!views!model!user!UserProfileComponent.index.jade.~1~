@@ -1,5 +1,0 @@
--@ val it : model.user.UserProfileComponent
-
-ul
-  li
-    = it.

@@ -1,8 +1,0 @@
-jade mode
-
-better whitespace indented block mode handling- 
-
-- select current block
-- in/undent current block
-- check whitespace contraints (only spaces, proper indentation, etc)
-

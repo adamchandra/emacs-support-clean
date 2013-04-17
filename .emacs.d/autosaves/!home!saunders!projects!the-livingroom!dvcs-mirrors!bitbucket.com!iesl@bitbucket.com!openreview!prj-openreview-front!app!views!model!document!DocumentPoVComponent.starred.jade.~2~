@@ -1,9 +1,0 @@
--@ val it : model.document.DocumentPoVComponent
-- import it._
-
-
-- if(starred) {
-i.icon-star.withtooltip(title="Starred")
-- } else {
-i.icon-star-empty.withtooltip(title="Not starred")
-- }

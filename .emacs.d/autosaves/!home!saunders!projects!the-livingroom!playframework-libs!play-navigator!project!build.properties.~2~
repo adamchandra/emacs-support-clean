@@ -1,4 +1,0 @@
-# These are used only by the sbt runner script, not by sbt itself.
-sbt.version=0.12
-build.scala.versions=2.9.2
-

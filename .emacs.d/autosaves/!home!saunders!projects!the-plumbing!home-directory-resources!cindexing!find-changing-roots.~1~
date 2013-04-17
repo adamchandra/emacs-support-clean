@@ -1,4 +1,0 @@
-#!/bin/baxh 
-
-find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/src/main' -not -path '*/.hg/*' | grep adamchandra 
-find /home/saunders/projects/the-livingroom/dvcs-mirrors -maxdepth 8 -type d -path '*/src/main' -not -path '*/.hg/*' | 'iesl@bitbucket'

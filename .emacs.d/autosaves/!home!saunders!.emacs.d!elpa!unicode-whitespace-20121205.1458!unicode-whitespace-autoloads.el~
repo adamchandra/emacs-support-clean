@@ -1,13 +1,0 @@
-;;; unicode-whitespace-autoloads.el --- automatically extracted autoloads
-;;
-;;; Code:
-
-
-(provide 'unicode-whitespace-autoloads)
-;; Local Variables:
-;; version-control: never
-;; no-byte-compile: t
-;; no-update-autoloads: t
-;; coding: utf-8
-;; End:
-;;; unicode-whitespace-autoloads.el ends here

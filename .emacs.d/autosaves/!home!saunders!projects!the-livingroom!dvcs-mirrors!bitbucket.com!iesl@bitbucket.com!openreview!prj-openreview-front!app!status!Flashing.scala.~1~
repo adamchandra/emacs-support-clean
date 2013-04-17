@@ -1,8 +1,0 @@
-package status
-
-import play.api.mvc._
-
-case class Flashing(request: RequestHeader) {
-
-}
-
