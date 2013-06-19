@@ -9,7 +9,7 @@
   (yas-load-directory  yas/root-directory)
   ;; If non-nil, don't derive tab triggers from filenames.
   (setq yas/ignore-filenames-as-triggers t)
-  (require 'dropdown-list)
+  ;;(require 'dropdown-list)
   ;; (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt))
   ;; (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/completing-prompt))
   ;; (setq yas/prompt-functions '(yas/completing-prompt yas/dropdown-prompt yas/ido-prompt))

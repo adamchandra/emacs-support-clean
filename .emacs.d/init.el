@@ -15,14 +15,16 @@
  '(dired-details-hide-link-targets nil)
  '(dired-details-initially-hide nil)
  '(dired-listing-switches "-ABl")
+ '(eproject-completing-read-function (quote eproject--ido-completing-read))
+ '(eproject-todo-expressions (quote ("TODO" "XXX" "NOPUSH" "NOCOMMIT" "FIXME")))
  '(face-font-family-alternatives (quote (("mono" "dejavu" "fixed") ("courier" "CMU Typewriter Text" "fixed") ("Sans Serif" "helv" "helvetica" "arial" "fixed") ("helv" "helvetica" "arial" "fixed"))))
  '(face-font-selection-order (quote (:width :height :weight :slant)))
  '(filesets-data (quote (("jade-files" (:tree "/home/saunders/projects/the-livingroom/dvcs-mirrors/bitbucket.com/iesl@bitbucket.com/openreview/prj-openreview-front/app/views" "^.+\\.jade$")))))
  '(fill-column 100)
- '(focus-follows-mouse nil)
+ '(focus-follows-mouse t)
  '(global-font-lock-mode t nil (font-lock))
  '(hippie-expand-try-functions-list (quote (try-expand-all-abbrevs try-expand-list try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill)))
- '(ibuffer-saved-filter-groups nil t)
+ '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-buffers-ido-like-flag t)
  '(icicle-download-dir "~/emacs/site-lisp/icicles")
@@ -36,17 +38,22 @@
  '(jde-jdk-registry (quote (("1.5.0_06" . "/exp/rcf/share/X11R5/jdk1.5.0_06/"))))
  '(line-number-mode t)
  '(menu-bar-mode nil)
+ '(minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
  '(mouse-wheel-mode t nil (mwheel))
- '(nxml-child-indent 4)
- '(nxml-outline-child-indent 4)
+ '(nxml-attribute-indent 2)
+ '(nxml-child-indent 2)
+ '(nxml-outline-child-indent 2)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "HIDDEN" "MORE")))
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
  '(org-hide-leading-stars t)
  '(org-highlight-latex-fragments-and-specials t)
+ '(org-level-color-stars-only t)
  '(org-modules (quote (org-bbdb org-bibtex org-info org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m)))
- '(org-odd-levels-only t)
+ '(org-odd-levels-only nil)
+ '(org-pretty-entities t)
  '(org-replace-disputed-keys t)
+ '(org-src-fontify-natively t)
  '(org-startup-align-all-tables t)
  '(org-startup-folded nil)
  '(scala-indent:align-forms t)
@@ -326,18 +333,18 @@
           ([(control ?c) (?m)         ] execute-extended-command)
           ([(control ?x) (control ?m) ] execute-extended-command)
           ([(control ?x) (m)          ] execute-extended-command)
-          ([(meta ?\ )                ] execute-extended-command)
+          ([(meta ?\ )                ] smex)
+          ([(meta control ?\ )        ] smex-major-mode-commands)
+
           ([(control ?c) (control ?k) ] kill-region)
           ([(meta ?w)                 ] kill-ring-save)
 
           ;; change font size, interactively
           ([(control ?=)              ] zoom-in)
           ([(control ?-)              ] zoom-out)
-
           ;; 
-          ([(meta ?a)                 ] backward-char)
-          ;; ([(meta ?s)                 ] kill-ring-save)
-          ([(meta ?d)                 ] forward-char)
+          ([(control ?f)              ] forward-char)
+          ([(control ?d)              ] backward-char)
 
           ([(control ?y)              ] yank)
           ([(control ?w)              ] backward-kill-word)
@@ -347,10 +354,10 @@
           ([(control ?2)              ] split-window-horizontally)
           ([(control ?3)              ] split-window-vertically)
           ([(control ?4)              ] ediff-buffers)
-          ([(control ?7)              ] ido-switch-buffer)
-          ([(control ?8)              ] ibuffer)
 
-          ([(control ?*)              ] icicle-buffer)
+          ([(control ?7)              ] eproject-find-file)
+          ([(control ?8)              ] ibuffer)
+          ([(control ?*)              ] ido-switch-buffer)
 
           ([(control ?9)              ] bs-cycle-previous)
           ([(control ?0)              ] bs-cycle-next)
@@ -365,8 +372,8 @@
           ([(shift right)             ] picture-forward-column)
           ([(shift ?\ )               ] just-one-space)
           ([(meta ?>)                 ] (lambda() (interactive) (find-file-existing (concat *orgfile-dir* "bookmark-index.org"))))
-          ([(control XF86Forward)     ] find-grep-dired)
-          ([(control tab)             ] sr-speedbar-toggle)
+          ;; ([(control XF86Forward)     ] find-grep-dired)
+          ;; ([(control tab)             ] sr-speedbar-toggle)
           ([(control ?J)              ] ace-jump-mode)
           ([(control ?H)              ] ace-jump-mode-pop-mark)
 
@@ -375,25 +382,17 @@
           ([(control ?>) (?s) (?d)    ] ag-search-def)
 
           ([f12                       ] raise-bookmark-buffer)
-          ([f5                        ] ensime-compile-errors)
+          ([f5                        ] ensime-show-all-errors-and-warnings)
+          ([(control f5)              ] ensime-compile-errors)
           ([f8                        ] deft)
           ([(control f8)              ] org-agenda)
           ([f11                       ] ansi-term)
+
+
           ))
-
-;;  ;; mode-specific hooks
-;;	(add-hook 'org-mode-hook
-;;						'(lambda ()
-;;							 (local-set-key [(meta ?.)] 'org-open-at-point)
-;;							 (local-set-key [(meta ?,)] 'org-mark-ring-goto)
-;;							 ;; (local-set-key [(meta up)] 'org-timestamp-up)
-;;							 ;; (local-set-key [(meta down)] 'org-timestamp-down)
-;;							 ;; (local-set-key [(meta shift up)] 'org-clock-timestamps-up)
-;;							 ;; (local-set-key [(meta shift down)] 'org-clock-timestamps-down)
-;;							 ))
-
-
   )
+
+(my-keys)
 
 
 (defun setup-paths () 
@@ -431,10 +430,6 @@
       (require 'grep+)
       (require 'vline)
       (require 'ag)
-      (require 'org-fstree)
-
-      (setq jiralib-url "http://bugs.openreview.net/")
-      (require 'org-jira)
 			; (require 'smooth-scroll)
 			; (require 'smooth-scrolling)
 			(require 'parenface)
@@ -460,8 +455,22 @@
       (require 'markdown-mode)
       (require 'deft)
       (require 'multifiles)
-      (global-undo-tree-mode)
+      ;; 
+      (cua-mode t)
+      ;; (require 'cua-mode)
+      (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+      (transient-mark-mode 1) ;; No region when it is not highlighted
+      (setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
 
+      (require 'window-number)
+      (require 'eproject)
+      (require 'eproject-extras)
+
+      (setq x-select-enable-clipboard t)
+      (global-undo-tree-mode)
+      (get 'overwrite-mode 'disabled)
+      (column-number-mode t)
+      (set-scroll-bar-mode 'right)
       ;; (smooth-scroll-mode t)
 			;; general elisp
 			(load-library "my-emisc")
@@ -612,12 +621,15 @@
 (add-hook 'coffee-mode-hook
           '(lambda() (coffee-custom)))
 
-;; (add-hook 'jade-mode-hook '(lambda() (vline-mode nil)))
+(defun jade-custom ()
+  (define-key jade-mode-map [(meta r)] 'coffee-compile-buffer)
+  )
+
+(add-hook 'jade-mode-hook '(lambda() (jade-custom)))
 ;; (remove-hook 'jade-mode-hook '(lambda() (vline-mode nil)))
 
 (assorted-customizations)
 (common-setup)
-(my-keys)
 
 (defun ensime-rpc-symbol-at-point-i ()
   (interactive)
@@ -648,6 +660,8 @@
                   (mode . markdown-mode)))
          ("js" (or 
                   (mode . coffee-mode)
+                  (mode . js-mode)
+                  (mode . js2-mode)
                   (mode . javascript-mode)
                   (mode . javascript-ide-mode)))
          ("emacs" (mode . emacs-lisp-mode))
@@ -779,7 +793,7 @@
       ;; allow some user customization
       (run-hooks 'find-file-root-hook))))
 
-(global-set-key [(control x) (control r)] 'find-file-root)
+;; (global-set-key [(control x) (control r)] 'find-file-root)
 
 (defface find-file-root-header-face
   '((t (:foreground "white" :background "red3")))
@@ -800,6 +814,9 @@
 
 
 
+
+
+;; functions for searching up and down directory paths
 (defun ensime-sbt-target-dir-p (path)
   "does this path have an sbt target dir?"
   (file-exists-p (concat path "/target" )))
@@ -960,3 +977,90 @@
 
 
 ;; (require 'mtorus)
+(require 'smex) ; Not needed if you use package.el
+(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+
+
+;; eproject stuff
+(define-project-type sbt (generic)
+  (look-for "sbt")
+  :relevant-files ("\\.scala$" "\\.java$" "\\.jade$" "\\.coffee$" "\\.js$" "\\.xml$" "\\.less$" "\\.conf$")
+  :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" "target/")
+  )
+
+
+(defun first-matching-buffer (predicate)
+  "Return PREDICATE applied to the first buffer where PREDICATE applied to the buffer yields a non-nil value."
+  (loop for buf in (buffer-list)
+     when (with-current-buffer buf (funcall predicate buf))
+     return (with-current-buffer buf (funcall predicate buf))))
+
+(defun fix-windows ()
+  "Setup my window config."
+  (interactive)
+  (let ((current-project
+         (first-matching-buffer (lambda (x) (ignore-errors (eproject-name)))))
+        (current-irc-window
+         (first-matching-buffer (lambda (x) (and (eq major-mode 'rcirc-mode)
+                                                 x))))
+        (current-shell
+         (or (first-matching-buffer (lambda (x)
+                                      (and (or (eq major-mode 'eshell-mode)
+                                               (eq major-mode 'term-mode))
+                                           x)))
+             (eshell))))
+
+    (delete-other-windows)
+    (split-window-horizontally)
+    (split-window-horizontally)
+    (window-number-select 1)
+    (split-window-vertically)
+    (labels ((show (x) (set-window-buffer nil (or x (get-buffer-create "*scratch*")))))
+      (window-number-select 1)
+      (show current-irc-window)
+      (window-number-select 2)
+      (show current-shell)
+      (let ((cur))
+        (loop for i in '(3 4)
+	   do
+	     (window-number-select i)
+	     (show (first-matching-buffer
+		    (lambda (x) (and (equal (ignore-errors (eproject-name))
+					    current-project)
+				     (not (equal cur (buffer-name x)))
+				     x))))
+	     (setf cur (buffer-name (current-buffer))))))
+    (balance-windows)))
+
+
+
+;; Display ido results vertically, rather than horizontally
+(setq ido-decorations 
+      (quote 
+       ( ;; 1st and 2nd elements are used as brackets around the prospect list,
+        "\n-> " "" 
+        ;; 3rd element is the separator between prospects (ignored if `ido-separator' is set),
+        "\n   "
+        ;; 4th element is the string inserted at the end of a truncated list of prospects,
+        "\n   ..." 
+        ;; 5th and 6th elements are used as brackets around the common match string which;; can be completed using TAB,
+        "[" "]" 
+        ;; 7th element is the string displayed when there are no matches, and
+        " [No match]" 
+        ;; 8th element is displayed if there is a single match (and faces are not used),
+        " [Matched]" 
+        ;; 9th element is displayed when the current directory is non-readable,
+        " [Not readable]" 
+        ;; 10th element is displayed when directory exceeds `ido-max-directory-size',
+        " [Too big]" 
+        ;; 11th element is displayed to confirm creating new file or buffer.
+        " [Confirm]")))
+
+(defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
+(add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
+
+(defun ido-define-keys () ;; C-n/p is more intuitive in vertical layout
+  (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+  (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
+
+(add-hook 'ido-setup-hook 'ido-define-keys)

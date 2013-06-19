@@ -1,10 +1,3 @@
-;; ACS added
-;;(add-hook 'org-mode-hook 'my-org-mode-autosave-settings)
-;;(defun my-org-mode-autosave-settings
-;;  (auto-save-mode 1)
-;;  (set (make-local-variable 'auto-save-visited-file-name) t)
-;;  (setq auto-save-interval 5))
-
 
 ;; From: http://doc.norang.ca/org-mode.html
 
@@ -19,12 +12,42 @@
      ;; ;;;
      ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
      ;; (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-     ;; (require 'org)
+        ;; (require 'org-fstree)
+        ;; (setq jiralib-url "http://bugs.openreview.net/")
+        ;; (require 'org-jira)
+        (require 'org-compat)
+        (require 'org)
      ;; ;;
      ;; ;; Standard key bindings
      ;; (global-set-key "\C-cl" 'org-store-link)
      ;; (global-set-key "\C-ca" 'org-agenda)
      ;; (global-set-key "\C-cb" 'org-iswitchb)
+
+
+
+
+;; ACS added
+;;(add-hook 'org-mode-hook 'my-org-mode-autosave-settings)
+;;(defun my-org-mode-autosave-settings
+;;  (auto-save-mode 1)
+;;  (set (make-local-variable 'auto-save-visited-file-name) t)
+;;  (setq auto-save-interval 5))
+
+;; mode-specific hooks
+(add-hook 'org-mode-hook
+					'(lambda ()
+						 (local-set-key [(meta ?.)] 'org-open-at-point)
+						 (local-set-key [(meta ?,)] 'org-mark-ring-goto)
+						 ;; (local-set-key [(meta up)] 'org-timestamp-up)
+						 ;; (local-set-key [(meta down)] 'org-timestamp-down)
+						 ;; (local-set-key [(meta shift up)] 'org-clock-timestamps-up)
+						 ;; (local-set-key [(meta shift down)] 'org-clock-timestamps-down)
+						 ))
+
+
+
+
+
 
 ;; That's all you need to get started using headlines and lists in org-mode.
 ;; The rest of this document describes customizations I use in my setup, how I structure org-mode files, and other changes to fit the way I want org-mode to work.

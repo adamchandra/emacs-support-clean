@@ -226,17 +226,17 @@ as point as well."
   "Increase font size by 10 points"
   (interactive)
   (set-face-attribute 'default nil
-      		      :height
-		      (+ (face-attribute 'default :height)
-		         10)))
+                      :height
+                      (+ (face-attribute 'default :height)
+                         10)))
 
 (defun zoom-out ()
   "Decrease font size by 10 points"
   (interactive)
   (set-face-attribute 'default nil
-      		      :height
-		      (- (face-attribute 'default :height)
-		         10)))
+                      :height
+                      (- (face-attribute 'default :height)
+                         10)))
 
 
 ;;  Copied here to hack it a bit: don't want filename expansion to stop at '-' chars.

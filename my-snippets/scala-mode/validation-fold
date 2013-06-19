@@ -2,7 +2,9 @@
 # name: validation-fold
 # key: validation-fold
 # --
-.fold(fail={err =>
-      },
-      succ={ok =>
-      })
+.fold(fail= { err =>
+  err.list.mkString(", ")
+}, succ={ ok =>
+  ok.entityMentions
+})
+
