@@ -1,0 +1,240 @@
+/project/ 
+
+* TODO BBN Deft
+:LOGBOOK:
+CLOCK: [2013-04-25 Thu 13:39]--[2013-04-25 Thu 13:40] =>  0:01
+:END:
+:PROPERTIES:
+:CATEGORY: BBNDeft
+:END:
+
+git clone http://saunders@www.deftware.bbn.com:7990/scm/umass/deft.git
+cd deft/
+git remote add adept http://saunders@www.deftware.bbn.com:7990/scm/adept/deft.git
+git remote –v
+git config merge.renameLimit 99999
+git fetch adept tag v1.0
+git pull adept tag v1.0 
+
+
+** TODO Ensure proper licensing of all delivered codebases
+*** TODO make jar release of deftbp project that includes apache license
+[2013-04-25 Thu 14:25]
+*** TODO release bbn/deft dep libs with licenses attached
+[2013-04-26 Fri 12:06]
+
+** TODO Fix relation extraction
+** TODO Regression tests
+** TODO Benchmark tests
+** TODO Update to latest factorie/tac codebase
+** NEXT Respond to open ticket w/next available release date
+
+
+** Meeting notes Nov. 6 2013
+- (intros)
+- 1.  deft code repo cleanup
+  - pruned branches
+  - * Should re-clone repo fresh
+- 2. multiple lang support
+- 3. benchmark tests
+  - stanford is not canonical
+  - numbers are there to make sure that bbn changes don't impact our algorithms.
+
+- 4. software requirements
+  - java 1.6 vs 1.7
+    - Impact of using 1.6? 
+      - Can this be cross-built?
+
+
+ 
+** Examples
+
+Site-Name:    BBN 
+ID: N/A 
+Algorithm Name: BBN-New-Algorithm 
+Has Been Delivered: N 
+Is Open Source: Y 
+Open Source: In House BBN License
+Comments: None
+
+Site-Name: UMass
+ID: 2.1
+Algorithm Name: Universal Schema Relation Extraction	
+Has Been Delivered: Y
+Is Open Source: Y 
+Open Source: Apache
+Comments: None
+
+Desc: Extracts relations between entities in a large document collection. Relations are drawn from an onology (e.g. attendedSchool)
+Input: Large collection of documents, plain text, mostly grammatical sentences	
+Output: Binary relation between entities with labels for each argument along with confidence value
+    
+
+Site-Name: UMass
+ID: 2.2
+Algorithm Name: Coreference within a Document	
+Has Been Delivered: Y 
+Is Open Source: Y 
+Open Source: Apache
+Comments: None
+
+Desc: Identifies coreferences ( group of equivalent items) within a document. Coreference is currently performed only for selected Entity types.
+Input: Document	
+Output: A list of coreferences, which is composed of document id, offset and and an unique id
+
+
+Site-Name: UMass
+ID: 2.3
+Algorithm Name: Cross Document Coreference with Resolution to Knowledge Base(KB)	
+Has Been Delivered: Y
+Is Open Source: Y 
+Open Source: Apache
+Comments: None
+
+Desc: Identifies coreferences ( group of equivalent items) within a document and resolves the coreferences with a KB. Coreference is corrently performed for People and Organizations
+Input: Documents and KB	
+Output: A list of coreferences, which is composed of document id, offset and and an unique id
+
+
+** TODO Finish regression tests
+#+begin_example
+
+These instructions tell how to create a regression test for a new DEFT site.For illustration the site will be called "NewSite" with path "edu.new_site".  
+
+The following steps will create a new regression test based on the StanfordCoreNlpRegressionTest:
+
+1.	Identify the algorithm config file for NewSite.  If there is none, then:
+
+ a. Copy StanfordCoreNlpProcessorConfig.xml from:    stanford/src/test/resources/edu/stanford/nlp
+ b.	To:         new_site/src/test/resources/edu/new_site
+ c.	Rename it to:	NewSiteConfig.xml	
+ d.	Edit the file as appropriate for the NewSite algorithms.
+
+==== Commented out pipline steps, not sure if needed
+
+
+2.	Copy StanfordCoreNlpRegressionTestFileList.txt from:    stanford/src/test/resources/edu/stanford/nlp
+ a.	To:         new_site/src/test/resources/edu/new_site
+ b.	Rename it to:	NewSiteRegressionTestFileList.txt
+ c.	No other changes are necessary because the same input files can be used.
+
+3.	Copy StanfordCoreNlpRegressionTestConfig.xml from:    stanford/src/test/resources/edu/stanford/nlp
+ a.	To:         new_site/src/test/resources/edu/new_site
+ b.	Rename it to:	NewSiteRegressionTestConfig.xml	
+ c.	Edit the file and change the entries to point to the algorithm config and file list.
+
+  <!-- <entry key="annotators">tokenize, ssplit, pos, lemma, ner, parse, dcoref</entry> -->
+
+
+4.	Copy StanfordCoreNlpRegressionTest.java from:    stanford/src/test/java/edu/stanford/nlp
+ a.	To:          new_site/src/test/java/edu/new_site
+ b.	Rename it to:	NewSiteRegressionTest.java
+ c.	Edit the file and change the following block of code to have the correct names for NewSite:
+		public class StanfordCoreNlpRegressionTest 
+		{
+		// The only site-specific members are config file and processor instance.
+		private static String configFilename = "StanfordCoreNlpRegressionTestConfig.xml";
+		private static StanfordCoreNlpProcessor theAlgorithmProcessor = new StanfordCoreNlpProcessor();
+
+5.	Edit new_site/pom.xml
+ a.	Open stanford/pom.xml
+ b.	Copy the <plugin> element which includes the following line:	
+		<argument>edu.stanford.nlp.StanfordCoreNlpRegressionTest</argument>	
+ c.	Paste it into new_site/pom.xml
+ d.	Change the <argument> line to be:
+		<argument>edu.new_site.NewSiteRegressionTest</argument>	
+ e. Copy the following dependency section:
+ 		<dependency>
+		    <groupId>com.googlecode.java-diff-utils</groupId>
+		    <artifactId>diffutils</artifactId>
+		    <version>1.2.1</version>
+		</dependency>
+
+6.	Copy the folder:	stanford/src/test/resources/edu/stanford/nlp/input
+ a.	Paste it under:	new_site/src/test/resources/edu/new_site
+
+7.	Copy the folder:	stanford/src/test/resources/edu/stanford/nlp/regression
+ a.	Paste it under:	new_site/src/test/resources/edu/new_site
+
+8.	Run the regression test.  It will give an error after producing the output files, because they do not match the reference files.
+
+9.	Delete the files from:      new_site/src/test/resources/edu/new_site/reference
+ a.	Go to the output folder:               adept/new_site/target/test-classes/edu/new_site/output
+ b.	Copy each *.output.xml file to the reference folder as *.reference.xml
+
+10.	Rerun the regression test.
+
+11.	Verify that the test gives a success message at the end.
+ a.	Review the file TestStatistics.txt in the output folder for reasonable file sizes and times.
+ b.	Verify that the file TestDifferences.txt is empty, i.e. the output matches the reference.
+
+12. Do "git add" to add the new files you have created, as follows:
+	git add new_site/src/test/java/edu/new_site/NewSiteRegressionTest.java
+	git add new_site/src/test/resources/edu/new_site/input
+	git add new_site/src/test/resources/edu/new_site/reference
+	git add new_site/src/test/resources/edu/new_site/NewSiteRegressionTestConfig.xml
+	git add new_site/src/test/resources/edu/new_site/NewSiteRegressionTestFileList.txt
+
+
+#+end_example
+
+
+#+begin_example
+
+     
+    I've put together a running script that you might find useful.
+    It does coref (within/cross-doc, only stringmatch) and relation extraction based on universal schema patterns.
+    You can find the code here:
+     
+    TAC_ROOT=/iesl/canvas/beroth/workspace/tackbpNYT
+     
+    and in particular:
+    $TAC_ROOT/src/main/scala/edu/umass/cs/iesl/deft
+     
+    The patterns extracted from the universal schema model are here:
+     
+    $data/sim_pattern_.$t
+     
+    where $t is the threshold of cosine similarity, e.g. t=.6
+    and data=/iesl/canvas/beroth/data
+     
+    I ran the model on a subset of the nyt corpus with this command:
+     
+    $TAC_ROOT/run_class.sh edu.umass.cs.iesl.deft.DeftAnnotations $data/nyttest/ $data/sim_pattern_.6 $data/argtypes_ontonotes > ~/data/sim_pattern_.6.matches
+     
+    The output contains stuff like this:
+     
+    Cross-doc entity:
+     strings: ArrayBuffer(dublin)
+     type: LOC
+     docs: ArrayBuffer(1165027.xml, 1165133.xml)
+    Cross-doc entity:
+     strings: ArrayBuffer(times)
+     type: ORG
+     docs: ArrayBuffer(1165027.xml, 1165028.xml, 1165029.xml, 1165030.xml, 1165031.xml, 1165032.xml, 1165033.xml, 1165034.xml, 1165072.xml, 1165110.xml, 1165142.xml, 1165215.xml)
+     
+    sentence: " It 's all very pinkies up , " said Lee Miringoff , director of the Marist Institute for Public Opinion , in Poughkeepsie , N.Y. " The candidates are being offered as separate products ;
+    entity1: Lee Miringoff
+    entity2: Marist Institute
+    relation: per:employee_or_member_of
+     
+    sentence: Mr. Richardson 's wife , Anne , died last July .
+    entity1: Richardson
+    entity2: Anne
+    relation: per:spouse
+     
+    It looks like .6 is a too high threshold, we can experiment with lowering it to get more recall.
+    The patterns were generated like this:
+     
+    for t in .3 .4 .5 .6 .7 .8 .9
+    do
+        ./run_class.sh edu.umass.cs.iesl.tackbp.deft.FilterUnivSchemaPatterns $data/relation_embeddings.txt $data/pattern_embeddings.txt $t > ~/data/sim_pattern_$t
+    done
+     
+
+
+#+end_example
+
+
+
+ 

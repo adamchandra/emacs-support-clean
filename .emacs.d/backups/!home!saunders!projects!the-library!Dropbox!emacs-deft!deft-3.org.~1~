@@ -1,0 +1,26 @@
+* craigslist queries
+
+(fset 'run-queries [return ?\C-n])
+
+* Motorcycle + music
+
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm400t&srchType=A][cm400t]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm450t&srchType=A][cm450t]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cb400t&srchType=A][cb400t]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cb450t&srchType=A][cb450t]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm400&srchType=A][cm400]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm450&srchType=A][cm450]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cb400&srchType=A][cb450]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cb450&srchType=A][cb450]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm+400&srchType=A][cm 400]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=cm+450&srchType=A][cm 450]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=honda+hawk&srchType=A][honda hawk]]
+[[http://westernmass.craigslist.org/search/mca?zoomToPosting=&query=nighthawk+450&srchType=A][nighthawk 450]]
+[[http://westernmass.craigslist.org/search/msa?zoomToPosting=&query=blues+jr][wm: blues jr]]
+[[http://worcester.craigslist.org/search/msa?zoomToPosting=&query=blues+jr][wor: blues jr]]
+[[http://hartford.craigslist.org/search/msa?zoomToPosting=&query=blues+jr][hart: blues jr]]
+[[http://westernmass.craigslist.org/search/msa?zoomToPosting=&query=kawai+ce220][wm: kawai ce220]]
+[[http://westernmass.craigslist.org/search/msa?zoomToPosting=&query=kawai+mp10][wm: kawai mp10]]
+[[http://westernmass.craigslist.org/search/msa?zoomToPosting=&query=blackstar][wm: blackstar]]
+
+

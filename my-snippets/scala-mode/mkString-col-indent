@@ -1,0 +1,5 @@
+# Author: acs
+# name: mkString-col-indent
+# key: mkString-col-indent
+# --
+mkString("\n  ", "\n  ", "\n")
