@@ -15,6 +15,8 @@
  '(dired-details-hide-link-targets nil)
  '(dired-details-initially-hide nil)
  '(dired-listing-switches "-ABl")
+ '(eclim-accepted-file-regexps (quote ("\\.java" "\\.js" "\\.xml" "\\.rb" "\\.php" "\\.scala")))
+ '(eclim-print-debug-messages t)
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
  '(eproject-todo-expressions (quote ("TODO" "XXX" "NOPUSH" "NOCOMMIT" "FIXME")))
  '(face-font-family-alternatives (quote (("mono" "dejavu" "fixed") ("courier" "CMU Typewriter Text" "fixed") ("Sans Serif" "helv" "helvetica" "arial" "fixed") ("helv" "helvetica" "arial" "fixed"))))
@@ -23,7 +25,8 @@
  '(fill-column 100)
  '(focus-follows-mouse t)
  '(global-font-lock-mode t nil (font-lock))
- '(hippie-expand-try-functions-list (quote (try-expand-all-abbrevs try-expand-list try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill)))
+ '(global-hl-line-mode t)
+ '(hippie-expand-try-functions-list (quote (try-expand-all-abbrevs try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill)))
  '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-buffers-ido-like-flag t)
@@ -36,6 +39,8 @@
  '(jde-compiler (quote (("eclipse java compiler server" "/usr/sen/tmp1/saunders/home.local/bin/eclipse-versions/eclipse-SDK-3.4.1-linux-gtk/plugins/org.eclipse.jdt.core_3.4.2.v_883_R34x.jar"))))
  '(jde-debugger (quote ("JDEbug")))
  '(jde-jdk-registry (quote (("1.5.0_06" . "/exp/rcf/share/X11R5/jdk1.5.0_06/"))))
+ '(jira-url "http://bugs.openreview.net/")
+ '(js-indent-level 2)
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
@@ -58,7 +63,7 @@
  '(org-startup-folded nil)
  '(scala-indent:align-forms t)
  '(scala-indent:align-parameters nil)
- '(sgml-basic-offset 4)
+ '(sgml-basic-offset 2)
  '(show-paren-mode t nil (paren))
  '(show-paren-style (quote expression))
  '(sml/active-background-color "medium blue")
@@ -126,6 +131,7 @@
  '(global-semantic-idle-completions-mode t nil (semantic-idle))
  '(global-semantic-mru-bookmark-mode t nil (semantic-util-modes))
  '(global-senator-minor-mode t nil (senator))
+ '(hl-line ((t (:background "dim gray"))))
  '(icicle-search-main-regexp-others ((((background dark)) (:background "#324"))))
  '(inhibit-startup-screen t)
  '(italic ((t (:foreground "Yellow1" :slant italic))))
@@ -214,7 +220,7 @@
 (defun assorted-customizations()
   (interactive)
   (require 'tramp)
-  (setq tramp-default-method "scp")
+  (setq tramp-default-method "scpx")
   ;; (setq tramp-default-method "mosh")
 
   ;; 23.2 specific customizations:
@@ -310,6 +316,10 @@
         '([(control ?x) (control ?c)] ;; was save-buffers-kill-emacs
           [(control ?z)]
           [(control next)]
+          [(control ?c) (control ?m) ] ;; execute-extended-command)
+          [(control ?c) (?m)         ] ;; execute-extended-command)
+          [(control ?x) (control ?m) ] ;; execute-extended-command)
+          [(control ?x) (m)          ] ;; execute-extended-command)
           [(meta ?/)]))
 
   (defun setkey (key-fn) 
@@ -329,14 +339,12 @@
 
   (mapc 'setkey
         '(
-          ([(control ?c) (control ?m) ] execute-extended-command)
-          ([(control ?c) (?m)         ] execute-extended-command)
-          ([(control ?x) (control ?m) ] execute-extended-command)
-          ([(control ?x) (m)          ] execute-extended-command)
+          ([(control ?m)              ] newline-and-indent)
+
           ([(meta ?\ )                ] smex)
           ([(meta control ?\ )        ] smex-major-mode-commands)
-
-          ([(control ?c) (control ?k) ] kill-region)
+          ([(control ?c) (control ?k) ] clipboard-kill-region)
+          ([(control ?y)              ] clipboard-yank)
           ([(meta ?w)                 ] kill-ring-save)
 
           ;; change font size, interactively
@@ -355,9 +363,10 @@
           ([(control ?3)              ] split-window-vertically)
           ([(control ?4)              ] ediff-buffers)
 
+          ([(control ?&)              ] dirtree)
           ([(control ?7)              ] eproject-find-file)
-          ([(control ?8)              ] ibuffer)
-          ([(control ?*)              ] ido-switch-buffer)
+          ([(control ?8)              ] ido-switch-buffer)
+          ([(control ?*)              ] ibuffer)
 
           ([(control ?9)              ] bs-cycle-previous)
           ([(control ?0)              ] bs-cycle-next)
@@ -381,16 +390,18 @@
           ([(control ?>) (?s) (?c)    ] ag-search-class)
           ([(control ?>) (?s) (?d)    ] ag-search-def)
 
+          ;; basic navigation
+          ([(meta j)              ] next-line)
+          ([(meta k)              ] previous-line)
+          ([(meta h)              ] backward-char)
+          ([(meta l)              ] forward-char)
+          
           ([f12                       ] raise-bookmark-buffer)
-          ([f5                        ] ensime-show-all-errors-and-warnings)
-          ([(control f5)              ] ensime-compile-errors)
+          ([f5                        ] ensime-compile-errors)
           ([f8                        ] deft)
           ([(control f8)              ] org-agenda)
-          ([f11                       ] ansi-term)
-
-
-          ))
-  )
+          ([f11                       ] (lambda() (interactive) (ansi-term "/usr/bin/zsh")))
+          )))
 
 (my-keys)
 
@@ -441,10 +452,10 @@
 			(require 'dired-details+)
 			(require 'filecache)
 			(require 'ido)
-			(require 'pabbrev)
+			;; (require 'pabbrev)
 			(require 'picture)
 			(require 'yaml-mode)
-      (require 'icicles)
+      ;; (require 'icicles)
       (require 'bookmark+)
       (require 'coffee-mode)
       (require 'sws-mode)
@@ -455,6 +466,7 @@
       (require 'markdown-mode)
       (require 'deft)
       (require 'multifiles)
+      (require 'jira)
       ;; 
       (cua-mode t)
       ;; (require 'cua-mode)
@@ -465,6 +477,11 @@
       (require 'window-number)
       (require 'eproject)
       (require 'eproject-extras)
+      ;; (require 'mwe-color-box)
+
+      (require 'windata)
+      (require 'tree-mode)
+      (require 'dirtree)
 
       (setq x-select-enable-clipboard t)
       (global-undo-tree-mode)
@@ -477,14 +494,13 @@
 			(load-library "my-org+deft-mode")
 			(load-library "org-life-in-plain-text")
 			(load-library "ag-code-search")
-			;; (ido-mode nil)
-			(icy-mode nil)
+			;; (icy-mode nil)
 			(filesets-setup)
 			(scala-mode-setup)
       (haskell-setup)
-			(load-library "my-yas")
-			(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)))
-   (t nil))
+			(load-library "my-yas"))
+    (autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
+    (t nil)))
   (add-to-list 'auto-mode-alist '("\\.scala$"  . scala-mode))
   (add-to-list 'auto-mode-alist '("\\.sbt$"    . scala-mode))
   (add-to-list 'auto-mode-alist '("\\.hs$"     . haskell-mode))
@@ -508,6 +524,7 @@
   (add-to-list 'auto-mode-alist '("\\.md"      . markdown-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode))
   (add-to-list 'auto-mode-alist '("[^/]\\.dired$" . dired-virtual-mode))
+  (add-to-list 'auto-mode-alist '("\\.xtm$" . extempore-mode))
 
 
   (cond ((eq window-system nil) 
@@ -523,6 +540,9 @@
 								(server-start))
 							 (t "server already running")))))
 
+
+(autoload 'extempore-mode "/home/saunders/projects/the-toolshed/extempore/extras/extempore.el" "" t)
+
 ;; ;; Assorted mode setups, utility defs
 (defun filesets-setup()
   ;; updated version: 
@@ -533,29 +553,72 @@
   ;; (filesets-support-dired)
   )
 
+
+;; scala mode stuff
+(global-auto-revert-mode 1)
+
+
+;; (require 'company)
+;; (require 'company-emacs-eclim)
+;; (company-emacs-eclim-setup)
+;; (global-company-mode t)
+
+
 (defun scala-mode-setup()
   (interactive)
-  (require 'ensime)
-  ;; (require 'scala-mode-auto)
   (require 'scala-mode2)
+
+  (require 'eclim)
+  ;; (global-eclim-mode nil)
+  (require 'eclimd)
+
+  (setq help-at-pt-display-when-idle t)
+  (setq help-at-pt-timer-delay 0.1)
+  (help-at-pt-set-timer)
+
+  (require 'auto-complete-config)
+  (ac-config-default)
+
+  ;; add the emacs-eclim source
+  (require 'ac-emacs-eclim-source)
+  (ac-emacs-eclim-config)
+
+  (defun scala-mode-hook()
+    (eclim-mode)
+    )
+  
+  (add-hook 'scala-mode-hook 'scala-mode-hook)
+  )
+
+
+;; ensime version of scala setup
+(require 'ensime)
+(require 'scala-mode2)
+
+(defun scala-mode-setup()
+  (interactive)
+  ;; (require 'scala-mode-auto)
+  (defun scala-mode-hook()
+    )
+  
+  (add-hook 'scala-mode-hook 'scala-mode-hook)
+
   (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
   (defvar ensime-scaladoc-stdlib-url-base "http://www.scala-lang.org/api/current")
   (defvar ensime-scaladoc-compiler-url-base "http://www.scala-lang.org/api/current")
 
-
-  ;; val commonsIo = "http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?"
-
-  (defun make-example-doc-url (type &optional member)
-    (ensime-make-java-doc-url-helper 
-     "http://developer.example.com/apidocs/" type member))
-
-  (add-to-list 
-   'ensime-doc-lookup-map 
-   '("^org\\.apache\\.commons\\.io\\." . 
-     (lambda (type &optional member) (
-                                     (ensime-make-java-doc-url-helper 
-                                      "http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?" type member))
-       )))
+  
+  ;;(defun make-example-doc-url (type &optional member)
+  ;;  (ensime-make-java-doc-url-helper 
+  ;;   "http://developer.example.com/apidocs/" type member))
+  
+  ;; (add-to-list 
+  ;;  'ensime-doc-lookup-map 
+  ;;  '("^org\\.apache\\.commons\\.io\\." . 
+  ;;    (lambda (type &optional member) (
+  ;;                                     (ensime-make-java-doc-url-helper 
+  ;;                                      "http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?" type member))
+  ;;      )))
   )
 
 (defun haskell-setup()
@@ -746,6 +809,8 @@
 
 ;; grep buffer behavior
 (add-to-list 'same-window-buffer-names "*grep*")
+(add-to-list 'same-window-buffer-names "*ag*")
+(add-to-list 'same-window-buffer-names "*ack*")
 
 (defun kill-grep-window ()
   (destructuring-bind (window major-mode)
@@ -811,11 +876,6 @@
 
 (add-hook 'find-file-root-hook 'find-file-root-header-warning)
 
-
-
-
-
-
 ;; functions for searching up and down directory paths
 (defun ensime-sbt-target-dir-p (path)
   "does this path have an sbt target dir?"
@@ -860,6 +920,8 @@
          (beg nil) (end nil)
          (replace t))
     (message filename)
+    (if (get-buffer "*ensime-compile-output*")
+        (kill-buffer "*ensime-compile-output*"))
     (switch-to-buffer (get-buffer-create "*ensime-compile-output*"))
     (fundamental-mode)
     (insert-file-contents filename visit beg end replace)
@@ -988,12 +1050,39 @@
   :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" "target/")
   )
 
+(define-project-type nodejs (generic)
+  (look-for "package.json")
+  :relevant-files ("\\.jade$" "\\.coffee$" "\\.js$" "\\.xml$" "\\.less$" "\\.conf$")
+  :irrelevant-files ("^[.]" "^[#]" "node_modules/")
+  )
+
+(setq nodejs-project-file-visit-hook
+          (lambda ()
+            (message "nodejs eproject")
+            ))
+
+;;; ;; eproject stuff
+;;; (define-project-type manual (generic)
+;;;   (look-for ".eproject-root")
+;;;   :relevant-files ("\\.scala$" "\\.java$" "\\.jade$" "\\.coffee$" "\\.js$" "\\.xml$" "\\.less$" "\\.conf$")
+;;;   :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" "target/")
+;;;   )
+
 
 (defun first-matching-buffer (predicate)
   "Return PREDICATE applied to the first buffer where PREDICATE applied to the buffer yields a non-nil value."
   (loop for buf in (buffer-list)
      when (with-current-buffer buf (funcall predicate buf))
      return (with-current-buffer buf (funcall predicate buf))))
+
+
+
+;; create window for fileset
+;;   bookmark a set of files
+;;   create a meta-bookmark for those bookmarks
+;;   assoc meta-inf with each bookmark hinting at the window positioning
+
+
 
 (defun fix-windows ()
   "Setup my window config."
@@ -1033,6 +1122,9 @@
     (balance-windows)))
 
 
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
 ;; Display ido results vertically, rather than horizontally
 (setq ido-decorations 
@@ -1064,3 +1156,62 @@
   (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
 
 (add-hook 'ido-setup-hook 'ido-define-keys)
+
+
+;; (eproject-list-project-files)
+
+;; (defun eproject-open-all-project-files ()
+;;   (interactive "p")
+;;   (let ((total 0)
+;;         )
+;;     (message "Opening files...")
+;;     (save-window-excursion
+;;       (loop for file in (eproject-list-project-files root)
+;;             do (progn 
+;;                  (find-file file) 
+;;                  )
+;;             )
+;;  
+;;       )
+;;     (message "Opened %d files" total))
+;;   )
+
+
+;; jump to project def
+;; with project files
+;;  ag --noheading --ignore '*---' -G 'scala$' 'def\\h+.+[\\h(:[]'
+
+
+;; Settings:
+;; (require 'workgroups2)
+;; (desktop-save-mode t)     ; save all opened files (or disable it)
+;; (setq wg-prefix-key (kbd "C-c z")
+;;       wg-restore-associated-buffers nil ; restore all buffers opened in this WG?
+;;       wg-use-default-session-file nil   ; turn off for "emacs --daemon"
+;;       wg-default-session-file "~/.emacs.d/workgroups"
+;;       wg-use-faces nil
+;;       wg-morph-on nil)                  ; animation off
+;;  
+;; ;; Keyboard shortcuts - load, save, switch
+;; (global-set-key (kbd "<pause>")     'wg-reload-session)
+;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
+;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
+;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
+;;  
+;; (workgroups-mode 1)     ; Activate workgroups
+
+
+; (when (window-system) (require 'git-gutter-fringe))
+
+; (global-git-gutter-mode +1)
+; (setq-default indicate-buffer-boundaries 'left)
+; (setq-default indicate-empty-lines +1)
+
+;; (add-hook 'scala-mode-hook 'projectile-on)
+;; (projectile-global-mode)
+
+
+
+
+
+ 

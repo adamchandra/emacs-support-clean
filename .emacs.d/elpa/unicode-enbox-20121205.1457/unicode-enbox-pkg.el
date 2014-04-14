@@ -1,1 +1,0 @@
-(define-package "unicode-enbox" "20121205.1457" "Surround a string with box-drawing characters [source: github]" (quote ((string-utils "0.0.1") (ucs-utils "0.7.2") (persistent-soft "0.8.6") (pcache "0.2.3"))))

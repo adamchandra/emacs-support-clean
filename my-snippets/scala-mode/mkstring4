@@ -1,5 +1,5 @@
 # Author: acs
-# name: {\n}
-# key: mkstring
+# name: mkString-col-braced
+# key: mkString-col-braced
 # --
 mkString("{\n  ", "\n  ", "\n}")

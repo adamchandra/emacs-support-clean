@@ -118,6 +118,27 @@
 ;; global value of `compilation-highlight-regexp'.
 
 
+(defun eproject-grep-symbol (codere)
+  (interactive
+   (let ((default-sym (symbol-string-at-point)))
+     (list 
+      (read-string "def> " default-sym))))
+  (eproject-grep codere))
+
+
+;; from eproject-extras.el
+;; (defun eproject-grep (regexp)
+;;   "Search all files in the current project for REGEXP."
+;;   (interactive "sRegexp grep: ")
+;;   (let* ((root (eproject-root))
+;;          (default-directory root)
+;;          (files (eproject-list-project-files-relative root)))
+;;     (grep-compute-defaults)
+;;     (lgrep regexp (combine-and-quote-strings files) root)))
+
+
+   
+
 (defun ag-search-def (codere)
   (interactive
    (let ((default-sym (symbol-string-at-point)))
@@ -141,8 +162,6 @@
      (concat "ag --noheading --ignore '*---' -G 'scala$' '\\W" codere "\\W' /home/saunders/projects/the-livingroom/dvcs-mirrors/")
      'grep-mode
      )))
-
-
 
 
 (defun ag-search-class (codere)

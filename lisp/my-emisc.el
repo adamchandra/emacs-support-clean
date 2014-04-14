@@ -1,31 +1,3 @@
- (defun rubify() 
-  (interactive)
-  (perlify))
-
-
-;; (defun perlify()
-;;   (interactive)
-;;   (save-excursion
-;;     (re-search-backward "^#\\!@\\(\\(perl\\|ruby\\) .*\\)$")
-;;     (setq perl-command (match-string 1))
-;;     (vertical-motion 1)
-;;     (setq script-start (point))
-;;     (re-search-forward "^#\\!@<<")
-;;     (beginning-of-line)
-;;     (setq script-end (point))
-;;     (setq script (buffer-substring script-start script-end))
-;;     (vertical-motion 1)
-;;     (setq doc-start (point-marker))
-;;     (setq command (concat perl-command " -e '" script "'"))
-;;     (re-search-forward "^END")
-;;     (beginning-of-line)
-;;     (setq doc-end (point-marker))
-;;     ;; (goto-char doc-end)
-;;     ;; (insert-string (concat "<-doc-end"))
-;;     ;; (insert-string (concat "command: " command))
-;;     (shell-command-on-region doc-start doc-end command t t "*Command Error*")))
-
-
 (defun escape-squote(str)
   (string-match "'" str)
   (replace-match "\\\'" t t  str))

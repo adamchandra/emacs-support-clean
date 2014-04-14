@@ -21,7 +21,7 @@ characters, with integrated ability to return fallback characters
 when Unicode display is not possible.
 
 Some ambiguities in Emacs' built-in Unicode data are resolved, and
-character support is updated to Unicode 6.1.
+character support is updated to Unicode 6.3.
 
 There are three interactive commands:
 
@@ -58,8 +58,8 @@ Notes
 
 Compatibility and Requirements
 
-    GNU Emacs version 24.3-devel     : yes, at the time of writing
-    GNU Emacs version 24.1 & 24.2    : yes
+    GNU Emacs version 24.4-devel     : yes, at the time of writing
+    GNU Emacs version 24.3           : yes
     GNU Emacs version 23.3           : yes (*)
     GNU Emacs version 22.3 and lower : no
 
